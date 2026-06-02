@@ -5,7 +5,7 @@ C++ template meta programming in a Lisp style.
 
 # Download
 
-[lmp-0.1.0.tar.gz](https://github.com/mistivia/lmp/archive/refs/tags/0.1.0.tar.gz)
+[lmp-0.1.0.tar.gz](https://github.com/mistivia-offloading/releases/releases/download/lmp-0.1.0/lmp-0.1.0.tar.gz)
 
 ## About
 
