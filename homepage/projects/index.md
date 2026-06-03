@@ -11,7 +11,7 @@ Projects
 
 [BambooLisp](bamboo-lisp/): embeddable Lisp-2 interpreter
 
-[typed-rpc](https://github.com/mistivia/typed-rpc): type-safe Haskell JSON-RPC 2.0 server library
+[typed-rpc](typed-rpc/): type-safe Haskell JSON-RPC 2.0 server library
 
 [flex-record](flex-record/): extensible Haskell records with type-level fields
 
