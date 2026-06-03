@@ -5,7 +5,7 @@ A Magic: The Gathering draft tool
 
 ## Download
 
-[hivemind-0.1.0.tar.gz](https://github.com/mistivia/hivemind/archive/refs/tags/0.1.0.tar.gz)
+[hivemind-0.1.0.tar.gz](https://github.com/mistivia/releases/releases/download/hivemind-0.1.0/hivemind-0.1.0.tar.gz)
 
 ## Dependencies
 
