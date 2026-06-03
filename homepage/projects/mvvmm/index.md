@@ -6,7 +6,7 @@ A virtual machine monitor (VMM) built upon KVM, designed for experimentation and
 
 ## Download
 
-[mvvmm-0.2.0.tar.gz](https://github.com/mistivia-offloading/releases/releases/download/mvvmm-0.2.0/mvvmm-0.2.0.tar.gz)
+[mvvmm-0.2.0.tar.gz](https://github.com/mistivia/releases/releases/download/mvvmm-0.2.0/mvvmm-0.2.0.tar.gz)
 
 ## Features
 

@@ -9,7 +9,7 @@ It runs a local SRT server, receive live video, turns it into HLS segments (.m3u
 
 # Download
 
-[ezlive-0.3.0.tar.gz](https://github.com/mistivia-offloading/releases/releases/download/ezlive-0.3.0/ezlive-0.3.0.tar.gz)
+[ezlive-0.3.0.tar.gz](https://github.com/mistivia/releases/releases/download/ezlive-0.3.0/ezlive-0.3.0.tar.gz)
 
 # Build
 
