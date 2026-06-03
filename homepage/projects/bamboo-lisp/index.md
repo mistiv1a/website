@@ -5,7 +5,7 @@ Embeddable Lisp-2 Interpreter
 
 ## Download
 
-[bamboo-lisp-0.1.0.tar.gz](https://github.com/mistivia/bamboo-lisp/archive/refs/tags/0.1.0.tar.gz)
+[bamboo-lisp-0.1.0.tar.gz](https://github.com/mistivia/releases/releases/download/bamboo-lisp-0.1.0/bamboo-lisp-0.1.0.tar.gz)
 
 ## About 
 
