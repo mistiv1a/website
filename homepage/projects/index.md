@@ -19,6 +19,6 @@ Projects
 
 [hivemind](hivemind/): draft simulation for *Magic: the Gathering*
 
-[raytracer](https://github.com/mistivia/raytracer): toy ray tracer from the book *Computer Graphics from Scratch*
+[raytracer](raytracer/): toy ray tracer from the book *Computer Graphics from Scratch*
 
 [oj](https://github.com/mistivia/oj): solutions of LeetCode, CodeWars, Advent of Code, etc.
