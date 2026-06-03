@@ -10,7 +10,7 @@ It provides:
 
 ## Download
 
-[flex-record-0.1.0.tar.gz](/blob/flex-record-0.1.0.tar.gz)
+[flex-record-0.1.1.tar.gz](https://github.com/mistivia/releases/releases/download/flex-record-0.1.1/flex-record-0.1.1.tar.gz)
 
 ## Quick Start
 
