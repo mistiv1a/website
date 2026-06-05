@@ -181,12 +181,11 @@ person = flexRecord
 
 <pre><code>encode person
 -- {"name":"uwu","age":18}
+</code></pre>
 
+<p>Decoding:</p>
 
-Decoding:
-
-
-case eitherDecode (LBS.pack "{\"name\":\"owo\",\"age\":20}") :: Either String Person of
+<pre><code>case eitherDecode (LBS.pack "{\"name\":\"owo\",\"age\":20}") :: Either String Person of
     Left err -&gt; putStrLn err
     Right p -&gt; print (frGet @"name" p, frGet @"age" p)
 -- ("owo",20)

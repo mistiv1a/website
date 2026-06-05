@@ -180,7 +180,7 @@ Encoding:
     -- {"name":"uwu","age":18}
     
 
-    Decoding:
+Decoding:
 
     
     case eitherDecode (LBS.pack "{\"name\":\"owo\",\"age\":20}") :: Either String Person of
