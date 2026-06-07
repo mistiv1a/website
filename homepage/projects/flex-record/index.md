@@ -160,7 +160,6 @@ The `inCase` function adds a handler for a specific field. Handlers are composed
 
 ### Simple usage
 
-
     type Person =
         FlexRecord
         [ Field "name" String
@@ -175,13 +174,11 @@ The `inCase` function adds a handler for a specific field. Handlers are composed
 
 Encoding:
 
-
     encode person
     -- {"name":"uwu","age":18}
     
 
 Decoding:
-
     
     case eitherDecode (LBS.pack "{\"name\":\"owo\",\"age\":20}") :: Either String Person of
         Left err -> putStrLn err
