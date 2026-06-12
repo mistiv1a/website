@@ -3,6 +3,7 @@ Scriptum Mistiviae
 
 [[RSS](index.xml)] [[友链](links/)]
 
+- 2026-06-12 [Emacs再访](/posts/2026-06-12-emacs-revisit/)
 - 2026-05-24 [Minecraft服务器搭建](/posts/2026-05-24-mcserver/)
 - 2026-03-30 [给欧拉-拉格朗日方程加上类型注释](/posts/2026-03-30-functional/)
 - 2026-02-02 [写一个虚拟机管理器](/posts/2026-02-02-vmm/)

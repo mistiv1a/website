@@ -8,6 +8,14 @@
     <generator>Python Plain String RSS Generator</generator>
 
     <item>
+      <title>Emacs再访</title>
+      <link>https://blog.mistivia.com/posts/2026-06-12-emacs-revisit/</link>
+      <description>Link to the post: https://blog.mistivia.com/posts/2026-06-12-emacs-revisit/</description>
+      <guid>https://blog.mistivia.com/posts/2026-06-12-emacs-revisit/</guid>
+      <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
       <title>Minecraft服务器搭建</title>
       <link>https://blog.mistivia.com/posts/2026-05-24-mcserver/</link>
       <description>Link to the post: https://blog.mistivia.com/posts/2026-05-24-mcserver/</description>
@@ -45,14 +53,6 @@
       <description>Link to the post: https://blog.mistivia.com/posts/2026-01-12-full-cone-nat/</description>
       <guid>https://blog.mistivia.com/posts/2026-01-12-full-cone-nat/</guid>
       <pubDate>Mon, 12 Jan 2026 00:00:00 GMT</pubDate>
-    </item>
-
-    <item>
-      <title>EZLive: 无需服务器，轻松搭建私人直播间</title>
-      <link>https://blog.mistivia.com/posts/2025-09-27-ezlive/</link>
-      <description>Link to the post: https://blog.mistivia.com/posts/2025-09-27-ezlive/</description>
-      <guid>https://blog.mistivia.com/posts/2025-09-27-ezlive/</guid>
-      <pubDate>Sat, 27 Sep 2025 00:00:00 GMT</pubDate>
     </item>
 
   </channel>
