@@ -7,7 +7,7 @@ date: "June 12nd, 2026",
 body: [
 
 Now there is more and more AI slop brought to VSCode by Microsoft, and
-they are adding Copilot coauthor to your commit message not matter
+they are adding Copilot coauthor to your commit message no matter
 wheather you have used Copilot at all. Also, various plugins are
 forcing unwanted features to me, for example, the official Python
 plugin bundle often switch pyenv on their own. These functions are
