@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Write HTML footer
-    fprintf(out, "</pre>\n</body>\n</html>\n");
+    fprintf(out, "\n\n-----\nEmail: i (at) mistivia (dot) com</pre>\n</body>\n</html>\n");
 
     fclose(in);
     fclose(out);
