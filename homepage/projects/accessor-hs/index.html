@@ -1,115 +1,121 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <title>Accessor</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="/style3.css">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>body { zoom: 150%; }</style>
 </head>
 <body>
-<pre class="back"><a href="../">../</a></pre>
+<pre><a href="../">../</a>
 
-<h1>Accessor</h1>
-<p>Very naive lens-like library.</p>
+Accessor
+########
 
-<h1>Download</h1>
+Very naive lens-like library.
 
-<p><a href="https://github.com/mistivia/releases/releases/download/accessor-hs-0.1.0/accessor-hs-0.1.0.tar.gz">accessor-hs-0.1.0.tar.gz</a></p>
+Download
+========
 
-<h1>Usage</h1>
+<a href="https://github.com/mistivia/releases/releases/download/accessor-hs-0.1.0/accessor-hs-0.1.0.tar.gz">accessor-hs-0.1.0.tar.gz</a>
 
-<p>To get started:</p>
+Usage
+=====
 
-<pre><code>import Data.Accessor
-</code></pre>
-
-<p>An accessor is a getter with a setter.</p>
-
-<p>For record fields, the accessors are defined as follows:</p>
-
-<pre><code>data Point = Point {_x :: Int, _y :: Int}
-
-x = accessor _x (\elem record -&gt; record {_x = elem})
-y = accessor _y (\elem record -&gt; record {_y = elem})
-</code></pre>
-
-<p>With an accessor, you can view, set, and transform data of the record:</p>
-
-<pre><code>point = Point 1 2
-view x point -- 1
-set x 3 point -- Point 3 2
-over x (+1) point -- Point 2 2
-</code></pre>
-
-<p>For a nested record, accessors can be composed using <code>.</code>:</p>
-
-<pre><code>data Line = Line {_start :: Point, _end :: Point}
-start = accessor _start (\elem record -&gt; record {_start = elem})
-end = accessor _end (\elem record -&gt; record {_end = elem})
+To get started:
 
 
-data Point = Point {_x :: Int, _y :: Int}
-x = accessor _x (\elem record -&gt; record {_x = elem})
-y = accessor _y (\elem record -&gt; record {_y = elem})
+    import Data.Accessor
 
-line = Line (Point 1 2) (Point 3 4)
 
-start_x = view (start . x) line -- 1
-end_y = view (end . y) line -- 4
-</code></pre>
+An accessor is a getter with a setter.
 
-<p>If the field is a functor, the accessor should be composed with the next accessor using <code>facc</code>. For example:</p>
+For record fields, the accessors are defined as follows:
 
-<pre><code>data Address = Address {_detail :: String, _code :: String }
-detail = accessor _detail (\elem record -&gt; record {_detail = elem}) 
-code = accessor _code (\elem record -&gt; record {_code = elem}) 
 
-data Person = Person {_name :: String, _addr :: Maybe Address }
-name = accessor _name (\elem record -&gt; record {_name = elem}) 
-addr= accessor _addr (\elem record -&gt; record {_addr = elem}) 
-</code></pre>
+    data Point = Point {_x :: Int, _y :: Int}
 
-<p>Let there be Alice living in Shanghai:</p>
+    x = accessor _x (\elem record -&gt; record {_x = elem})
+    y = accessor _y (\elem record -&gt; record {_y = elem})
 
-<pre><code>alice = Person
-    { _name = "Alice"
-    , _addr = Just Address
-        { _detail = "Shanghai"
-        , _code = "200000"
+
+With an accessor, you can view, set, and transform data of the record:
+
+
+    point = Point 1 2
+    view x point -- 1
+    set x 3 point -- Point 3 2
+    over x (+1) point -- Point 2 2
+
+
+For a nested record, accessors can be composed using `.`:
+
+
+    data Line = Line {_start :: Point, _end :: Point}
+    start = accessor _start (\elem record -&gt; record {_start = elem})
+    end = accessor _end (\elem record -&gt; record {_end = elem})
+
+
+    data Point = Point {_x :: Int, _y :: Int}
+    x = accessor _x (\elem record -&gt; record {_x = elem})
+    y = accessor _y (\elem record -&gt; record {_y = elem})
+
+    line = Line (Point 1 2) (Point 3 4)
+
+    start_x = view (start . x) line -- 1
+    end_y = view (end . y) line -- 4
+
+
+If the field is a functor, the accessor should be composed with the
+next accessor using `facc`. For example:
+
+    data Address = Address {_detail :: String, _code :: String }
+    detail = accessor _detail (\elem record -&gt; record {_detail = elem}) 
+    code = accessor _code (\elem record -&gt; record {_code = elem}) 
+
+    data Person = Person {_name :: String, _addr :: Maybe Address }
+    name = accessor _name (\elem record -&gt; record {_name = elem}) 
+    addr= accessor _addr (\elem record -&gt; record {_addr = elem}) 
+
+
+Let there be Alice living in Shanghai:
+
+
+    alice = Person
+        { _name = &quot;Alice&quot;
+        , _addr = Just Address
+            { _detail = &quot;Shanghai&quot;
+            , _code = &quot;200000&quot;
+            }
         }
-    }
-</code></pre>
 
-<p>You can view/modify Alice&rsquo;s address detail:</p>
 
-<pre><code>s = view (addr . facc . detail) alice -- Just "Shanghai"
-</code></pre>
+You can view/modify Alice's address detail:
 
-<p>The use of <code>fmap</code> inside of <code>facc</code> ensures that <code>Nothing</code> is handled properly.</p>
 
-<p>Accessor of the nth element of a list is <code>listAcc n</code>, and for 0 to 9, there are shortcuts: <code>_0</code> to <code>_9</code>.</p>
+    s = view (addr . facc . detail) alice -- Just &quot;Shanghai&quot;
 
-<pre><code>view _1 [1,2,3] -- 2
-view (_1 . _1) [[1,2,3], [4,5,6]] -- 5
-set _0 42 [1,2,3] -- [42,2,3]
-over _1 (+1) [1,2,3] -- [1,3,3]
-</code></pre>
 
-<p>Lists are also functors, so you can <code>fmap</code> over it using <code>facc</code>, which is the same as <code>map</code>:</p>
+The use of `fmap` inside of `facc` ensures that `Nothing` is handled
+properly.
 
-<pre><code>over facc (+1) [1,2,3] -- [2,3,4]
-over (_1 . facc) (+1) [[1,2], [3,4]] -- [[1,2],[4,5]]
-</code></pre>
+Accessor of the nth element of a list is `listAcc n`, and for 0 to 9,
+there are shortcuts: `_0` to `_9`.
 
-<hr>
-<p id="email">Email: i (at) mistivia (dot) com</p>
-<script>
-var emailElement = document.getElementById('email');
-var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
-var decodedString = atob(base64String);
-emailElement.innerHTML = decodedString;
-</script>
+
+    view _1 [1,2,3] -- 2
+    view (_1 . _1) <a href="1,2,3], [4,5,6">1,2,3], [4,5,6</a> -- 5
+    set _0 42 [1,2,3] -- [42,2,3]
+    over _1 (+1) [1,2,3] -- [1,3,3]
+
+
+Lists are also functors, so you can `fmap` over it using `facc`, which
+is the same as `map`:
+
+    over facc (+1) [1,2,3] -- [2,3,4]
+    over (_1 . facc) (+1) <a href="1,2], [3,4">1,2], [3,4</a> -- <a href="1,2],[4,5">1,2],[4,5</a>
+
+
+
+-----
+Email: i (at) mistivia (dot) com</pre>
 </body>
 </html>
-
