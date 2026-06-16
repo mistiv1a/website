@@ -95,7 +95,7 @@ there are shortcuts: `_0` to `_9`.
 
 
     view _1 [1,2,3] -- 2
-    view (_1 . _1) [[1,2,3], [4,5,6]] -- 5
+    view (_1 . _1) [[1,2,3], [4,5,6] ] -- 5
     set _0 42 [1,2,3] -- [42,2,3]
     over _1 (+1) [1,2,3] -- [1,3,3]
 
@@ -104,5 +104,5 @@ Lists are also functors, so you can `fmap` over it using `facc`, which
 is the same as `map`:
 
     over facc (+1) [1,2,3] -- [2,3,4]
-    over (_1 . facc) (+1) [[1,2], [3,4]] -- [[1,2],[4,5]]
+    over (_1 . facc) (+1) [[1,2], [3,4] ] -- [ [1,2],[4,5] ]
 
