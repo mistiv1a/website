@@ -1,11 +1,14 @@
 MD_SRC  = $(shell find . -name "*.md" -not -path './task.md')
 MD_TARGET  = $(MD_SRC:.md=.html)
 
+PRE_SRC  = $(shell find . -name "*.pre")
+PRE_TARGET  = $(PRE_SRC:.pre=.html)
+
 TYP_SRC  = $(shell find . -name '*.typ' -not -path './template.typ' -not -path './template-en.typ')
 TYP_HTML_TARGET  = $(TYP_SRC:.typ=.html)
 TYP_GPG_TARGET  = $(TYP_SRC:.typ=.typ.gpg)
 
-all: rss $(MD_TARGET) $(TYP_HTML_TARGET) $(TYP_GPG_TARGET)
+all: rss $(PRE_TARGET) $(MD_TARGET) $(TYP_HTML_TARGET) $(TYP_GPG_TARGET)
 
 clean:
 	-rm $(TYP_HTML_TARGET) $(MD_TARGET)
@@ -17,6 +20,9 @@ blog/index.xml: blog/index.md scripts/genrss.py
 
 $(MD_TARGET): %.html: %.md scripts/md.py
 	python scripts/md.py $< > $@
+
+$(PRE_TARGET): %.html: %.pre
+	./text2html $< $@
 
 $(TYP_HTML_TARGET): %.html: %.typ template.typ scripts/typ2html.py
 	python scripts/typ2html.py $< $@
