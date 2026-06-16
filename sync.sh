@@ -3,7 +3,7 @@
 make
 python3 scripts/sitemap.py
 
-sed -i 's#href="../"#href="//mistivia.com"#g' blog/index.html
+sed -i 's#href="\.\./"#href="//mistivia.com"#g' blog/index.html
 
 git add *
 git commit -am "update"
