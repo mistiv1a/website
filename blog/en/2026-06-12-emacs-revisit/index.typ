@@ -9,18 +9,27 @@ body: [
 Now there is more and more AI slop brought to VSCode by Microsoft, and
 they are adding Copilot coauthor to your commit message not matter
 wheather you have used Copilot at all. Also, various plugins are
-forcing unwanted functions to me, for example, the official Python
+forcing unwanted features to me, for example, the official Python
 plugin bundle often switch pyenv on their own. These functions are
 helpful to users at first sight, but lead to problems hard to debug in
 the long run. The VSCode remote plugin also consumes a lot of
 resources, and it's actually a closed source software; not to mention
-frequent bugs, it also does unintended update.
+frequent bugs and the unintended updates which are jamming my workflow.
 
-虽然这些对于现代的软件都是常态，但是想了半天我还是决定跳出舒适圈，回到Emacs。Emacs并不是开箱即用的，为了能有接近VSCode的使用体验，我在#link("../2024-08-03-emacs/", "之前的基础")上增加了一切新功能。
+To be honest, all these things are very common for mordern
+software. But after much thinking, I decided to jump out of my comfort
+zone and go back to Emacs. Emacs is not very handy out of the box; to
+have experience close to VSCode, I've added some new features based on
+my previous configuration.
 
-= 远程剪贴板
+= Remote Clipboard
 
-如果在Linux图形界面上Emacs，剪贴板完全不是问题，Emacs会自动使用系统的剪贴板。但是如果是远程的Emacs就有点麻烦了。Emacs并没有完整的服务端-客户端架构，其daemon模式要求客户端和服务端都在同一台机器上，只是一种加快启动速度的优化。因此如果想要远程的Emacs，唯一的选择是在SSH中使用终端版本的Emacs。
+If you are using Emacs on Linux GUI, clipboard is not a problem at
+all. But it gets you some trouble if it's a remote Emacs. Emacs
+doesn't have a full server-client architecture: the daemon mode
+requires that server and clients are on the same host, as a method to
+accelerate cold start. Hence, if you want a remote Emacs, the only
+reasonable solution is a terminal Emacs through SSH.
 
 所幸Xterm标准很早就提供了这个功能：#link("https://www.xfree86.org/current/ctlseqs.html", "OSC 52控制序列")。#link("https://ghostty.org/docs/vt/osc/52", "Ghostty的文档")中有更详细的介绍。很多终端都支持这个功能：
 
