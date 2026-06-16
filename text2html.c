@@ -94,17 +94,28 @@ int main(int argc, char *argv[]) {
 
                 // 2. Extract the content between "[[" and "]]"
                 size_t link_len = link_end - (link_start + 2);
-                char link_text[4096] = {0};
-                strncpy(link_text, link_start + 2, link_len);
+                char link_content[4096] = {0};
+                strncpy(link_content, link_start + 2, link_len);
 
                 // 3. Print the HTML hyperlink tag
-                fprintf(out, "<a href=\"");
-                print_escaped(out, link_text, link_len); // href attribute
-                fprintf(out, "\">");
-                print_escaped(out, link_text, link_len); // Link display text
-                fprintf(out, "</a>");
+                char *pipe = strchr(link_content, '|');
+                char *display_text = link_content;
+                char *href_target = link_content;
 
-                // Move the start pointer to after "]]"
+                if (pipe != NULL) {
+                    *pipe = '\0';
+                    display_text = link_content;
+                    href_target = pipe + 1;
+                } else {
+                    display_text = link_content;
+                    href_target = link_content;
+                }
+                fprintf(out, "<a href=\"");
+                print_escaped(out, href_target, strlen(href_target));
+                fprintf(out, "\">");
+                print_escaped(out, display_text, strlen(display_text));
+                fprintf(out, "</a>");
+                
                 start = link_end + 2;
             } else {
                 // If there is "[[" without a matching "]]", treat it as normal text and break
