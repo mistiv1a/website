@@ -138,9 +138,9 @@ details.
 
 = Batch Replacement
 
-Emacs的#link("https://github.com/dajva/rg.el", "rg插件")可以很容易检索。但是这个插件本身并没有提供批量替换功能。如果需要批量替换的话，只需要在搜索结果的缓冲区中按下`e`键，就可以进入wgrep状态，此时用`M-%`完成批量替换。
+#link("https://github.com/dajva/rg.el", "The rg plugin") of Emacs provides an easy way to search the project. But this plugin doesn't provide a way for batch replacement directly. If you need to do batch replacement, you need to press `e` to enter `wgrep` mode, and then use `M-%` to do batch replacement.
 
-更多wgrep的使用方案可以参考#link("https://github.com/mhayashi1120/Emacs-wgrep", "文档")。
+For more usage of `wgrep`, you can refer to #link("https://github.com/mhayashi1120/Emacs-wgrep", "its document").
 
 ]
 )
