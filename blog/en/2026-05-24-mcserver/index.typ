@@ -10,11 +10,11 @@ Recently I deployed a Minecraft server. This time, I added many mods and didn't 
 
 = Picking a Version
 
-The reason I create a server this time is that I watched many videos about _Create: Aeronautics_, so I want to try it. This mod now only mainly support 1.21.1, and this version is compatible with many other mods, thus this is a natural choice.
+The reason I create a server this time is that I watched many videos about _Create: Aeronautics_, so I want to try it. This mod now supports 1.21.1. And this version (1.21.1) is compatible with many other mods, thus this is a natural choice.
 
 = Choosing a Launcher
 
-The most popular launcher recently is #link("https://prismlauncher.org/", "Prism Launcher"), which only supports legit game. But some of my friends are pirate players. They will need to change a launcher, for example, #link("https://prismlauncher.org/", "PolyMC"). These two are from the same upstream, both forked from link("https://multimc.org/", "MultiMC"). But their modpacks are not compatible. You will need to create two modpack separately.
+The most popular launcher recently is #link("https://prismlauncher.org/", "Prism Launcher"), which only supports legit game. But some of my friends are pirate players. They will need to use another launcher, for example, #link("https://prismlauncher.org/", "PolyMC"). These two are from the same upstream, both forked from link("https://multimc.org/", "MultiMC"). But their modpacks are not compatible. You will need to create two modpacks separately.
 
 至于制作整合包时，则Prism Launcher更为轻松，因其能自动解决模组依赖。因此即使决定使用PolyMC启动器，也推荐用Prism Launcher来安装模组，然后把模组的jar包统一复制到PolyMC的实例中。
 

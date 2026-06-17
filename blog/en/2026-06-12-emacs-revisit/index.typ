@@ -31,11 +31,7 @@ requires that server and clients be on the same host, as a method to
 accelerate cold start. Hence, if you want a remote Emacs, the only
 reasonable solution is a terminal Emacs through SSH.
 
-Luckily, Xterm standard provided this feature long time ago:
-#link("https://www.xfree86.org/current/ctlseqs.html", "OSC 52 Control Sequence").
-There is a more detailed introduction in
-#link("https://ghostty.org/docs/vt/osc/52", "the document of
-Ghostty").  There are many terminal emulators that support this:
+Luckily, Xterm standard provided this feature long time ago: #link("https://www.xfree86.org/current/ctlseqs.html", "OSC 52 Control Sequence"). There is a more detailed introduction in #link("https://ghostty.org/docs/vt/osc/52", "the document of Ghostty"). There are many terminal emulators that support this:
 
 - Ghostty: macOS, Linux
 - iTerm2: macOS
