@@ -54,7 +54,10 @@ payload=$(base64 | tr -d '\r\n')
 printf "\033]52;c;%s\a" "$payload"
 ```
 
-This script will read text from stdin, and output and the format of OSC 52 control sequence. If the terminal emulator support this, this text will enter the clipboard of your local OS, which can be considered to be a remote version of xclip or wl-copy.
+This script will read text from stdin, and output and the format of
+OSC 52 control sequence. If the terminal emulator support this, this
+text will enter the clipboard of your local OS, which can be
+considered to be a remote version of xclip or wl-copy.
 
 For mintty, `.minttyrc` should be added with:
 
@@ -62,7 +65,10 @@ For mintty, `.minttyrc` should be added with:
 AllowSetSelection=yes
 ```
 
-Then install this Emacs extension: #link("https://github.com/spudlyo/clipetty", "clipetty"). Some terminal are not auto detected by clipetty, maybe this lisp snippet are needed to be added to Emacs configuration: 
+Then install this Emacs extension:
+#link("https://github.com/spudlyo/clipetty", "clipetty"). Some
+terminal are not auto detected by clipetty, maybe this lisp snippet
+are needed to be added to Emacs configuration:
 
 ```el
 (global-clipetty-mode)
@@ -79,9 +85,11 @@ Enable `xterm-mouse-mode`:
 
 = LSP
 
-
-
-The mainstream solution is to use #link("https://github.com/emacs-lsp/lsp-mode", "lsp-mode"). But newer version of Emacs come with a LSP solution: eglot, which is sufficient in most cases. Just enable it in the mode hook of relevent programming language:
+The mainstream solution is to use
+#link("https://github.com/emacs-lsp/lsp-mode", "lsp-mode"). But newer
+version of Emacs come with a LSP solution: eglot, which is sufficient
+in most cases. Just enable it in the mode hook of relevent programming
+language:
 
 ```el
 (require 'eglot)
@@ -96,30 +104,39 @@ Most used shortcuts:
 - `C-M-i`: Auto complete
 - `M-.`: Jump to definition
 - `M-,`: Jump back
-- `M-x flymake-show-buffer-diagnostics`: See errors of current file
-- `M-x flymake-show-project-diagnostics`: See error of the whole project
+- `M-x flymake-show-buffer-diagnostics`: View errors of current file
+- `M-x flymake-show-project-diagnostics`: View error of the whole project
 
 = Customized Keyboard Shortcuts
 
-Emacs快捷键繁多，键位冲突有时候会非常难受。我选择了统一用`M-o`作为自定义快捷键的前缀。这个键位Emacs自己不用，各类插件也很少用到。
+The are a lot of keybindings in Emacs, and resolving key conflicts is
+a pain. So I choose to use `M-o` as a universal prefix, which is not
+used by Emacs it self and rarely used by all kinds of plugins.
 
 = Git
 
-在人工智能时代的代理式（Agentic）开发中，阅读git diff已经是编辑器最重要的功能了。Emacs生态里面最好用的当属magit。不过magit功能复杂，上手门槛比较高。Emacs自带的vc模块大多数情况下勉强够用，如果暂时不想学magit的话可以凑合用一用。
+In agentic development in AI-era, reading `git diff` has been the most
+important function of an editor. In Emacs ecosystem, the best tool is
+magit. However, magit is very complex and difficult to learn. Emacs'
+built-in vc module is enough in most case. If you don't want to learn
+magit for now, it will be a acceptable alternative.
 
-主要有这些命令：
+Here are the primary commands:
 
-- `vc-diff`: 查看当前文件的diff
-- `vc-root-diff`: 查看整个目录的当前diff
-- `vc-print-root-log`: 查看当前目录下的提交记录
+- `vc-diff`: View diff of current file
+- `vc-root-diff`: View diff of the whole directory
+- `vc-print-root-log`: View commit log of current directory
 
-常用快捷键有这些：
+And the most used keyboard shortcuts are these:
 
-Diff界面下，使用`C-c C-c`可以跳转到修改的位置；如果是查看历史文件的diff，使用`C-u C-c C-c`可以跳转到文件的历史版本中的对应位置。
+In diff interface, use `C-c C-c` to jump to modified postion; If you
+are viewing the diff of a historical file, use `C-u C-c C-c` to jump
+to relevent postion in the historical version.
 
-在查看提交记录的界面中，按`=`可以查看其diff细节。
+In the interface of viewing commit log, you can press `=` to view diff
+details.
 
-= 批量替换
+= Batch Replacement
 
 Emacs的#link("https://github.com/dajva/rg.el", "rg插件")可以很容易检索。但是这个插件本身并没有提供批量替换功能。如果需要批量替换的话，只需要在搜索结果的缓冲区中按下`e`键，就可以进入wgrep状态，此时用`M-%`完成批量替换。
 
