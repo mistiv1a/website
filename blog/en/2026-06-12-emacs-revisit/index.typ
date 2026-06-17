@@ -31,14 +31,18 @@ requires that server and clients are on the same host, as a method to
 accelerate cold start. Hence, if you want a remote Emacs, the only
 reasonable solution is a terminal Emacs through SSH.
 
-所幸Xterm标准很早就提供了这个功能：#link("https://www.xfree86.org/current/ctlseqs.html", "OSC 52控制序列")。#link("https://ghostty.org/docs/vt/osc/52", "Ghostty的文档")中有更详细的介绍。很多终端都支持这个功能：
+Luckily, Xterm standard provided this feature long time ago:
+#link("https://www.xfree86.org/current/ctlseqs.html", "OSC 52 Control Sequence").
+There are more detailed introduction in
+#link("https://ghostty.org/docs/vt/osc/52", "the document of Ghostty").
+There are amny terminal emulators that support this:
 
 - Ghostty: macOS, Linux
 - iTerm2: macOS
 - mintty: Windows
 - Alacritty: Windows, Linux, macOS
 
-这个bash脚本可以用来测试OSC 52功能是否能够正常运作：
+This bash script can be used to test if OSC 52 is functioning properly.
 
 ```bash
 if [ -t 0 ]; then
@@ -50,24 +54,24 @@ payload=$(base64 | tr -d '\r\n')
 printf "\033]52;c;%s\a" "$payload"
 ```
 
-这个脚本会从stdin中读入文本，然后以OSC 52控制序列的格式输出。如果终端支持的话，这段文本就会进入本地操作系统的剪贴板中。可以看成是一个远程版本的xclip或者wl-copy。
+This script will read text from stdin, and output and the format of OSC 52 control sequence. If the terminal emulator support this, this text will enter the clipboard of your local OS, which can be considered to be a remote version of xclip or wl-copy.
 
-对于mintty来说，需要修改`.minttyrc`，加入：
+For mintty, `.minttyrc` should be added with:
 
 ```
 AllowSetSelection=yes
 ```
 
-然后安装这个Emacs扩展：#link("https://github.com/spudlyo/clipetty", "clipetty")。某些终端clipetty无法自动识别，可能要在Emacs配置文件中手动加入：
+Then install this Emacs extension: #link("https://github.com/spudlyo/clipetty", "clipetty"). Some terminal are not auto detected by clipetty, maybe this lisp snippet are needed to be added to Emacs configuration: 
 
 ```el
 (global-clipetty-mode)
 (setq clipetty-assume-ansi-terminal t)
 ```
 
-= 鼠标操作
+= Mouse Opeartion
 
-启用`xterm-mouse-mode`：
+Enable `xterm-mouse-mode`:
 
 ```
 (xterm-mouse-mode 1)
@@ -75,7 +79,9 @@ AllowSetSelection=yes
 
 = LSP
 
-主流的方案是使用#link("https://github.com/emacs-lsp/lsp-mode", "lsp-mode")。但是Emacs新版本自带的LSP方案eglot大多数情况下已经够用了。使用的时候只需要按需在对应语言的hook中启用即可：
+
+
+The mainstream solution is to use #link("https://github.com/emacs-lsp/lsp-mode", "lsp-mode"). But newer version of Emacs come with a LSP solution: eglot, which is sufficient in most cases. Just enable it in the mode hook of relevent programming language:
 
 ```el
 (require 'eglot)
@@ -85,15 +91,15 @@ AllowSetSelection=yes
 (add-hook 'rust-mode-hook #'eglot-ensure)
 ```
 
-常用的快捷键：
+Most used shortcuts:
 
-- `C-M-i`: 自动补全
-- `M-.`: 跳转到定义
-- `M-,`: 从跳转返回
-- `M-x flymake-show-buffer-diagnostics`: 查看当前文件的错误
-- `M-x flymake-show-project-diagnostics`: 查看整个项目的错误
+- `C-M-i`: Auto complete
+- `M-.`: Jump to definition
+- `M-,`: Jump back
+- `M-x flymake-show-buffer-diagnostics`: See errors of current file
+- `M-x flymake-show-project-diagnostics`: See error of the whole project
 
-= 自定义快捷键
+= Customized Keyboard Shortcuts
 
 Emacs快捷键繁多，键位冲突有时候会非常难受。我选择了统一用`M-o`作为自定义快捷键的前缀。这个键位Emacs自己不用，各类插件也很少用到。
 
