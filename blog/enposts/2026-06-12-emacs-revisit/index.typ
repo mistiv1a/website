@@ -75,11 +75,11 @@ The mainstream solution is to use #link("https://github.com/emacs-lsp/lsp-mode",
 
 Commonly used shortcuts are:
 
-* `C-M-i`: Auto-complete
-* `M-.`: Jump to definition
-* `M-,`: Pop back from definition jump
-* `M-x flymake-show-buffer-diagnostics`: View errors in the current file
-* `M-x flymake-show-project-diagnostics`: View errors across the entire project
+- `C-M-i`: Auto-complete
+- `M-.`: Jump to definition
+- `M-,`: Pop back from definition jump
+- `M-x flymake-show-buffer-diagnostics`: View errors in the current file
+- `M-x flymake-show-project-diagnostics`: View errors across the entire project
 
 = Custom Shortcuts
 
@@ -91,9 +91,9 @@ In the era of AI-driven Agentic development, reviewing git diffs has become the 
 
 The most used commands include:
 
-* `vc-diff`: View the diff of the current file
-* `vc-root-diff`: View the current diff of the entire directory
-* `vc-print-root-log`: View the commit history of the current directory
+- `vc-diff`: View the diff of the current file
+- `vc-root-diff`: View the current diff of the entire directory
+- `vc-print-root-log`: View the commit history of the current directory
 
 Commonly used shortcuts:
 
