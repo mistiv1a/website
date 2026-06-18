@@ -1,7 +1,7 @@
 Scriptum Mistiviae
 ========
 
-[[RSS](index.xml)] [[友链](links/)] [[English](enposts/)]
+[[RSS](index.xml)] [[友链](links/)]
 
 - 2026-06-12 [Emacs再访](/posts/2026-06-12-emacs-revisit/)
 - 2026-05-24 [Minecraft服务器搭建](/posts/2026-05-24-mcserver/)
