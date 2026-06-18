@@ -187,10 +187,9 @@ def build_html(svg_names: list[str], title: str, srctext: str = "") -> str:
 </style>
 <main>
 <p id="srctext" class="visually-hidden">
-    {srctext[:500].replace('\n', '<br>').replace(' ', '&#32;')}
+    {srctext.replace('\n', '<br>').replace(' ', '&#32;')}
 </p>
 </main>
-{gen_cipherdiv(srctext[500:].replace('\n', '<br>').replace(' ', '&#32;'))}
 <div class="content">
 {pages_html}
 </div>
@@ -204,8 +203,6 @@ var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
 var decodedString = atob(base64String);
 emailElement.innerHTML = decodedString;
 </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DRZ9ESWCVM"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){{dataLayer.push(arguments);}}
