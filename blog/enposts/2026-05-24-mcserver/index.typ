@@ -24,7 +24,7 @@ The demand for memory and CPU of a Minecraft will surge after added many mods. N
 
 = Adding Mods to the Server
 
-It's easy to add mods to clients, the launcher will do the job for you. But things are a bit more complicated on server. To play with _Aeronautics_, I choosed NeoForge as mod API. Firstly, I downloaded the installer on #link("", "NeoForge's website"). After running the installer and installing the server, copy all jar files from `mods/` in client instance to `mods` directory of NeoForge server isntance
+It's easy to add mods to clients, the launcher will do the job for you. But things are a bit more complicated on server. To play with _Aeronautics_, I choosed NeoForge as mod API. Firstly, I downloaded the installer on #link("https://neoforged.net/", "NeoForge's website"). After running the installer and installing the server, copy all jar files from `mods/` in client instance to `mods` directory of NeoForge server isntance
 
 Before creating the server, it's recommended to test the modpack in single player mode. Once the server were cerated, it would be a huge hussle to upgrade: every player need to upgrade their client.
 
