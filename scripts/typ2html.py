@@ -188,7 +188,6 @@ def build_html(svg_names: list[str], title: str, srctext: str = "") -> str:
 <div class="ipadding">
 <pre class="back" style="display: flex; justify-content: space-between; align-items: center;">
     <a href="../">../</a>
-    <a href="{english_link}" style="text-align: right;" target="_blank">English</a>
 </pre>
 <script>
     if (window.location.hostname.endsWith('translate.goog')) {{
