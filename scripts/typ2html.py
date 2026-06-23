@@ -8,6 +8,7 @@ import shutil
 import json
 import tempfile
 from pathlib import Path
+import urllib.parse
 
 CSS_STYLES = """
 """
@@ -152,6 +153,17 @@ def gen_cipherdiv(plaintext):
     </script>
     '''
 
+def create_en_link(srctext):
+    base_url = "https://translate.google.com/"
+    params = {
+        "sl": "auto",
+        "tl": "en",
+        "text": srctext,
+        "op": "translate"
+    }
+    query_string = urllib.parse.urlencode(params)
+    return f"{base_url}?{query_string}"
+
 def build_html(svg_names: list[str], title: str, srctext: str = "") -> str:
     """Build HTML with object tags referencing SVG files"""
     # Wrap each SVG object in a page div
@@ -162,7 +174,7 @@ def build_html(svg_names: list[str], title: str, srctext: str = "") -> str:
 </div></div>''')
     
     pages_html = '\n'.join(page_divs)
-    
+    english_link = create_en_link(srctext)
     return f'''<!DOCTYPE html>
 <html>
 <head>
@@ -174,7 +186,17 @@ def build_html(svg_names: list[str], title: str, srctext: str = "") -> str:
 </head>
 <body>
 <div class="ipadding">
-<pre class="back"><a href="../">../</a></pre>
+<pre class="back" style="display: flex; justify-content: space-between; align-items: center;">
+    <a href="../">../</a>
+    <a href="{english_link}" style="text-align: right;" target="_blank">English</a>
+</pre>
+<script>
+    if (window.location.hostname.endsWith('translate.goog')) {{
+        var myRealDomain = "blog.mistivia.com"; 
+        var currentPath = window.location.pathname;
+        window.location.replace("https://" + myRealDomain + currentPath);
+    }}
+</script>
 </div>
 <style>
 .visually-hidden {{
