@@ -6,9 +6,8 @@ PRE_TARGET  = $(PRE_SRC:.pre=.html)
 
 TYP_SRC  = $(shell find . -name '*.typ' -not -path './template.typ' -not -path './template-en.typ')
 TYP_HTML_TARGET  = $(TYP_SRC:.typ=.html)
-TYP_GPG_TARGET  = $(TYP_SRC:.typ=.typ.gpg)
 
-all: rss $(PRE_TARGET) $(MD_TARGET) $(TYP_HTML_TARGET) $(TYP_GPG_TARGET)
+all: rss $(PRE_TARGET) $(MD_TARGET) $(TYP_HTML_TARGET)
 
 clean:
 	-rm $(TYP_HTML_TARGET) $(MD_TARGET)
@@ -27,14 +26,4 @@ $(PRE_TARGET): %.html: %.pre
 $(TYP_HTML_TARGET): %.html: %.typ template.typ scripts/typ2html.py
 	python scripts/typ2html.py $< $@
 
-$(TYP_GPG_TARGET): %.typ.gpg: %.typ
-	gpg --batch --yes --passphrase "blog.mistivia.com" --cipher-algo AES256 --symmetric -o $@ $<
-
-decrypt:
-	@for f in $$(find . -name "*.typ.gpg"); do \
-		output=$${f%.gpg}; \
-		echo "Decrypting $$f -> $$output"; \
-		gpg --batch --yes --passphrase "blog.mistivia.com" -d -o $$output $$f; \
-	done
-
-.PHONY: rss clean decrypt
+.PHONY: rss clean
