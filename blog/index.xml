@@ -8,6 +8,14 @@
     <generator>Python Plain String RSS Generator</generator>
 
     <item>
+      <title>计算多头注意力</title>
+      <link>https://blog.mistivia.com/posts/2026-07-05-attention/</link>
+      <description>Link to the post: https://blog.mistivia.com/posts/2026-07-05-attention/</description>
+      <guid>https://blog.mistivia.com/posts/2026-07-05-attention/</guid>
+      <pubDate>Sun, 05 Jul 2026 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
       <title>Emacs再访</title>
       <link>https://blog.mistivia.com/posts/2026-06-12-emacs-revisit/</link>
       <description>Link to the post: https://blog.mistivia.com/posts/2026-06-12-emacs-revisit/</description>
@@ -45,14 +53,6 @@
       <description>Link to the post: https://blog.mistivia.com/posts/2026-01-14-nwtravel/</description>
       <guid>https://blog.mistivia.com/posts/2026-01-14-nwtravel/</guid>
       <pubDate>Wed, 14 Jan 2026 00:00:00 GMT</pubDate>
-    </item>
-
-    <item>
-      <title>专治各种游戏联机疑难杂症</title>
-      <link>https://blog.mistivia.com/posts/2026-01-12-full-cone-nat/</link>
-      <description>Link to the post: https://blog.mistivia.com/posts/2026-01-12-full-cone-nat/</description>
-      <guid>https://blog.mistivia.com/posts/2026-01-12-full-cone-nat/</guid>
-      <pubDate>Mon, 12 Jan 2026 00:00:00 GMT</pubDate>
     </item>
 
   </channel>
