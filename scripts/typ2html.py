@@ -4,14 +4,8 @@ import sys
 import subprocess
 import os
 import glob
-import shutil
-import json
 import tempfile
 from pathlib import Path
-import urllib.parse
-
-CSS_STYLES = """
-"""
 
 def get_project_root() -> Path:
     """Get the project root directory (where this script is located/..)"""
@@ -77,93 +71,6 @@ def compile_typ_to_svgs(typ_path: Path, project_root: Path, output_dir: Path, ba
         
         return svg_names
 
-def fnv1a(s: str):
-    hash_val = 0x811c9dc5 # FNV offset basis
-    for char in s:
-        hash_val ^= ord(char)
-        hash_val = (hash_val * 0x01000193) & 0xFFFFFFFF
-    return str(hash_val)
-
-def hashxor(key, plaintext: str) -> str:
-    ciphertext = []
-    current_key = str(key)
-
-    for p_char in plaintext:
-        k_byte = ord(current_key[0])
-        p_byte = ord(p_char)
-        xor_char = chr(k_byte ^ p_byte)
-        ciphertext.append(xor_char)
-        
-        current_key = fnv1a(current_key)
-    return "".join(ciphertext)
-
-js = '''
-function fnv1a(str) {
-    let hash = 0x811c9dc5;
-    for (let i = 0; i < str.length; i++) {
-        hash ^= str.charCodeAt(i);
-        hash = Math.imul(hash, 0x01000193);
-    }
-    return (hash >>> 0).toString();
-}
-
-function hashxor(key, plaintext) {
-    let ciphertext = "";
-    let currentKey = key.toString();
-
-    for (let i = 0; i < plaintext.length; i++) {
-        let kByte = currentKey.charCodeAt(0);
-        let pByte = plaintext.charCodeAt(i);
-        let xorResult = kByte ^ pByte;
-        ciphertext += String.fromCharCode(xorResult);
-        currentKey = fnv1a(currentKey);
-    }
-    return ciphertext;
-}
-
-function getKey(cur, n, cont) {
-    if (n == 5) {
-        cont(cur);
-        return;
-    }
-    for (let i = 0; i < 2000000; i++) { 
-        cur = fnv1a(cur);
-    }
-    setTimeout(function() {getKey(cur, n+1, cont);}, 0);
-}
-
-function rendersrc(txt) {
-    document.getElementById('srctext').innerHTML =
-        document.getElementById('srctext').innerHTML + txt;
-}
-
-setTimeout(function() {
-    getKey('mistivia', 0, function(key) {
-        rendersrc(hashxor(key, ciphertext));
-    })
-}, 0)
-
-'''
-
-def gen_cipherdiv(plaintext):
-    return f'''
-    <script>
-        let ciphertext = {json.dumps(hashxor('1755283311', plaintext))};
-        {js}
-    </script>
-    '''
-
-def create_en_link(srctext):
-    base_url = "https://translate.google.com/"
-    params = {
-        "sl": "auto",
-        "tl": "en",
-        "text": srctext,
-        "op": "translate"
-    }
-    query_string = urllib.parse.urlencode(params)
-    return f"{base_url}?{query_string}"
-
 def build_html(svg_names: list[str], title: str, srctext: str = "") -> str:
     """Build HTML with object tags referencing SVG files"""
     # Wrap each SVG object in a page div
@@ -174,7 +81,6 @@ def build_html(svg_names: list[str], title: str, srctext: str = "") -> str:
 </div></div>''')
     
     pages_html = '\n'.join(page_divs)
-    english_link = create_en_link(srctext)
     return f'''<!DOCTYPE html>
 <html>
 <head>
