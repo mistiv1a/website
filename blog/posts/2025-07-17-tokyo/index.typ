@@ -1,4 +1,3 @@
-// 东京游记
 #import "/template.typ": doc-template
 #doc-template(
 title: "东京游记",

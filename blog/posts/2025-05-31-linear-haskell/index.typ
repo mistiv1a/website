@@ -1,4 +1,3 @@
-// 像Rust一样使用Haskell
 #import "/template.typ": doc-template
 
 #doc-template(

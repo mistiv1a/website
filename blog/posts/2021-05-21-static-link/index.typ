@@ -1,4 +1,3 @@
-// 静态链接Go和Rust
 #import "/template.typ":*
 
 #doc-template(

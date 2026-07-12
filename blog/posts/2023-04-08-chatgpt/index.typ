@@ -1,4 +1,3 @@
-// 安提基特拉岛的ChatGPT
 #import "/template.typ":*
 #doc-template(
 title: "安提基特拉岛的ChatGPT",

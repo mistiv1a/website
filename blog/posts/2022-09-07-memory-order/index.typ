@@ -1,4 +1,3 @@
-// 理解内存顺序
 #import "/template.typ":doc-template
 
 #doc-template(

@@ -1,4 +1,3 @@
-// udp2raw + Wiregurad组建虚拟专网
 #import "/template.typ":*
 #doc-template(
 title: "udp2raw + Wiregurad组建虚拟专网",

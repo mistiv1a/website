@@ -1,4 +1,3 @@
-// 如何制作出极小的超轻量Docker镜像
 #import "/template.typ":doc-template
 
 #doc-template(

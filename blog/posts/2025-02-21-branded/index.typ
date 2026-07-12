@@ -1,4 +1,3 @@
-// 游戏王「烙印」卡组攻略
 #import "/template.typ":doc-template
 
 #doc-template(

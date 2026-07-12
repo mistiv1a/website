@@ -1,4 +1,3 @@
-// 计算多头注意力
 #import "/template.typ": *
 
 #doc-template(

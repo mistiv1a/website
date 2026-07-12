@@ -1,4 +1,3 @@
-// 写一个虚拟机管理器
 #import "/template.typ": *
 
 #doc-template(

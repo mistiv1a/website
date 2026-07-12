@@ -1,4 +1,3 @@
-// qemu-kvm使用笔记
 #import "/template.typ":*
 #doc-template(
 title: "qemu-kvm使用笔记",

@@ -1,4 +1,3 @@
-// 社交网络的戒断反应
 #import "/template.typ": *
 
 #doc-template(

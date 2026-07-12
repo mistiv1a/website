@@ -1,4 +1,3 @@
-// 钩子注入
 #import "/template.typ":doc-template
 
 #doc-template(

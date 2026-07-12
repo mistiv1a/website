@@ -1,4 +1,3 @@
-// 毕业记
 #import "/template.typ":doc-template
 
 #doc-template(

@@ -1,4 +1,3 @@
-// C99的指定初始化 
 #import "/template.typ": *
 
 #doc-template(

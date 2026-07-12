@@ -1,4 +1,3 @@
-// 在C语言中模拟RAII
 #import "/template.typ":*
 
 #doc-template(

@@ -1,4 +1,3 @@
-// 杭州游记
 #import "/template.typ": *
 
 #doc-template(

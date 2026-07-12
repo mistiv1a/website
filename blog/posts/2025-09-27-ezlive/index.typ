@@ -1,4 +1,3 @@
-// EZLive: 无需服务器，轻松搭建私人直播间
 #import "/template.typ": doc-template
 
 #doc-template(

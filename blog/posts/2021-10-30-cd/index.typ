@@ -1,4 +1,3 @@
-// CD与黑胶的音质
 #import "/template.typ":*
 
 #doc-template(

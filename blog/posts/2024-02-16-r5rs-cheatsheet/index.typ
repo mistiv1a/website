@@ -1,4 +1,3 @@
-// R5RS速查表
 #import "/template.typ":doc-template
 
 #doc-template(

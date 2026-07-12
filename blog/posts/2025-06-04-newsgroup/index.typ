@@ -1,4 +1,3 @@
-// 如何使用新闻组
 #import "/template.typ":*
 
 #doc-template(

@@ -1,4 +1,3 @@
-// 开发弹幕朗读器
 #import "/template.typ":*
 
 #doc-template(

@@ -1,4 +1,3 @@
-// 让Linux失去色彩
 #import "/template.typ":*
 #doc-template(
 title: "让Linux失去色彩",

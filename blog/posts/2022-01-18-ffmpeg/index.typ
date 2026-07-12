@@ -1,4 +1,3 @@
-// 一些FFMpeg小窍门
 #import "/template.typ":*
 
 #doc-template(

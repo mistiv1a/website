@@ -1,4 +1,3 @@
-// getsockopt的隐藏功能
 #import "/template.typ":doc-template
 
 #doc-template(

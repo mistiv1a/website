@@ -1,4 +1,3 @@
-// 笨方法写Quine
 #import "/template.typ":*
 
 #doc-template(

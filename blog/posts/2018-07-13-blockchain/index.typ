@@ -1,4 +1,3 @@
-// 为什么我觉得区块链不是未来
 #import "/template.typ":doc-template
 
 #doc-template(

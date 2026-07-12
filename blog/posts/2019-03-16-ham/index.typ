@@ -1,4 +1,3 @@
-// 业余无线电台操作技术能力验证学习笔记
 #import "/template.typ":*
 #doc-template(
 title: "业余无线电台操作技术能力验证学习笔记",

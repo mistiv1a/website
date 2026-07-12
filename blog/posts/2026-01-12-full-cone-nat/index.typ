@@ -1,4 +1,3 @@
-// 专治各种游戏联机疑难杂症
 #import "/template.typ": doc-template
 
 #doc-template(

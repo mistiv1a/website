@@ -1,4 +1,3 @@
-// 一些编写Makefile的常用套路
 #import "/template.typ":*
 #doc-template(
 title: "一些编写Makefile的常用套路",

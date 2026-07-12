@@ -1,4 +1,3 @@
-// 冠状病毒
 #import "/template.typ":doc-template
 
 #doc-template(

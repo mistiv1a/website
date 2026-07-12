@@ -1,4 +1,3 @@
-// 用C++模拟Mesa Monitor
 #import "/template.typ":*
 #doc-template(
 title: "用C++模拟Mesa Monitor",

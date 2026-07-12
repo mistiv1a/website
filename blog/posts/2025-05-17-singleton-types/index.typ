@@ -1,4 +1,3 @@
-// 类型级编程：一个最平凡的例子
 #import "/template.typ": doc-template
 
 #doc-template(

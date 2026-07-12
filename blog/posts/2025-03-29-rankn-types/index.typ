@@ -1,4 +1,3 @@
-// Rank-N类型的简单例子
 #import "/template.typ": *
 
 #doc-template(

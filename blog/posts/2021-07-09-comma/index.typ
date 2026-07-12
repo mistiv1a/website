@@ -1,4 +1,3 @@
-// 中文中的牛津逗号
 #import "/template.typ":*
 
 #doc-template(

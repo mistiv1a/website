@@ -1,4 +1,3 @@
-// 农历的编算
 #import "/template.typ":*
 
 #doc-template(

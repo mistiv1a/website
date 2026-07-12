@@ -1,4 +1,3 @@
-// 现代经济中的货币扩张
 #import "/template.typ":*
 #doc-template(
 title: "现代经济中的货币扩张",

@@ -1,4 +1,3 @@
-// 来传纸条吧
 #import "/template.typ":doc-template
 
 #doc-template(

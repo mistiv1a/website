@@ -1,4 +1,3 @@
-// Minecraft服务器搭建
 #import "/template.typ": *
 
 #doc-template(

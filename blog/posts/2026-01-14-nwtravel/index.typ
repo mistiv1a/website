@@ -1,4 +1,3 @@
-// 西北之行
 #import "/template.typ": *
 
 #doc-template(

@@ -1,4 +1,3 @@
-// 一些C/C++优化工具
 #import "/template.typ":*
 
 #doc-template(

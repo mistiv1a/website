@@ -1,4 +1,3 @@
-// 没有公网IP也可以当BT赛博菩萨
 #import "/template.typ":*
 #doc-template(
 title: "没有公网IP也可以当BT赛博菩萨",

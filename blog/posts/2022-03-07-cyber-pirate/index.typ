@@ -1,4 +1,3 @@
-// 赛博海盗航行指南
 #import "/template.typ":doc-template
 
 #doc-template(

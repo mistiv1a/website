@@ -1,4 +1,3 @@
-// 给欧拉-拉格朗日方程加上类型注释
 #import "/template.typ": *
 
 #doc-template(

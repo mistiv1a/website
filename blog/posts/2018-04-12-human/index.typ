@@ -1,4 +1,3 @@
-// 只是一个食物采集者
 #import "/template.typ":doc-template
 
 #doc-template(

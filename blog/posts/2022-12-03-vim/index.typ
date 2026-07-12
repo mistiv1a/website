@@ -1,4 +1,3 @@
-// 用Vim制作文本处理工具
 #import "/template.typ":doc-template
 
 #doc-template(

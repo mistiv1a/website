@@ -1,4 +1,3 @@
-// 邪道Scheme
 #import "/template.typ":doc-template
 
 #doc-template(

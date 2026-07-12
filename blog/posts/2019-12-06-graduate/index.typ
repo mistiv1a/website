@@ -1,4 +1,3 @@
-// 苦痛之路
 #import "/template.typ":doc-template
 
 #doc-template(

@@ -1,4 +1,3 @@
-// 基于Debian 12的IPv4/IPv6双栈软路由
 #import "/template.typ":*
 #doc-template(
 title: "基于Debian 12的IPv4/IPv6双栈软路由",

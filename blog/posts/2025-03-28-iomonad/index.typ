@@ -1,4 +1,3 @@
-// 从Hello World到IO Monad
 #import "/template.typ":doc-template
 
 #doc-template(

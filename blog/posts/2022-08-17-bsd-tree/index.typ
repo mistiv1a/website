@@ -1,4 +1,3 @@
-// 生活在BSD的树上
 #import "/template.typ":doc-template
 
 #doc-template(

@@ -1,4 +1,3 @@
-// 成功上手Racket
 #import "/template.typ":*
 #doc-template(
 title: "成功上手Racket",

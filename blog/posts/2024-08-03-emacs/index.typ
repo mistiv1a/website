@@ -1,4 +1,3 @@
-// Emacs手札
 #import "/template.typ":*
 #doc-template(
 title: "Emacs手札",

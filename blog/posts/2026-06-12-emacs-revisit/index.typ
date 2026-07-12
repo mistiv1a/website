@@ -1,4 +1,3 @@
-// Emacs再访
 #import "/template.typ": *
 
 #doc-template(
