@@ -13,16 +13,19 @@ def get_project_root() -> Path:
     return script_path.parent.parent
 
 def extract_title(src_path: Path) -> str:
-    """Extract title from the first line of source file"""
+    """Extract title from the title: field in doc-template"""
     if not src_path.exists():
         return src_path.stem
     text = src_path.read_text(encoding="utf-8")
-    first_line = text.splitlines()[0] if text.splitlines() else ""
-    line = first_line.strip()
-    if line.startswith("//"):
-        return line[2:].strip() or src_path.stem
-    if line.startswith("%"):
-        return line.lstrip("%").strip() or src_path.stem
+    # Try to find title: "..." in the file
+    import re
+    m = re.search(r'\btitle:\s*"([^"]*)"', text)
+    if m:
+        title = m.group(1)
+        # Strip spaces and remove newlines
+        title = title.strip().replace('\\n', '').replace('\n', '')
+        if title:
+            return title
     return src_path.stem
 
 def compile_typ_to_svgs(typ_path: Path, project_root: Path, output_dir: Path, base_name: str) -> list[str]:
