@@ -26,9 +26,7 @@ body: [
 
 注意，目录名的格式是20xx-0x-0x，但是文件里面日期是"20xx年x月x日"，没有“0”。
 
-第5步：`touch blog/posts/yyyy-mm-dd-缩写/index.typ.gpg`
-
-第6步：修改`blog/index.md`，在合适的位置（按日期降序）插入：
+第5步：修改`blog/index.md`，在合适的位置（按日期降序）插入：
 
 ```
 - 20xx-mm-dd [标题](/posts/20xx-mm-dd-缩写/)
