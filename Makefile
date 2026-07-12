@@ -27,3 +27,7 @@ $(TYP_HTML_TARGET): %.html: %.typ template.typ scripts/typ2html.py
 	python scripts/typ2html.py $< $@
 
 .PHONY: rss clean
+
+BLOG_POST_SRC = $(shell find blog/posts -name 'index.typ')
+blog/index.md: $(BLOG_POST_SRC) blog/generate-index.py
+	python3 blog/generate-index.py
