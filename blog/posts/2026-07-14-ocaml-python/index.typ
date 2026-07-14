@@ -8,11 +8,11 @@ body: [
 
 要想代码有 OCaml 风味，以下要素必不可少：
 
-- ADT (product type 正常编程语言都有，主要是 sum type)
-- Pattern Matching
+- 代数数据类型（product type正常编程语言都有，主要是sum type）
+- 模式匹配
 - 基于 Functor 的多态
 
-这是一段从 _Real World Ocaml_ 中摘下来的代码，上面几个要素都有所体现：
+这是一段从 _Real World OCaml_ 中摘下来的代码，上面几个要素都有所体现：
 
 ```ocaml
 module type Comparable = sig
@@ -45,7 +45,7 @@ let i1 = Int_interval.create 3 8;;
 let c = Int_interval.contains i1 5;;
 ```
 
-现代 Python 几经迭代，现在该有的特性也都有了，于是写出 OCaml 感也就成为可能。不过也就能接近九十年代古典 OCaml 的效果，GADTs 和 algebraic effects 什么的还是别想了。
+现代 Python 几经迭代，现在该有的特性也都有了，于是也就有可能写出 OCaml 感。不过也就能接近九十年代古典 OCaml 的效果，GADTs 和 algebraic effects 什么的还是别想了。
 
 下面是上述 OCaml 代码的 Python 对应：
 
@@ -116,6 +116,6 @@ c = Int_interval.contains(i1, 5)
 )
 ]
 
-目前还不知道这种风格大规模写起来是什么效果，有没有什么隐藏的陷阱，不过就目前这个小例子看起来很有趣。
+目前还不知道这种风格大规模写起来是什么效果，有没有什么隐藏的陷阱。不过就目前这个小例子看起来很有趣。
 
 ])
