@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Writing Python with an OCaml Flavor</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style5.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Type: Blog Article, Author: Mistivia, Title: Writing Python with an OCaml Flavor">
+</head>
+<body>
+<div class="ipadding">
+<pre class="back" style="display: flex; justify-content: space-between; align-items: center;">
+    <a href="../">../</a>
+</pre>
+<script>
+    if (window.location.hostname.endsWith('translate.goog')) {
+        var myRealDomain = "blog.mistivia.com"; 
+        var currentPath = window.location.pathname;
+        window.location.replace("https://" + myRealDomain + currentPath);
+    }
+</script>
+</div>
+<style>
+.visually-hidden {
+    position: absolute;
+    left: -999px;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+}
+</style>
+<main>
+<p id="srctext" class="visually-hidden">
+    #import&#32;&quot;/template.typ&quot;:&#32;*<br><br>#doc-template(<br>title:&#32;&quot;Writing&#32;Python&#32;with&#32;an&#32;OCaml&#32;Flavor&quot;,<br>date:&#32;&quot;July&#32;14,&#32;2026&quot;,<br>body:&#32;[<br><br><br>To&#32;make&#32;code&#32;feel&#32;like&#32;OCaml,&#32;a&#32;few&#32;ingredients&#32;are&#32;essential:<br><br>-&#32;Algebraic&#32;data&#32;types&#32;(most&#32;languages&#32;already&#32;have&#32;product&#32;types;&#32;the&#32;interesting&#32;part&#32;is&#32;sum&#32;types)<br>-&#32;Pattern&#32;matching<br>-&#32;Functor-based&#32;polymorphism<br><br>Here&#x27;s&#32;a&#32;snippet&#32;extracted&#32;from&#32;_Real&#32;World&#32;OCaml_&#32;that&#32;demonstrates&#32;all&#32;three:<br><br>```ocaml<br>module&#32;type&#32;Comparable&#32;=&#32;sig<br>&#32;&#32;type&#32;t<br>&#32;&#32;val&#32;compare&#32;:&#32;t&#32;-&gt;&#32;t&#32;-&gt;&#32;int<br>end;;<br><br>module&#32;Make_interval(Endpoint&#32;:&#32;Comparable)&#32;=&#32;struct<br>&#32;&#32;type&#32;t&#32;=&#32;|&#32;Interval&#32;of&#32;Endpoint.t&#32;*&#32;Endpoint.t<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;|&#32;Empty<br>&#32;&#32;let&#32;create&#32;low&#32;high&#32;=<br>&#32;&#32;&#32;&#32;if&#32;Endpoint.compare&#32;low&#32;high&#32;&gt;&#32;0&#32;then&#32;Empty<br>&#32;&#32;&#32;&#32;else&#32;Interval&#32;(low,high)<br>&#32;&#32;let&#32;contains&#32;t&#32;x&#32;=<br>&#32;&#32;&#32;&#32;match&#32;t&#32;with<br>&#32;&#32;&#32;&#32;|&#32;Empty&#32;-&gt;&#32;false<br>&#32;&#32;&#32;&#32;|&#32;Interval&#32;(l,h)&#32;-&gt;<br>&#32;&#32;&#32;&#32;&#32;&#32;Endpoint.compare&#32;x&#32;l&#32;&gt;=&#32;0&#32;&amp;&amp;&#32;Endpoint.compare&#32;x&#32;h&#32;&lt;=&#32;0<br>end;;<br><br>module&#32;Int_comparable&#32;=&#32;struct<br>&#32;&#32;&#32;&#32;type&#32;t&#32;=&#32;int<br>&#32;&#32;&#32;&#32;let&#32;compare&#32;=&#32;Int.compare<br>end<br><br>module&#32;Int_interval&#32;=<br>&#32;&#32;Make_interval(Int_comparable);;<br><br>let&#32;i1&#32;=&#32;Int_interval.create&#32;3&#32;8;;<br>let&#32;c&#32;=&#32;Int_interval.contains&#32;i1&#32;5;;<br>```<br><br>After&#32;several&#32;rounds&#32;of&#32;upgarde,&#32;modern&#32;Python&#32;now&#32;has&#32;all&#32;the&#32;features&#32;it&#32;needs&#32;to&#32;simulate&#32;these&#32;OCaml&#32;features&#32;—&#32;at&#32;least&#32;at&#32;some&#32;level.&#32;You&#32;can&#32;get&#32;close&#32;to&#32;the&#32;feel&#32;of&#32;classical,&#32;1990s-era&#32;OCaml,&#32;but&#32;don&#x27;t&#32;expect&#32;to&#32;reach&#32;for&#32;GADTs&#32;or&#32;algebraic&#32;effects&#32;any&#32;time&#32;soon.<br><br>Here&#x27;s&#32;the&#32;Python&#32;equivalent&#32;of&#32;the&#32;OCaml&#32;code&#32;above:<br><br>```python<br>from&#32;typing&#32;import&#32;Callable<br>from&#32;dataclasses&#32;import&#32;dataclass<br><br>@dataclass<br>class&#32;Comparable[T]:<br>&#32;&#32;&#32;&#32;compare:&#32;Callable[[T,&#32;T],&#32;int]<br><br>@dataclass<br>class&#32;Empty:<br>&#32;&#32;&#32;&#32;pass<br><br>@dataclass<br>class&#32;Interval[T]:<br>&#32;&#32;&#32;&#32;low:&#32;T<br>&#32;&#32;&#32;&#32;high:&#32;T<br><br>type&#32;IntervalType[T]&#32;=&#32;Interval[T]&#32;|&#32;Empty<br><br>@dataclass<br>class&#32;IntervalModule[T]:<br>&#32;&#32;&#32;&#32;create:&#32;Callable[[T,&#32;T],&#32;IntervalType[T]]<br>&#32;&#32;&#32;&#32;contains:&#32;Callable[[IntervalType[T],&#32;T],&#32;bool]<br><br>def&#32;Make_interval[T](Endpoint:&#32;Comparable[T])&#32;-&gt;&#32;IntervalModule[T]:<br>&#32;&#32;&#32;&#32;def&#32;create(low:&#32;T,&#32;high:&#32;T)&#32;-&gt;&#32;IntervalType[T]:<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;if&#32;Endpoint.compare(low,&#32;high)&#32;&gt;&#32;0:<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;return&#32;Empty()<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;return&#32;Interval(low,&#32;high)<br>&#32;&#32;&#32;&#32;def&#32;contains(t:&#32;IntervalType[T],&#32;x:&#32;T)&#32;-&gt;&#32;bool:<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;match&#32;t:<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;case&#32;Empty():<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;return&#32;False<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;case&#32;Interval(l,&#32;h):<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;return&#32;Endpoint.compare(x,&#32;l)&#32;&gt;=&#32;0&#32;and&#32;Endpoint.compare(x,&#32;h)&#32;&lt;=&#32;0<br>&#32;&#32;&#32;&#32;return&#32;IntervalModule(create=create,&#32;contains=contains)<br><br>def&#32;int_compare(a:&#32;int,&#32;b:&#32;int)&#32;-&gt;&#32;int:<br>&#32;&#32;&#32;&#32;return&#32;(a&#32;&gt;&#32;b)&#32;-&#32;(a&#32;&lt;&#32;b)<br><br>Int_comparable&#32;=&#32;Comparable(int_compare)<br><br>Int_interval&#32;=&#32;Make_interval(Int_comparable)<br><br>i1&#32;=&#32;Int_interval.create(3,&#32;8)<br>c&#32;=&#32;Int_interval.contains(i1,&#32;5)<br>```<br><br>To&#32;sum&#32;up:<br><br>#box(width:80%)[<br>#figure(<br>&#32;&#32;align(left)[<br>&#32;&#32;&#32;&#32;#table(<br>&#32;&#32;&#32;&#32;&#32;&#32;columns:&#32;2,<br>&#32;&#32;&#32;&#32;&#32;&#32;stroke:&#32;0.5pt&#32;+&#32;luma(200),<br>&#32;&#32;&#32;&#32;&#32;&#32;fill:&#32;(col,&#32;row)&#32;=&gt;&#32;if&#32;row&#32;==&#32;0&#32;{&#32;luma(240)&#32;}&#32;else&#32;{&#32;none&#32;},<br><br>&#32;&#32;&#32;&#32;&#32;&#32;[*OCaml&#32;Ingredient*],&#32;[*Python&#32;Implementation*],<br>&#32;&#32;&#32;&#32;&#32;&#32;[*ADT*],&#32;[Type&#32;annotations],<br>&#32;&#32;&#32;&#32;&#32;&#32;[*Pattern&#32;Matching*],&#32;[Built-in&#32;syntax&#32;(`match-case`)&#32;+&#32;`dataclass`],<br>&#32;&#32;&#32;&#32;&#32;&#32;[*Functor*],&#32;[Generic&#32;`dataclass`&#32;+&#32;generic&#32;higher-order&#32;functions],<br>&#32;&#32;&#32;&#32;)<br>&#32;&#32;]<br>)<br>]<br><br>I&#32;don&#x27;t&#32;yet&#32;know&#32;how&#32;well&#32;this&#32;style&#32;holds&#32;up&#32;at&#32;scale,&#32;or&#32;what&#32;hidden&#32;pitfalls&#32;it&#32;might&#32;have.&#32;But&#32;for&#32;this&#32;small&#32;example,&#32;it&#x27;s&#32;an&#32;interesting&#32;experiment.<br><br>])<br>
+</p>
+</main>
+<div class="content">
+<div class="ipadding"><div class="page">
+<object data="index-01.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
+</div></div>
+<div class="ipadding"><div class="page">
+<object data="index-02.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
+</div></div>
+<div class="ipadding"><div class="page">
+<object data="index-03.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
+</div></div>
+</div>
+<div class="ipadding">
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+</div>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DRZ9ESWCVM');
+</script>
+</body>
+</html>
