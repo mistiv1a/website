@@ -3,6 +3,7 @@
 #doc-template(
 title: "Writing Python with an OCaml Flavor",
 date: "July 14, 2026",
+parindent: 1.2em,
 body: [
 
 

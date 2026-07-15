@@ -1,7 +1,8 @@
 #let doc-template(
     title: "TITLE",
     date: "1970-01-01",
-    body: ""
+    body: "",
+    parindent: 2em
 ) = [
     #show link: it => underline(
         offset: 2pt,
@@ -10,7 +11,7 @@
         it
     )
     #show raw.where(block: true): block.with(
-        inset: (left: 24pt, top: 0em, bottom: 0em),
+        inset: (left: parindent + 8pt, top: 0em, bottom: 0em),
         width: 100%
     )
     #show raw: set text(font: (
@@ -46,14 +47,14 @@
     #show heading: set text(font: "Source Han Serif", weight: "semibold")
     #align(center, [#par(first-line-indent: 0em)[#date] #v(0.5em)])
     #set par(
-        first-line-indent: 2em,
+        first-line-indent: parindent,
         justify: true,
         leading: 0.8em,
         spacing: 0.8em,
     )
-    #set list(indent: 23pt)
-    #set enum(indent: 23pt)
-    #set terms(indent: 23pt)
+    #set list(indent: parindent)
+    #set enum(indent: parindent)
+    #set terms(indent: parindent)
     #show heading: it =>  {
         par(leading:0pt,spacing:0pt)[#text(size:0pt)[]]
         it

@@ -3,6 +3,7 @@
 #doc-template(
 title: "Computing Multi-Head Attention",
 date: "July 5, 2026",
+parindent: 1.2em,
 body: [
 
 Multi-Head Attention is the cornerstone of transformer-based large language models. Yet its computation is hard to picture intuitively because the matrices get mixed up in a confusing way. So I wrote this post to work through it and summarize.
