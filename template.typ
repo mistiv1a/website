@@ -11,7 +11,7 @@
         it
     )
     #show raw.where(block: true): block.with(
-        inset: (left: parindent + 8pt, top: 0em, bottom: 0em),
+        inset: (left: parindent + 9pt, top: 0em, bottom: 0em),
         width: 100%
     )
     #show raw: set text(font: (
