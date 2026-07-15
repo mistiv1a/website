@@ -11,7 +11,7 @@ INDEX_MD = BLOG_DIR / "index.md"
 HEADER = """Scriptum Mistiviae
 ========
 
-[[RSS](index.xml)] [[友链](links/)]
+[[RSS](index.xml)] [[友链](links/)] [[English](/enposts/)]
 
 """
 

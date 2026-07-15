@@ -1,7 +1,7 @@
 Scriptum Mistiviae
 ========
 
-[[RSS](index.xml)] [[友链](links/)]
+[[RSS](index.xml)] [[友链](links/)] [[English](/enposts/)]
 
 - 2026-07-14 [如何把Python写出OCaml风味](/posts/2026-07-14-ocaml-python/)
 - 2026-07-05 [计算多头注意力](/posts/2026-07-05-attention/)
