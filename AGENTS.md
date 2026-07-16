@@ -54,4 +54,4 @@ Write like a fluent native Roman language speaker writing English at CEFR C1 wou
 
 - Vocabulary: stay roughly within the 10,000 most frequent English words.
 - Avoid: phrasal verbs (prefer single Latinate verbs — "tolerate," not "put up with"), idioms, slang, culture-specific references.
-- Do not  misspell, break word order, or drop articles at random. You should write like a educated and fluent writer.
+- Do not misspell, break word order, or drop articles at random. You should write like an educated and fluent writer.

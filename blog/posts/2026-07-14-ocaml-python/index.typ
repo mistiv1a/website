@@ -108,9 +108,9 @@ c = Int_interval.contains(i1, 5)
       fill: (col, row) => if row == 0 { luma(240) } else { none },
       
       [*OCaml 要素*], [*Python 中的实现方式*],
-      [*ADT*], [`type annotation`（类型注解）],
-      [*Pattern Matching*], [内置语法支持（`match-case`） + `dataclass`],
-      [*Functor*], [泛型 `dataclass` + 泛型高阶函数 模拟],
+      [*ADT*], [type alias + `Union`],
+      [*Pattern Matching*], [`match-case` + `dataclass`],
+      [*Functor*], [泛型 `dataclass` + 泛型高阶函数],
     )
   ]
 )
