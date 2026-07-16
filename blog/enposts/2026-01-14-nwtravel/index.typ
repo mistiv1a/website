@@ -12,7 +12,7 @@ At the beginning of December I travelled to the northwestern provinces, mainly t
 
 As for transport, my power bank is rather old and carries no 3C certification, and I did not want my film to pass through an X-ray machine, so once again I chose the high-speed railway. The train journey lasted eight hours in total. It crossed the Yangtze and the Yellow River, traversed the Central Plains, and passed through Hangu Pass into the Guanzhong basin — one may call it a classic route of "entering the pass". I arrived at Xi'an North station after dark.
 
-At first I assumed Xi'an would be quite cold, but I had not visited the north China for so long that I had forgotten how tolerable its dry cold actually is; my down jacket was almost entirely unnecessary. The guesthouse I had reserved was at a place called "Nanshaomen", reasonably close to several of the nearby attractions. After meeting Silicon Cat at the metro station, we had ice-boiled mutton hotpot nearby. So ended a full day of travel.
+At first I assumed Xi'an would be quite cold, but I had not visited the north China for so long that I had forgotten how tolerable its dry cold actually is; my down jacket was almost entirely unnecessary. The guesthouse I had reserved was at a place called "Nanshaomen", reasonably close to several of the nearby attractions. After meeting SiliconNeko at the metro station, we had ice-boiled mutton hotpot nearby. So ended a full day of travel.
 
 = Day 1
 
@@ -34,7 +34,7 @@ After descending from the wall, two metro stops brought me to the Drum Tower and
 
 #image("004.jpg", width: 65%)
 
-After dinner we wandered through the streets near the Bell Tower. Silicon Cat noticed an escape room with a horror theme and proposed that we try it. I was, predictably, so frightened that I was still trembling long after we emerged. Since I do not enjoy such experiences, I would rather not recall it. In fairness, though, their execution was genuinely impressive, and I can understand why so many people love this sort of entertainment.
+After dinner we wandered through the streets near the Bell Tower. SiliconNeko noticed an escape room with a horror theme and proposed that we try it. I was, predictably, so frightened that I was still trembling long after we emerged. Since I do not enjoy such experiences, I would rather not recall it. In fairness, though, their execution was genuinely impressive, and I can understand why so many people love this sort of entertainment.
 
 Such was the first day.
 
@@ -84,11 +84,11 @@ Upon entering Ci'en Temple I noticed loudspeakers everywhere, endlessly repeatin
 
 #image("013.jpg", width: 65%)
 
-The road at the gate of Ci'en Temple is the "Great Tang All Day Mall". By daylight it is an ordinary commercial pedestrian street; the buildings on either side have some character, though their texture is a little plastic. After eating something at a KFC, the light began to fade, and Silicon Cat and I watched a flying dome-screen film at the roadside; the effects were beautiful and in no way inferior to Disney's. By the time we emerged it was completely dark, and the lights of the surrounding pseudo-ancient buildings had all been illuminated, which looked magnificent. Apparently only their nocturnal appearance had been considered, and not their appearance by day. Xiaohongshu had claimed that various performances take place here in the evening, but perhaps because it was the low season, several passes along the street revealed none; only a few influencers' livestream stages looked lively. So we took a taxi home from the other exit of the pedestrian street.
+The road at the gate of Ci'en Temple is the "Great Tang All Day Mall". By daylight it is an ordinary commercial pedestrian street; the buildings on either side have some character, though their texture is a little plastic. After eating something at a KFC, the light began to fade, and SiliconNeko and I watched a flying dome-screen film at the roadside; the effects were beautiful and in no way inferior to Disney's. By the time we emerged it was completely dark, and the lights of the surrounding pseudo-ancient buildings had all been illuminated, which looked magnificent. Apparently only their nocturnal appearance had been considered, and not their appearance by day. Xiaohongshu had claimed that various performances take place here in the evening, but perhaps because it was the low season, several passes along the street revealed none; only a few influencers' livestream stages looked lively. So we took a taxi home from the other exit of the pedestrian street.
 
 = Day 4
 
-Silicon Cat had other arrangements that day and departed for a time, so today I wandered alone. I chose a rather desolate site: the ruins of Daming Palace.
+SiliconNeko had other arrangements that day and departed for a time, so today I wandered alone. I chose a rather desolate site: the ruins of Daming Palace.
 
 #image("014.jpg", width: 65%)
 
@@ -110,7 +110,7 @@ The site has nothing particularly attractive about it. The core of Daming Palace
 
 = Day 6
 
-The fifth day held no arrangements: I merely travelled from Xi'an to Linfen and settled there, so I omit it. Today's excursion was the main event. I had planned to spend it with Silicon Cat, but owing to circumstances beyond our control Silicon Cat departed early, so once again I travelled alone.
+The fifth day held no arrangements: I merely travelled from Xi'an to Linfen and settled there, so I omit it. Today's excursion was the main event. I had planned to spend it with SiliconNeko, but owing to circumstances beyond our control SiliconNeko departed early, so once again I travelled alone.
 
 The first stop was Guangsheng Temple in Hongtong County. Its glazed-tile pagoda is a famous sight, and the CCTV television series #emph[Journey to the West] was filmed here. Compared with the plain and austere pagodas of Xi'an, the glazed pagoda of Guangsheng Temple is extraordinarily ornate. Unfortunately I had wasted too much colour film in Xi'an, and only black-and-white film remained by the time I arrived.
 
