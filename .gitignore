@@ -1,4 +1,5 @@
 blog/pdfjs/
+AGENTS.html
 *.pdf
 .bashrc
 .inputrc
