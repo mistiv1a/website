@@ -109,8 +109,8 @@ To summarize:
       fill: (col, row) => if row == 0 { luma(240) } else { none },
 
       [*OCaml Ingredient*], [*Python Implementation*],
-      [*ADT*], [Type annotations],
-      [*Pattern Matching*], [Built-in `match-case` syntax],
+      [*ADT*], [type alias + `Union`],
+      [*Pattern Matching*], [`match-case` + `@dataclass`],
       [*Functor*], [Generic `dataclass` + generic higher-order functions],
     )
   ]
