@@ -9,11 +9,11 @@ body: [
 
 A few elements are essential if you want your code to resemble OCaml:
 
-- Algebraic data types (most languages already have product types; the interesting aspect is sum types)
+- Algebraic data types (most languages already have product types; the interesting part is sum types)
 - Pattern matching
 - Functor-based polymorphism
 
-Here is a fragment taken from _Real World OCaml_ that demonstrates all three:
+Here is a code snippet taken from _Real World OCaml_ that demonstrates all three:
 
 ```ocaml
 module type Comparable = sig
@@ -46,7 +46,7 @@ let i1 = Int_interval.create 3 8;;
 let c = Int_interval.contains i1 5;;
 ```
 
-After several rounds of improvements, modern Python finally has everything it needs to imitate all three — to a certain degree. You can approximate the feeling of classical, 1990s-era OCaml, but do not expect advanced features such as GADTs or algebraic effects.
+After several rounds of improvements, Python today finally has everything it needs to imitate all three — to a certain degree. Although you can approximate the feeling of classical, 1990s-era OCaml, do not expect advanced modern features such as GADTs or algebraic effects.
 
 Here is the Python equivalent of the OCaml code above:
 
