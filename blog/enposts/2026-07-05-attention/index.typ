@@ -6,15 +6,15 @@ date: "July 5, 2026",
 parindent: 1.2em,
 body: [
 
-Multi-Head Attention is the cornerstone of transformer-based large language models. Yet its computation is hard to picture intuitively because the matrices get mixed up in a confusing way. So I wrote this post to work through it and summarize.
+Multi-Head Attention is the cornerstone of transformer-based large language models. Yet its computation is hard to picture intuitively, because the matrices get shuffled around in a confusing way. So I wrote this post to work through it.
 
-Abstract letters like $a, b, c$ add to the mental overhead, so whenever a matrix dimension comes up here, I'll use a unique prime number for it instead — that makes the examples more concrete and easier to follow. Since each prime number is unique, you don't have to think of it as a literal number; you can just treat it as a distinct label.
+Abstract letters like $a, b, c$ only add to the mental overhead, so whenever a matrix dimension comes up here, I'll give a unique prime number instead — concrete numbers are easier to follow. Since all dimensional numbers are unique, you don't have to read them as literal sizes; you can just treat each one as a distinct label.
 
 = A Linear Algebra Refresher
 
 When we say an $a times b$ matrix, we mean a matrix with $a$ rows and $b$ columns. You can think of this matrix as made up of $a$ row vectors, or equivalently $b$ column vectors.
 
-Multiplying an $a times b$ matrix $A$ by a $b times c$ matrix $B$ gives an $a times c$ matrix $R$. $R_(x y)$ at row $x$, column $y$ of $R$ is the inner product of the $x$-th row vector of $A$ and the $y$-th column vector of $B$.
+Multiplying an $a times b$ matrix $A$ by a $b times c$ matrix $B$ gives an $a times c$ matrix $R$. The element $R_(x y)$, at row $x$ and column $y$, is the inner product of the $x$-th row vector of $A$ and the $y$-th column vector of $B$.
 
 = From Input to Output
 
@@ -31,7 +31,7 @@ Suppose for each token, $Q$ and $K$ are both 7-dimensional vectors; then for 3 t
 $ Q &= X W_Q \
   K &= X W_K $
 
-Transposing $K$ and multiplying it by $Q$, $Q K^T$ is a $3 times 7$ matrix times a $7 times 3$ matrix, giving a $3 times 3$ matrix.
+If we transpose $K$ and multiply $Q$ by it, then $Q K^T$ is a $3 times 7$ matrix times a $7 times 3$ matrix, which gives a $3 times 3$ matrix.
 
 We scale this matrix by dividing every entry by $sqrt(7)$, then apply a causal mask, turning the upper triangle into negative infinity. To see what a causal mask does, here's an example: suppose we have a $3 times 3$ matrix:
 
@@ -61,7 +61,7 @@ $H$ is also a $3 times 11$ matrix.
 
 = Multi-Head Attention
 
-Suppose we have 2 heads. That means the $Q, K, V$ above actually each come in 2 copies, and so do $W_Q, W_K, W_V$. That is:
+Suppose we have 2 heads. That means the $Q, K, V$ above each come in two versions, and so do $W_Q, W_K, W_V$. That is:
 
 $ Q_1 &= X W_(Q 1) \
   K_1 &= X W_(K 1) \
@@ -92,13 +92,13 @@ $ Y_1 &= f_1(X_1; W) \
   Y_2 &= f_2(X_1, X_2; W) \
   Y_3 &= f_3(X_1, X_2, X_3; W) $
 
-Here, the functions $f_1, f_2, f_3$ are fixed once the algorithm and hyperparameters are chosen — they don't change; $W$ are trainable weights. Notice that the $N$-th row of the output is determined entirely by the first $N$ rows of the input.
+Here the functions $f_1, f_2, f_3$ are fixed once the algorithm and hyperparameters are chosen; $W$ holds the trainable weights. Notice that the $N$-th row of the output is determined entirely by the first $N$ rows of the input.
 
 = KV Cache
 
 Suppose that after computing $Y$, we append a 4th row $X_4$ to the input $X$, while $X_1, X_2, X_3$ stay unchanged. By the analysis above, $Y_1, Y_2, Y_3$ also stay unchanged, and we only need to compute $Y_4 = f_4(X_1, X_2, X_3, X_4; W)$.
 
-Notice that in all the intermediate results above, every matrix with 3 rows becomes a matrix with 4 rows, while the first three rows stay exactly the same. So if we cache those first three rows, we only need to compute the fourth row — which saves a lot of computation. Going further, notice that the 4th row of matrix $H$ has nothing to do with the first three rows of $Q$ at all, so in fact the contents of matrix $Q$ can be discarded right after use. This is precisely the principle behind how KV Cache saves compute.
+Notice that in all the intermediate results above, every matrix with 3 rows becomes a matrix with 4 rows, while the first three rows stay exactly the same. So if we cache those first three rows, we only need to compute the fourth row — which saves a lot of computation. Going further, notice that the 4th row of matrix $H$ has nothing to do with the first three rows of $Q$, so the contents of $Q$ can be discarded right after use. This is precisely how the KV Cache saves computation.
 
 = Closing
 

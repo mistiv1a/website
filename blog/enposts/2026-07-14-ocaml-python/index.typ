@@ -7,13 +7,13 @@ parindent: 1.2em,
 body: [
 
 
-To make code feel like OCaml, a few ingredients are essential:
+A few ingredients are essential if you want code to feel like OCaml:
 
 - Algebraic data types (most languages already have product types; the interesting part is sum types)
 - Pattern matching
 - Functor-based polymorphism
 
-Here's a snippet extracted from _Real World OCaml_ that demonstrates all three:
+Here's a snippet taken from _Real World OCaml_ that shows all three:
 
 ```ocaml
 module type Comparable = sig
@@ -46,7 +46,7 @@ let i1 = Int_interval.create 3 8;;
 let c = Int_interval.contains i1 5;;
 ```
 
-After several rounds of upgarde, modern Python now has all the features it needs to simulate these OCaml features — at least at some level. You can get close to the feel of classical, 1990s-era OCaml, but don't expect to reach for GADTs or algebraic effects any time soon.
+After several rounds of upgrades, modern Python finally has everything it needs to fake all three — up to a point. You can get close to the feel of classical, 1990s-era OCaml, but don't expect advanced features like GADTs or algebraic effects.
 
 Here's the Python equivalent of the OCaml code above:
 
@@ -110,13 +110,13 @@ To sum up:
 
       [*OCaml Ingredient*], [*Python Implementation*],
       [*ADT*], [Type annotations],
-      [*Pattern Matching*], [Built-in syntax (`match-case`) + `dataclass`],
+      [*Pattern Matching*], [Built-in `match-case` syntax],
       [*Functor*], [Generic `dataclass` + generic higher-order functions],
     )
   ]
 )
 ]
 
-I don't yet know how well this style holds up at scale, or what hidden pitfalls it might have. But for this small example, it's an interesting experiment.
+I don't yet know how well this style holds up at scale, or what pitfalls are hiding in it. But on a small example like this one, it's a fun experiment.
 
 ])
