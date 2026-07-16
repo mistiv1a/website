@@ -11,3 +11,4 @@ blog/posts/*/*.html
 *.svg
 homepage/blob/
 text2html
+CLAUDE.md

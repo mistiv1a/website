@@ -13,7 +13,6 @@
 文件初始内容如下：
 
 ```
-// 标题
 #import "/template.typ": *
 
 #doc-template(
@@ -33,3 +32,20 @@ body: [
 ```
 
 结束。
+
+## English translation
+
+If it's an English translation, the header is :
+
+
+```
+#import "/template.typ": *
+
+#doc-template(
+title: "Title",
+date: "June 1, 2025",
+parindent: 1.2em,
+body: [
+
+])
+```
