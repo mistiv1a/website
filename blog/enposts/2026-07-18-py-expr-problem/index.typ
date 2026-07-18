@@ -60,6 +60,8 @@ Using the traditional OOP approach — defining a base class and subtyping it �
 
 Python has also introduced `@singledispatch`. It's very similar to typeclasses in Haskell or `defgeneric` in Lisp. With `@singledispatch`, you can get extensibility in both data types and operations simultaneously. However, type safety is lost — the parameter type of a singledispatched function will be `Any`. You might forget to register the singledispatch function for a particular type, and then at runtime it falls back to the default implementation, crashing the program. And in a language like Haskell that has type constraints, recursive calls to an operation become a problem. This is why Haskell resorts to complex solutions like #link("https://webspace.science.uu.nl/~swier004/publications/2008-jfp.pdf")[_Data Types à la Carte_] to fix the Expression Problem.
 
+And #link("https://eli.thegreenplace.net/2016/the-expression-problem-and-its-solutions/")[this blog post] has very nice pictures illustrating this dillema.
+
 = The Typed Python Approach
 
 == Adding a Type Parameter
