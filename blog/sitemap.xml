@@ -296,6 +296,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://blog.mistivia.com/posts/2026-07-18-py-expr-problem/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://blog.mistivia.com/enposts/</loc>
     <lastmod>2026-07-18</lastmod>
     <priority>0.8</priority>
