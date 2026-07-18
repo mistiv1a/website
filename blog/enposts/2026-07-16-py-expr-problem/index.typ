@@ -6,7 +6,7 @@ date: "July 16, 2026",
 parindent: 1.2em,
 body: [
 
-DISCLAIMER: I am not a Python expert, and this is just a note of what I found when exploring Python's type checker. There may be better solutions already but I don't know. And I'm not sure if someone has already written a post on this, though I cannot find one.
+DISCLAIMER: I am not a Python expert, and this is just a note of what I found when exploring Python's type checker. There may be better solutions already but I don't know. And I'm not sure if someone has already written a post on similar approach, though I cannot find one.
 
 = What is the Expression Problem
 
