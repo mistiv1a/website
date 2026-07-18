@@ -94,7 +94,7 @@ You can see that the newly defined `Expr` here is essentially the same as the pr
 
 == Being Recursive
 
-If we write `evaluate(expr: Expr) -> int` directly as before, then evaluate will be closed over `Expr`, losing room for extension. Therefore, we make the recursive operation a parameter:
+If we write "`evaluate(expr: Expr) -> int`" directly as before, then evaluate will be closed over `Expr`, losing room for extension. Therefore, we make the recursive operation a parameter, and make the operation generic just like the data types above:
 
 ```python
 def evaluate_base[T](recur: Callable[[T], int], expr: T) -> int:
