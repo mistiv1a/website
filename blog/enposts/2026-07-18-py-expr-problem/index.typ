@@ -144,7 +144,7 @@ Now the data types are extended with perfect type safety.
 
 == Extending Operations
 
-Extending operations on union types is trivial: just pattern matching on it, and you get type safety for free.
+As mentioned above, extending operations on union types is a solved problem:
 
 ```python
 def pretty_print(e: Expr2) -> None:
