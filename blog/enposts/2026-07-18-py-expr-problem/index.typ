@@ -58,7 +58,7 @@ In the example above, we've actually already achieved type safety and operation 
 
 Using the traditional OOP approach — defining a base class and subtyping it — you can easily achieve type safety and data type extensibility. However, it's good at achieving operation extensibility. You can add a visitor to extend operation, yet for these extended new operations, it's difficult to extend new data types, so you are in a dillema. #link("https://eli.thegreenplace.net/2016/the-expression-problem-and-its-solutions/")[This blog post] has very nice pictures illustrating of these drawbacks.
 
-Python has also introduced `@singledispatch`. It's very similar to typeclasses in Haskell or `defgeneric` in Lisp. With `@singledispatch`, you can get extensibility in both data types and operations simultaneously. However, type safety is lost — the parameter type of a singledispatched function will be `Any`. You might forget to register the singledispatch function for a particular type, and then at runtime it falls back to the default implementation, crashing the program. And in a language like Haskell that has type constraints, recursive calls to an operation become a problem. This is why Haskell resorts to complex solutions like #link("https://webspace.science.uu.nl/~swier004/publications/2008-jfp.pdf")[_Data Types à la Carte_] to fix the Expression Problem.
+Python has also introduced `@singledispatch`. It's very similar to typeclasses in Haskell or `defgeneric` in Lisp. With `@singledispatch`, you can get extensibility in both data types and operations simultaneously. However, type safety is lost — the parameter type of a singledispatched function will be `Any`, so you can call a singledispatched function with arguments of invalid data types. And in a language like Haskell that has type constraints, recursive calls to an operation become a problem. This is why Haskell resorts to complex solutions like #link("https://webspace.science.uu.nl/~swier004/publications/2008-jfp.pdf")[_Data Types à la Carte_] to fix the Expression Problem.
 
 = The Typed Python Approach
 
@@ -97,7 +97,7 @@ You can see that the newly defined `Expr` here is essentially the same as the pr
 If we write "`evaluate(expr: Expr) -> int`" directly as before, then evaluate will be closed over `Expr`, losing room for extension. Therefore, we make the recursive operation a parameter, and make the operation generic just like the data types above:
 
 ```python
-def evaluate_base[T](recur: Callable[[T], int], expr: T) -> int:
+def evaluate_base[T](recur: Callable[[T], int], expr: ExprBase[T]) -> int:
     match expr:
         case int():
             return expr
