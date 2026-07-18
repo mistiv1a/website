@@ -2,7 +2,7 @@
 
 #doc-template(
 title: "The Expression Problem in Python:\nA Static Typing Approach",
-date: "July 16, 2026",
+date: "July 18, 2026",
 parindent: 1.2em,
 body: [
 
