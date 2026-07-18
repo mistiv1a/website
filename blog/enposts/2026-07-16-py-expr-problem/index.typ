@@ -96,7 +96,7 @@ You can see that the newly defined `Expr` here is essentially the same as the pr
 
 If we write `evaluate(expr: Expr) -> int` directly as before, then evaluate will be closed over `Expr`, losing room for extension. Therefore, we make the recursive operation a parameter:
 
-```
+```python
 def evaluate_base[T](recur: Callable[[T], int], expr: T) -> int:
     match expr:
         case int():
@@ -116,7 +116,7 @@ def evaluate(expr: Expr) -> int:
 
 Now we add a `Minus` node:
 
-```
+```python
 @dataclass
 class Minus[T]:
     lhs: T
@@ -125,13 +125,13 @@ class Minus[T]:
 
 And the new `Expr` type will be:
 
-```
+```python
 type Expr_v2= Minus[Expr_v2] | ExprBase[Expr_v2]
 ```
 
 To evaluate `Minus`, we extend the `evaluate` function:
 
-```
+```python
 def evaluate_v2(e: Expr_v2) -> int:
     match e:
         case Minus(lhs, rhs):
@@ -146,7 +146,7 @@ Now the data types are extended with perfect type safety.
 
 Extending operations on union types is trivial: just pattern matching on it, and you get type safety for free.
 
-```
+```python
 def pretty_print(e: Expr2) -> None:
     match e:
         case int(): pass
