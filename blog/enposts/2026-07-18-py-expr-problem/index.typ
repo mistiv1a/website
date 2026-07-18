@@ -40,7 +40,7 @@ def evaluate(e: Expr) -> int:
         case _ as never: assert_never(never)
 ```
 
-Imagine this code snippet being in an 3rd-party library and the user cannot modify it, yet the user want to extend it. What the user want would be:
+Imagine this code snippet being in a library and the user cannot modify it, yet the user want to extend it. What the user want would be:
 
 - Without modifying existing code, add a new data type (e.g., adding a `Minus` besides `Add` and `Mul`);
 - Without modifying existing code, add a new operation (e.g., adding a `pretty_print`);
@@ -107,7 +107,11 @@ def evaluate_base[T](recur: Callable[[T], int], expr: T) -> int:
             return recur(lhs) * recur(rhs)
         case _ as never:
             assert_never(never)
+```
 
+And then we define a wrapper operation:
+
+```python
 def evaluate(expr: Expr) -> int:
     return evaluate_base(evaluate, expr)
 ```
