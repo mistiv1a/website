@@ -137,7 +137,7 @@ def evaluate_v2(e: Expr_v2) -> int:
         case Minus(lhs, rhs):
             return evaluate_v2(lhs) - evaluate_v2(rhs)
         case _:
-            return eval_base(evaluate_v2, e)
+            return evaluate_base(evaluate_v2, e)
 ```
 
 Now the data types are extended with perfect type safety.
