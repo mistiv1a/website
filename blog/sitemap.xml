@@ -306,6 +306,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://blog.mistivia.com/enposts/2024-08-03-emacs/</loc>
+    <lastmod>2024-08-03</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://blog.mistivia.com/enposts/2026-01-14-nwtravel/</loc>
     <lastmod>2026-01-14</lastmod>
     <priority>0.6</priority>
@@ -313,6 +318,11 @@
   <url>
     <loc>https://blog.mistivia.com/enposts/2026-02-02-vmm/</loc>
     <lastmod>2026-02-02</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://blog.mistivia.com/enposts/2026-06-12-emacs-revisit/</loc>
+    <lastmod>2026-06-12</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
