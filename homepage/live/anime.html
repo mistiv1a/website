@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<title>Live</title>
+
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+  body {
+    display: flex;
+    flex-direction: row;
+  }
+  iframe {
+    border: none;
+  }
+
+  @media (orientation: landscape) {
+    body {
+      flex-direction: row;
+    }
+    #iframe1 {
+      width: 75%;
+      height: 100%;
+    }
+    #iframe2 {
+      width: 25%;
+      height: 100%;
+    }
+  }
+
+  @media (orientation: portrait) {
+    body {
+      flex-direction: column;
+    }
+    #iframe1 {
+      width: 100%;
+      height: 50%;
+    }
+    #iframe2 {
+      width: 100%;
+      height: 50%;
+    }
+  }
+  #popupButton {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    filter: opacity(0.5);
+  }
+
+  #popupButton:hover {
+    filter: opacity(1);
+  }
+</style>
+</head>
+<body>
+  <script>
+
+var words= {
+  "adjectives": [
+    "Agile", "Bright", "Crimson", "Dark", "Echoing", "Fluent", "Golden", "Hushed",
+    "Icy", "Jaded", "Kinetic", "Lunar", "Muted", "Nimbly", "Olive", "Pale",
+    "Quick", "Regal", "Starry", "Tidy", "Unique", "Vibrant", "Warm", "Xenial",
+    "Young", "Zesty", "Active", "Blissful", "Clever", "Dreamy", "Elegant", "Fancy",
+    "Grateful", "High", "Ideal", "Jolly", "Lucky", "Merry", "Neat", "Open",
+    "Perfect", "Polished", "Quick", "Radiant", "Shiny", "Silent", "Sly", "Smooth",
+    "Sparkling", "Stable", "Sunny", "True", "Upbeat", "Violet", "Wise", "Xtreme",
+    "Yellowish", "Zesty", "Ample", "Bold", "Crafty", "Dazzling", "Endless", "Fluffy",
+    "Keen", "Lavish", "Misty", "Noble", "Opulent", "Pristine", "Quiet", "Ripe",
+    "Serene", "Swift", "True", "Urban", "Velvet", "Witty", "Yellow", "Zealous",
+    "Airy", "Bold", "Crisp", "Dry", "Eager", "Feral", "Gentle", "Huge",
+    "Iron", "Jovial", "Kind", "Light", "Mighty", "New", "Odd", "Plain",
+    "Ponder", "Quick", "Rich", "Solemn", "Solid", "Sweet", "Tender", "Timely",
+    "Usual", "Vicious", "Warm", "Xenophobic", "Youthful", "Zigzag", "Ancient", "Brilliant",
+    "Celestial", "Delicate", "Dreamlike", "Electric", "Fantastic", "Fierce", "Ghostly", "Glowing",
+    "Hearty", "Immortal", "Intrepid", "Jumping", "Kindly", "Luminous", "Magical", "Oceanic",
+    "Quaint", "Radiant", "Silent", "Tangible", "Umber", "Vague", "Wild", "Azure",
+    "Blue", "Calm", "Deep", "Eerie", "Faint", "Grand", "Hollow", "Inner",
+    "Outer", "Pointed", "Rough", "Smooth", "Subtle", "Thick", "Thin", "Tiny",
+    "Vast", "Wicked", "Wooden", "Xylo", "Yearning", "Zircon", "Aloft", "Boreal",
+    "Civil", "Daring", "Earnest", "Far", "Global", "Heavy", "Humble", "Infinite",
+    "Junior", "Loose", "Major", "Minor", "Nifty", "Ordinary", "Petite", "Quality",
+    "Rational", "Serious", "Short", "Square", "Strong", "Subtle", "Tame", "True",
+    "Ultimate", "Upright", "Value", "Visible", "Weak", "Worthy", "Xenon", "Yesterday",
+    "Vivid", "Woven", "Zenith", "Abrupt", "Balanced", "Coastal", "Dynamic", "Endless",
+    "Floral", "Glimmering", "Humble", "Inventive", "Jolly", "Lonely", "Mellow", "Nostalgic",
+    "Parallel", "Reserve", "Shimmering", "Sprightly", "Tense", "Untamed", "Versatile", "Whimsical",
+    "Zenithal", "Adoring", "Bitter", "Cloudy", "Curious", "Eloquent", "Festive", "Grandiose",
+    "Harmonious", "Ideal", "Juvenile", "Legendary", "Maximum", "Native", "Original", "Pious",
+    "Resourceful", "Spiritual", "Supreme", "Thankful", "Unwavering", "Voluminous", "Wistful", "Xeric",
+    "Yielding", "Zillion", "Abstract", "Candid", "Diverse", "Excellent", "Fictional", "Genuine",
+    "Healthy", "Intense", "Marvelous", "Oblong", "Pliable", "Respectful", "Scenic", "Wholesome"
+  ],
+  "nouns": [
+    "Star", "River", "Cloud", "Stone", "Breeze", "Flame", "Forest", "Harbor",
+    "Jewel", "Knight", "Labyrinth", "Meadow", "Nebula", "Ocean", "Path", "Pixel",
+    "Quill", "Rune", "Silence", "Sky", "Sphere", "Spring", "Stream", "Summit",
+    "Symphony", "Tide", "Valley", "Vessel", "Watch", "Whisper", "Zenith", "Anchor",
+    "Beam", "Bridge", "Canvas", "Citadel", "Coast", "Comet", "Dream", "Dust",
+    "Echo", "Ember", "Gate", "Gem", "Glimmer", "Glyph", "Hearth", "Helix",
+    "Hunt", "Island", "Keeper", "Lamp", "Ledge", "Light", "Lock", "Lore",
+    "Maze", "Moon", "Moth", "Murmur", "Node", "Oasis", "Pact", "Pattern",
+    "Peak", "Quest", "Ring", "Shadow", "Shield", "Song", "Spark", "Spell",
+    "Storm", "Talon", "Thorn", "Torch", "Tower", "Trail", "Tree", "Vale",
+    "Vault", "Veil", "Vigil", "Voice", "Watch", "Wave", "Wind", "Wing",
+    "Wish", "Word", "Wreath", "Zephyr", "Alloy", "Beacon", "Chamber", "Code",
+    "Comet", "Crown", "Crystal", "Drone", "Elder", "Forge", "Frost", "Gale",
+    "Gear", "Glyph", "Helix", "Isle", "Key", "Lens", "Loom", "Luster",
+    "Mask", "Mirage", "Mist", "Node", "Oath", "Opal", "Orbit", "Pacer",
+    "Passage", "Phantom", "Plume", "Port", "Pulse", "Pyramid", "Quarry", "Quartz",
+    "Quiver", "Realm", "Scroll", "Siren", "Sphere", "Spirit", "Spire", "Stream",
+    "Summit", "Symbol", "Temple", "Token", "Totem", "Trade", "Tribe", "Trophy",
+    "Tunnel", "Vessel", "Vortex", "Wand", "Ward", "Web", "Whisper", "Wizard",
+    "World", "Zenith", "Abyss", "Artifact", "Barrier", "Bridge", "Citadel", "Cliff",
+    "Clock", "Cove", "Dome", "Dust", "Edge", "Enigma", "Fabric", "Flower",
+    "Fountain", "Frame", "Gallery", "Gate", "Ghost", "Grotto", "Gust", "Habitat",
+    "Haven", "Haze", "Hearth", "Height", "Hole", "Horizon", "House", "Image",
+    "Ink", "Iris", "Knoll", "Land", "Limit", "Lode", "Mesa", "Niche",
+    "Virtue", "Whisper", "Xylophone", "Yarn", "Zeal", "Anchor", "Beacon", "Compass",
+    "Crystal", "Device", "Engine", "Globe", "Horizon", "Journey", "Key", "Loom",
+    "Machine", "Matter", "Memory", "Mirror", "Net", "Orbit", "Palace", "Phantom",
+    "Portal", "Ring", "Robot", "Satellite", "Scroll", "Secret", "Shield", "Sign",
+    "Signal", "Sphere", "Spiral", "Star", "Station", "Stone", "Sun", "Sword",
+    "System", "Target", "Team", "Thread", "Time", "Tool", "Tower", "Trail",
+    "Transit", "Tunnel", "Universe", "Vehicle", "View", "Voice", "Watch", "Water",
+    "Weight", "Whirlpool", "Wilderness", "Window", "World", "Zone", "Zest", "Zodiac"
+  ]
+};
+
+function randName() {
+    const randomIndex1 = Math.floor(Math.random() * words.adjectives.length);
+    const part1 = words.adjectives[randomIndex1];
+    const randomIndex2 = Math.floor(Math.random() * words.nouns.length);
+    const part2 = words.nouns[randomIndex2];
+    return part1 + part2;
+}
+
+
+    function fnv1a64(str) {
+        const FNV_OFFSET_BASIS = BigInt("14695981039346656037");
+        const FNV_PRIME = BigInt("1099511628211");
+        let hash = FNV_OFFSET_BASIS;
+        for (let i = 0; i < str.length; i++) {
+            hash ^= BigInt(str.charCodeAt(i));
+            hash = (hash * FNV_PRIME) & BigInt("0xFFFFFFFFFFFFFFFF");
+        }
+        return hash.toString(16).padStart(16, "0");
+    }
+
+    function randomString(length) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+    var popup = function() {}
+
+    async function getHash(message) {
+        const algorithm = 'SHA-256'
+        const encoder = new TextEncoder();
+        const data = encoder.encode(message);
+        const hashBuffer = await crypto.subtle.digest(algorithm, data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+        return hashHex;
+    }
+
+    async function main() {
+      const params = new URLSearchParams(window.location.search);
+      let key = params.get('key');
+      if (key === null) key = '';
+      let keyHash = await getHash(key);
+      let useSharkChat = true;
+      let iframeUrl = "./hls.html#https://nebulive.s3.us-west-2.amazonaws.com/ezlive/stream.m3u8" + "?t=" + randomString(8); 
+      let iframe = document.createElement("iframe");
+      iframe.id = "iframe1";
+      iframe.src = iframeUrl;
+      document.body.appendChild(iframe);
+      let chatUrl = function () {
+        if (useSharkChat) {
+          return 'https://raye.mistivia.com/irc/auto.html?nick=' + randName() + '#anime';
+        }
+      };
+      let popUrl = function () {
+        if (useSharkChat) {
+          return './chat.html?key=' + key + '&nick=' + randName() + '#anime';
+        }
+        return "https://hack.chat?" + "ezl" + fnv1a64(location.hash) + '#' + randomString(8);
+      };
+
+
+      iframeUrl = chatUrl();
+      iframe = document.createElement("iframe");
+      iframe.id = "iframe2";
+      iframe.src = iframeUrl;
+      document.body.appendChild(iframe);
+
+      function openPopup(url) {
+          const windowFeatures = `
+              width=250,
+              height=900,
+              toolbar=no,
+              menubar=no,
+              scrollbars=yes,
+              resizable=yes,
+              location=no,
+              status=no
+          `.replace(/\s+/g, '');
+          const popup = window.open(url, "popupWindow", windowFeatures);
+      }
+
+      let popupUrl = popUrl();
+      popup = function() {
+          openPopup(popupUrl);
+      };
+    }
+
+    main();
+  </script>
+  <button id="popupButton" onclick="popup()">Popup Chat</button>
+</body>
+</html>
