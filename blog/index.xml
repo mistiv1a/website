@@ -16,14 +16,6 @@
     </item>
 
     <item>
-      <title>如何把Python写出OCaml风味</title>
-      <link>https://blog.mistivia.com/posts/2026-07-14-ocaml-python/</link>
-      <description>Link to the post: https://blog.mistivia.com/posts/2026-07-14-ocaml-python/</description>
-      <guid>https://blog.mistivia.com/posts/2026-07-14-ocaml-python/</guid>
-      <pubDate>Tue, 14 Jul 2026 00:00:00 GMT</pubDate>
-    </item>
-
-    <item>
       <title>计算多头注意力</title>
       <link>https://blog.mistivia.com/posts/2026-07-05-attention/</link>
       <description>Link to the post: https://blog.mistivia.com/posts/2026-07-05-attention/</description>
@@ -53,6 +45,14 @@
       <description>Link to the post: https://blog.mistivia.com/posts/2026-03-30-functional/</description>
       <guid>https://blog.mistivia.com/posts/2026-03-30-functional/</guid>
       <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>写一个虚拟机管理器</title>
+      <link>https://blog.mistivia.com/posts/2026-02-02-vmm/</link>
+      <description>Link to the post: https://blog.mistivia.com/posts/2026-02-02-vmm/</description>
+      <guid>https://blog.mistivia.com/posts/2026-02-02-vmm/</guid>
+      <pubDate>Mon, 02 Feb 2026 00:00:00 GMT</pubDate>
     </item>
 
   </channel>

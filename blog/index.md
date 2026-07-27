@@ -4,7 +4,6 @@ Scriptum Mistiviae
 [[RSS](index.xml)] [[友链](links/)] [[English](/enposts/)]
 
 - 2026-07-18 [Python中的表达式问题：一种静态类型解法](/posts/2026-07-18-py-expr-problem/)
-- 2026-07-14 [如何把Python写出OCaml风味](/posts/2026-07-14-ocaml-python/)
 - 2026-07-05 [计算多头注意力](/posts/2026-07-05-attention/)
 - 2026-06-12 [Emacs再访](/posts/2026-06-12-emacs-revisit/)
 - 2026-05-24 [Minecraft服务器搭建](/posts/2026-05-24-mcserver/)
