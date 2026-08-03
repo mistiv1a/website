@@ -103,7 +103,7 @@ It defines something called the action functional. Its input is a trajectory fun
 
 $ S[q] = integral_(t_"start")^(t_"end") L(t, q(t), dot(q)(t)) d t $
 
-If you, like me, are not at ease with advanced mathematics, you may have been frightened to tears by now. But in fact there is nothing very difficult here; it only seems alarming when one is lost among the symbols. Let us decompose it step by step.
+If you, like me, are not at ease with advanced mathematics, you may have been frightened now. But in fact there is nothing very difficult here; it only seems hard when one is lost among the symbols. Let us try to explain it step by step.
 
 The $L$ in the formula is called the Lagrangian. To simplify, let us consider the one-dimensional case, where $q(t)$ is a scalar; then $L$ is a function of three variables:
 
@@ -112,7 +112,7 @@ lagrangian :: Float -> Float -> Float -> Float
 lagrangian = undefined
 ```
 
-By the same reasoning, if there were two generalized coordinates, the Lagrangian would be a function of five variables; with three, a function of seven. Here, however, we consider only the simplest case.
+Similarly, if there were two generalized coordinates, the Lagrangian would be a function of five variables; with three, a function of seven. Here, however, we consider only the simplest case.
 
 Now we rewrite the formula using the higher-order differentiation and integration functions defined above:
 

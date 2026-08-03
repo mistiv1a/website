@@ -13,3 +13,4 @@ blog/posts/*/*.html
 homepage/blob/
 text2html
 CLAUDE.*
+.basher/
