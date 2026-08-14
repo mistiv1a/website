@@ -22,7 +22,8 @@
   /* Palatino: a humanist face drawn from broad-nib calligraphy — the right
      register for a site whose name means "the writings of". */
   --face-text: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua",
-    "URW Palladio L", "P052", Georgia, "Times New Roman", serif-chinese, serif;
+    "URW Palladio L", "P052", Georgia, "Times New Roman", "SiteSerifBody", "Songti SC", "STSong", "SimSun", serif;
+  --face-heading-text: "SiteSerifHeading", "Source Han Serif CN", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "STSong", "SimSun", serif;
   --face-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", sans-chinese, monospace;
 
@@ -200,6 +201,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: var(--face-heading-text);
   font-weight: 600;
   line-height: 1.35;
   text-wrap: balance;

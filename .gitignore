@@ -9,8 +9,11 @@ templates/*.log
 scripts/__pycache__/
 task.md
 blog/posts/*/*.html
+blog/enposts/*/*.html
 *.svg
 homepage/blob/
 text2html
 CLAUDE.*
+scripts/vendor/
 .basher/
+blog/**/serif-*-subset.woff2

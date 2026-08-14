@@ -15,6 +15,31 @@ KATEX_JS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         "vendor", "katex.min.js")
 KATEX_CSS_LINK = '<link rel="stylesheet" href="/katex.min.css">'
 
+# --- Serif webfont ---------------------------------------------------------
+# Each page carries two character-subsetted woff2 faces: Source Han Serif CN
+# SemiBold for headings and FZNewShuSong (方正新书宋) for body text, so CJK
+# text is reliably serif on platforms without a serif CJK face (iOS).
+# fontTools lives in scripts/vendor; if absent the build still succeeds and
+# pages simply fall back to the system serif stack.
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, "vendor"))
+try:
+    from fontTools.subset import Options, Subsetter
+    from fontTools.ttLib import TTFont
+    HAS_FONTTOOLS = True
+except Exception:
+    HAS_FONTTOOLS = False
+
+SERIF_BODY_FAMILY = "SiteSerifBody"
+SERIF_HEADING_FAMILY = "SiteSerifHeading"
+SERIF_BODY_FONT = "serif-body-subset.woff2"
+SERIF_HEADING_FONT = "serif-heading-subset.woff2"
+SERIF_BODY_SOURCE = os.environ.get(
+    "SERIF_BODY_FONT_SRC", "/usr/share/fonts/FZXSSJW.TTF")
+SERIF_HEADING_SOURCE = os.environ.get(
+    "SERIF_HEADING_FONT_SRC",
+    "/usr/share/fonts/adobe-source-han-serif/SourceHanSerifCN-SemiBold.otf")
+
 DISPLAY_MATH_RE = re.compile(r'\$\$(.+?)\$\$', re.DOTALL)
 INLINE_MATH_RE = re.compile(r'(?<!\$)\$(?!\s)([^\n$]+?)(?<!\s)\$(?!\$)')
 
@@ -168,6 +193,70 @@ def is_article(input_path):
     path = os.path.abspath(input_path).replace(os.sep, "/")
     return "/blog/posts/" in path or "/blog/enposts/" in path
 
+def find_font_source(path):
+    return path if path and os.path.isfile(path) else None
+
+def make_serif_subset(font_path, chars, out_path, keep_ascii=False):
+    """Build a woff2 containing exactly the glyphs given.
+
+    By default only non-ASCII glyphs are kept, so the body face never
+    shadows the Latin stack (Palatino). Headings pass keep_ascii=True: the
+    whole heading, Latin and CJK alike, is set in Source Han Serif.
+    """
+    if not HAS_FONTTOOLS or not font_path:
+        return False
+    if keep_ascii:
+        chars = set(chars)
+    else:
+        chars = {ch for ch in chars if ord(ch) > 0x7e}
+    chars.update("，。、；：？！“”‘’（）《》〈〉【】—…「」·")
+    if not chars:
+        return False
+    try:
+        font = TTFont(font_path)
+        options = Options()
+        options.flavor = "woff2"
+        subsetter = Subsetter(options)
+        subsetter.populate(text="".join(chars))
+        subsetter.subset(font)
+        font.save(out_path)
+        font.close()
+        return True
+    except Exception as e:
+        print(f"warning: serif subset failed for {out_path}: {e}",
+              file=sys.stderr)
+        return False
+
+HEADING_TAG_RE = re.compile(r"<h[1-6][^>]*>(.*?)</h[1-6]>", re.S)
+
+def serif_face_extra(input_path, html_text):
+    """Write per-page subsets and return <style> content ("" if skipped)."""
+    out_dir = os.path.dirname(os.path.abspath(input_path))
+    body_font = os.path.join(out_dir, SERIF_BODY_FONT)
+    heading_font = os.path.join(out_dir, SERIF_HEADING_FONT)
+
+    heading_text = "".join(HEADING_TAG_RE.findall(html_text))
+    body_html = HEADING_TAG_RE.sub("", html_text)
+    body_ok = make_serif_subset(find_font_source(SERIF_BODY_SOURCE),
+                                body_html, body_font)
+    heading_ok = make_serif_subset(find_font_source(SERIF_HEADING_SOURCE),
+                                   heading_text, heading_font, keep_ascii=True)
+
+    faces = []
+    if body_ok:
+        faces.append(
+            f'@font-face{{font-family:"{SERIF_BODY_FAMILY}";'
+            f'src:url("{SERIF_BODY_FONT}") format("woff2");'
+            f"unicode-range:U+2000-FFFF;font-style:normal;font-weight:400;"
+            f"font-display:swap;}}")
+    if heading_ok:
+        faces.append(
+            f'@font-face{{font-family:"{SERIF_HEADING_FAMILY}";'
+            f'src:url("{SERIF_HEADING_FONT}") format("woff2");'
+            f"unicode-range:U+0000-FFFF;font-style:normal;font-weight:600;"
+            f"font-display:swap;}}")
+    return "\n".join(faces)
+
 template = """
 <!DOCTYPE html>
 <html>
@@ -233,6 +322,9 @@ if __name__ == "__main__":
     html_out = markdown_convert(title, body,
                                 nav_for(input_file), pubdate_for(input_file))
     html_out = restore_math(html_out, render_math(math_items))
+    serif_extra = serif_face_extra(input_file, html_out)
     head_extra = "\n" + KATEX_CSS_LINK if math_items else ""
+    if serif_extra:
+        head_extra += f"\n<style>\n{serif_extra}\n</style>"
     print(template.format(title, head_extra, html_out))
 
