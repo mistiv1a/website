@@ -13,7 +13,7 @@ FENCE_RE = re.compile(r'^(```|~~~).*?^\1[ \t]*$', re.MULTILINE | re.DOTALL)
 # Note: "关于" is written without a trailing slash so sync.sh's yggdrasil
 # rewrite of href="//mistivia.com" keeps matching.
 BLOG_NAV = [
-    ("首页", "//blog.mistivia.com/"),
+    ("博客", "//blog.mistivia.com/"),
     ("关于", "//mistivia.com"),
     ("友链", "//blog.mistivia.com/links/"),
     ("English", "//blog.mistivia.com/enposts/"),
