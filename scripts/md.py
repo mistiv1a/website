@@ -189,9 +189,11 @@ def replace_markdown_links_in_file(content, thumb=True):
     out.append(_rewrite_links(content[pos:], thumb))
     return ''.join(out)
 
+ARTICLE_PATH_RE = re.compile(r"/blog/(?:posts|enposts)/[^/]+/index\.(?:md|typ)$")
+
 def is_article(input_path):
     path = os.path.abspath(input_path).replace(os.sep, "/")
-    return "/blog/posts/" in path or "/blog/enposts/" in path
+    return bool(ARTICLE_PATH_RE.search(path))
 
 def find_font_source(path):
     return path if path and os.path.isfile(path) else None
