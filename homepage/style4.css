@@ -46,7 +46,7 @@ body {
   background-color: var(--paper);
   max-width: 39rem;
   margin: 0 auto;
-  padding: 4.5rem 1.5rem 3rem;
+  padding: 2.2rem 1.5rem 3rem;
   min-height: 100%;
   overflow-wrap: break-word;
   text-autospace: normal;
@@ -54,26 +54,27 @@ body {
 
 /* --- Masthead ----------------------------------------------------------- */
 
+/* On an index the title stands alone, so it needs its own room below; an
+   article overrides this, because the date line follows it closely. */
 body > h1:first-of-type {
   text-align: center;
   font-size: 1.75em;
   font-weight: 400;
   letter-spacing: 0.14em;
   text-indent: 0.14em; /* offset the trailing letter-space, keeps it optically centered */
-  margin: 0 0 0.9rem;
+  margin: 0 0 2.6rem;
 }
 
-p:has(> .masthead-nav),
+/* The nav runs across the top, above the title block. */
+p:has(> .masthead-nav) {
+  text-align: center;
+  margin: 0 0 2.4rem;
+}
+
 p:has(> .note),
 p:has(> .pubdate) {
   text-align: center;
   margin: 0 0 2.2rem;
-}
-
-/* When a note or date follows the nav, that line carries the space instead. */
-p:has(> .masthead-nav):has(+ p > .note),
-p:has(> .masthead-nav):has(+ p > .pubdate) {
-  margin-bottom: 0.45rem;
 }
 
 .masthead-nav,
@@ -374,15 +375,9 @@ img {
 }
 
 /* A photograph set to the full measure crowds the text; hold it in from the
-   margins. On a phone the column is already narrow, so let it fill. */
+   margins, at every width. */
 body:has(.pubdate) img {
   max-width: 75%;
-}
-
-@media (max-width: 34rem) {
-  body:has(.pubdate) img {
-    max-width: 100%;
-  }
 }
 
 figcaption {

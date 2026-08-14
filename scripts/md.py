@@ -192,7 +192,7 @@ emailElement.innerHTML = decodedString;
 </html>
 """
 
-def markdown_convert(title, body, chrome=""):
+def markdown_convert(title, body, nav="", pubdate=""):
     html_title = f"<h1>{title}</h1>"
     try:
         # cmark-gfm rather than discount: discount mis-parses fenced code
@@ -214,9 +214,8 @@ def markdown_convert(title, body, chrome=""):
     except subprocess.CalledProcessError as e:
         return (f"error:：Markdown convert cmd failed (exit code: {e.returncode})."
                 f"\nerr msg: {e.stderr}")
-    parts = [html_title]
-    if chrome:
-        parts.append(chrome)
+    # The nav sits ahead of the title so it lands in the top corner of the page.
+    parts = [x for x in (nav, html_title, pubdate) if x]
     parts.append(html_body)
     return "\n".join(parts)
 
@@ -231,8 +230,8 @@ if __name__ == "__main__":
     body = ''.join(content.splitlines(1)[2:])
     body, math_items = protect_math(body)
     body = replace_markdown_links_in_file(body, thumb=not is_article(input_file))
-    chrome = "\n".join(x for x in (nav_for(input_file), pubdate_for(input_file)) if x)
-    html_out = markdown_convert(title, body, chrome)
+    html_out = markdown_convert(title, body,
+                                nav_for(input_file), pubdate_for(input_file))
     html_out = restore_math(html_out, render_math(math_items))
     head_extra = "\n" + KATEX_CSS_LINK if math_items else ""
     print(template.format(title, head_extra, html_out))

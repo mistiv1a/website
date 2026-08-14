@@ -9,8 +9,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<h1>Computing Multi-Head Attention</h1>
 <p><span class="masthead-nav"><a href="//blog.mistivia.com/">博客</a> · <a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/enposts/">English</a> · <a href="//blog.mistivia.com/index.xml">RSS</a></span></p>
+<h1>Computing Multi-Head Attention</h1>
 <p><span class="pubdate">July 5, 2026</span></p>
 <p>Multi-Head Attention is the cornerstone of transformer-based large language models. Yet its computation is difficult to visualize intuitively, because the matrices are rearranged in a confusing manner. Therefore I wrote this post to examine it in detail.</p>
 <p>Abstract letters such as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">a, b, c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span></span></span></span> only increase the mental effort, so whenever a matrix dimension appears here, I will provide a unique prime number instead — concrete numbers are easier to follow. Since all the dimensional numbers are unique, you do not need to interpret them as literal sizes; you can simply treat each one as a distinct label.</p>
