@@ -15,7 +15,7 @@ clean:
 rss: blog/index.xml
 
 blog/index.xml: blog/index.md scripts/genrss.py
-	sed -n '6,11p' $< | python scripts/genrss.py > $@
+	grep '^- ' $< | head -6 | python scripts/genrss.py > $@
 
 $(MD_TARGET): %.html: %.md scripts/md.py
 	python scripts/md.py $< > $@

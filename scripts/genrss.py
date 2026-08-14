@@ -19,10 +19,13 @@ def generate_rss(markdown_content):
     <generator>Python Plain String RSS Generator</generator>
 """
 
-    pattern = re.compile(r'^- (\d{4}-\d{2}-\d{2}) \[([^\]]+)\]\(([^)]+)\)')
+    pattern = re.compile(r'^-\s*(\d{4}-\d{2}-\d{2})\s*\[([^\]]+)\]\(([^)]+)\)')
 
     for line in markdown_content.splitlines():
-        match = pattern.match(line.strip())
+        # The index wraps dates in markup (e.g. <span class="pdate">); drop any
+        # tags first so the feed does not depend on the index's presentation.
+        line = re.sub(r'<[^>]+>', '', line.strip())
+        match = pattern.match(line)
         if match:
             date_str, title, path = match.groups()
             try:

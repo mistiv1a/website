@@ -1,15 +1,6 @@
+友情链接
+========
 
-<!DOCTYPE html>
-<html>
-<head>
-<title>友情链接</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="/style3.css">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-<h1>友情链接</h1>
-<p><span class="masthead-nav"><a href="/">首页</a> · <a href="//mistivia.com">关于</a> · <a href="/links/">友链</a> · <a href="/enposts/">English</a> · <a href="/index.xml">RSS</a></span></p>
 <ul id="lnks">
 <li><a href="https://unstablebeagle.bearblog.dev/">比格犬劳动饮酒叹息</a></li>
 <li><a href="https://blog.gyara.moe/">島風造船所</a></li>
@@ -29,10 +20,14 @@
 <li><a href="https://xiayun.click/">Snake and Snail and Saury</a></li>
 <li><a href="https://ioover.net/">读写终子</a></li>
 </ul>
+
 <p>失效链接：</p>
+
 <ul>
 <li><del><a href="https://coccimore.cyou/">苹果核聚变</a></del></li>
 </ul>
+
+
 <script>
 function shuffleArray(array) {
   let currentIndex = array.length,
@@ -68,15 +63,3 @@ function shuffleListItems() {
 
 shuffleListItems();
 </script>
-
-<hr>
-<p id="email">Email: i (at) mistivia (dot) com</p>
-<script>
-var emailElement = document.getElementById('email');
-var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
-var decodedString = atob(base64String);
-emailElement.innerHTML = decodedString;
-</script>
-</body>
-</html>
-

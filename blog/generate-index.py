@@ -11,8 +11,6 @@ INDEX_MD = BLOG_DIR / "index.md"
 HEADER = """Scriptum Mistiviae
 ========
 
-[[RSS](index.xml)] [[友链](links/)] [[English](/enposts/)]
-
 """
 
 def extract_title(index_typ: Path) -> str:
@@ -25,6 +23,14 @@ def extract_title(index_typ: Path) -> str:
         return raw.strip()
     raise SystemExit(f"Cannot find title in {index_typ}")
 
+def extract_title_md(index_md: Path) -> str:
+    """Extract the title from a markdown post: its first line."""
+    text = index_md.read_text(encoding="utf-8")
+    title = text.splitlines()[0].strip() if text.splitlines() else ""
+    if title:
+        return title
+    raise SystemExit(f"Cannot find title in {index_md}")
+
 def main():
     posts = []
     for d in sorted(POSTS_DIR.iterdir()):
@@ -36,11 +42,16 @@ def main():
             continue
         date_str = f"{m.group(1)}-{m.group(2)}-{m.group(3)}"
         slug = m.group(4)
+        # Posts are being migrated from typst to markdown; accept either.
         index_typ = d / "index.typ"
-        if not index_typ.exists():
-            print(f"Warning: {index_typ} not found, skipping")
+        index_md = d / "index.md"
+        if index_md.exists():
+            title = extract_title_md(index_md)
+        elif index_typ.exists():
+            title = extract_title(index_typ)
+        else:
+            print(f"Warning: no index.typ or index.md in {d}, skipping")
             continue
-        title = extract_title(index_typ)
         posts.append((date_str, slug, title))
 
     # Sort by date descending
@@ -48,7 +59,10 @@ def main():
 
     lines = [HEADER]
     for date_str, slug, title in posts:
-        lines.append(f"- {date_str} [{title}](/posts/{date_str}-{slug}/)\n")
+        lines.append(
+            f'- <span class="pdate">{date_str}</span>'
+            f'[{title}](/posts/{date_str}-{slug}/)\n'
+        )
 
     INDEX_MD.write_text("".join(lines).rstrip("\n") + "\n\n", encoding="utf-8")
     print(f"Generated {INDEX_MD} with {len(posts)} posts")
