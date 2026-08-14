@@ -20,11 +20,6 @@ BLOG_NAV = [
     ("RSS", "//blog.mistivia.com/index.xml"),
 ]
 
-PROJECT_NAV = [
-    ("Projects", "../"),
-    ("Home", "/"),
-]
-
 def render_nav(items):
     links = " · ".join(f'<a href="{href}">{text}</a>' for text, href in items)
     return f'<p><span class="masthead-nav">{links}</span></p>'
@@ -32,8 +27,6 @@ def render_nav(items):
 def nav_for(input_path):
     """Pick the nav belonging to the site this page is part of."""
     path = os.path.abspath(input_path).replace(os.sep, "/")
-    if "/homepage/projects/" in path:
-        return render_nav(PROJECT_NAV)
     if "/blog/" in path or path.endswith("/homepage/index.md"):
         return render_nav(BLOG_NAV)
     return ""

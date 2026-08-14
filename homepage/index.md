@@ -1,22 +1,20 @@
 Mistivia
 ========
 
-<div id="ennav" style="display: none;">
-<ul class="homelinks">
-<li><a href="//blog.mistivia.com/">Blog</a></li>
-<li><a href="//raye.mistivia.com/gallery/">Photography</a></li>
-<li><a href="//mistivia.com/chat">IRC Chatroom</a></li>
-<li><a href="http://github.com/mistivias?tab=repositories">GitHub</a></li>
-</ul>
+<div id="zhnav">
+<dl class="hindex">
+<dt>摄影</dt><dd><a href="//raye.mistivia.com/gallery/">摄影集</a></dd>
+<dt>聊天</dt><dd><a href="//mistivia.com/chat">IRC 聊天室</a></dd>
+<dt>代码</dt><dd><a href="https://github.com/mistivia?tab=repositories">GitHub</a></dd>
+</dl>
 </div>
 
-<div id="zhnav">
-<ul class="homelinks">
-<li><a href="//blog.mistivia.com/">博客</a></li>
-<li><a href="//raye.mistivia.com/gallery/">摄影</a></li>
-<li><a href="//mistivia.com/chat">IRC聊天室</a></li>
-<li><a href="http://github.com/mistivia?tab=repositories">GitHub</a></li>
-</ul>
+<div id="ennav" style="display: none;">
+<dl class="hindex">
+<dt>Photography</dt><dd><a href="//raye.mistivia.com/gallery/">Gallery</a></dd>
+<dt>Chat</dt><dd><a href="//mistivia.com/chat">IRC Chatroom</a></dd>
+<dt>Code</dt><dd><a href="https://github.com/mistivias?tab=repositories">GitHub</a></dd>
+</dl>
 </div>
 
 <script>

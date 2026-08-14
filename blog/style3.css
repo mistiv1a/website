@@ -148,27 +148,56 @@ ul:has(> li > .pdate) li {
   }
 }
 
-/* --- Homepage: a short hand-list of destinations ------------------------ */
+/* --- Homepage index ------------------------------------------------------
+   Category in a muted left column, destination in the right — the same
+   two-column figure the blog's contents uses, so both hosts read as one site.
+   The grid sizes the label column to its widest term, which keeps the two
+   language variants aligned without hard-coding a width for either. */
 
-.homelinks {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-align: center;
+.hindex {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1.6em;
+  row-gap: 0.15em;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
-.homelinks li {
-  margin: 0;
-  padding: 0.5em 0;
+.hindex dt {
+  color: var(--ink-faint);
+  font-size: 0.8em;
+  letter-spacing: 0.06em;
+  padding: 0.42em 0;
+  align-self: baseline;
 }
 
-.homelinks a {
+.hindex dd {
+  margin: 0;
+  padding: 0.42em 0;
+}
+
+.hindex a {
   border-bottom: none;
-  letter-spacing: 0.02em;
 }
 
-.homelinks a:hover {
+.hindex a:hover {
   border-bottom: 1px solid var(--ink);
+}
+
+@media (max-width: 26rem) {
+  .hindex {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+
+  .hindex dt {
+    padding-bottom: 0;
+  }
+
+  .hindex dd {
+    padding-top: 0.1em;
+  }
 }
 
 /* --- Back-of-book index (friend links) ---------------------------------- */
