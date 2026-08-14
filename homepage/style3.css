@@ -148,6 +148,26 @@ ul:has(> li > .pdate) li {
   }
 }
 
+/* --- Homepage: short intro and a handful of destinations ---------------- */
+
+#zhnav,
+#ennav {
+  text-align: center;
+}
+
+#zhnav ul,
+#ennav ul {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+}
+
+#zhnav li,
+#ennav li {
+  margin: 0;
+  padding: 0.42em 0;
+}
+
 /* --- Back-of-book index (friend links) ---------------------------------- */
 
 #lnks {
@@ -184,20 +204,22 @@ h6 {
   text-wrap: balance;
 }
 
+/* The two levels are separated by size above all: serif CJK faces often ship a
+   single weight, so a weight change alone would not read in Chinese. */
 h2 {
-  margin-top: 3rem;
-  margin-bottom: 0.9rem;
-  font-size: 1.24em;
-  letter-spacing: 0.02em;
+  margin-top: 3.4rem;
+  margin-bottom: 0.85rem;
+  font-size: 1.5em;
+  letter-spacing: 0.01em;
   color: var(--ink);
 }
 
 h3 {
-  margin-top: 2.2rem;
-  margin-bottom: 0.6rem;
-  font-size: 1.06em;
-  letter-spacing: 0.02em;
-  color: var(--ink);
+  margin-top: 2.3rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.05em;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
 }
 
 h4,
