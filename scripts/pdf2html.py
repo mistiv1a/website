@@ -29,7 +29,7 @@ def html_template(title: str, pdf_url: str, srctext: str = "") -> str:
 <head>
 <title>{title}</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="/style4.css">
+<link rel="stylesheet" href="/style6.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     .pdf-wrapper {{

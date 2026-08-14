@@ -4,7 +4,7 @@
 <head>
 <title>Computing Multi-Head Attention</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="/style3.css">
+<link rel="stylesheet" href="/style4.css">
 <link rel="stylesheet" href="/katex.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -131,7 +131,7 @@ Y_3 &amp;= f_3(X_1, X_2, X_3; W)
 <p>Notice that in all the intermediate results above, every matrix with 3 rows becomes a matrix with 4 rows, while the first three rows remain exactly the same. So if we cache those first three rows, we only need to compute the fourth row — which saves a great deal of computation. Going further, notice that the 4th row of matrix <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi></mrow><annotation encoding="application/x-tex">H</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span></span></span></span> has no relation to the first three rows of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi></mrow><annotation encoding="application/x-tex">Q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span></span></span></span>, so the contents of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi></mrow><annotation encoding="application/x-tex">Q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span></span></span></span> can be discarded immediately after use. This is precisely how the KV Cache saves computation.</p>
 <h2>Closing</h2>
 <p>To conclude, here is the architecture diagram from the <a href="https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf">original GPT paper</a>:</p>
-<p><a href="./gpt.jpg" target="_blank"><img src="./gpt.jpg" alt="GPT architecture diagram" style="max-width:300px;max-height:300px;"></a></p>
+<p><a href="./gpt.jpg" target="_blank"><img src="./gpt.jpg" alt="GPT architecture diagram"></a></p>
 <p>As you can see, the only genuinely complex part is the multi-head attention discussed in this post. The parts not discussed here — residual connections, layer norm, and the FFN — are all relatively simple, so I will not describe them in detail.</p>
 
 <hr>

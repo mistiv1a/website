@@ -138,23 +138,35 @@ def pubdate_for(input_path):
         text = f"{year}年{month}月{day}日"
     return f'<p><span class="pubdate">{text}</span></p>'
 
-def _rewrite_links(content):
-    pattern_image_link = re.compile(r'!\[([^\]]+?)\]\((.+?)\)')
-    pattern_new_link = re.compile(r'~\[([^\]]+?)\]\((.+?)\)')
-    content = pattern_new_link.sub(r'<a href="\2" target="_blank">\1</a>', content)
-    content = pattern_image_link.sub(r'<a href="\2" target="_blank"><img src="\2" alt="\1" style="max-width:300px;max-height:300px;"></a>', content)
+IMAGE_LINK_RE = re.compile(r'!\[([^\]]*?)\]\((.+?)\)')
+NEW_LINK_RE = re.compile(r'~\[([^\]]+?)\]\((.+?)\)')
+
+# Elsewhere an image is a thumbnail that opens full size; in an article the
+# photographs are the content, so they run the width of the text column.
+THUMB_STYLE = ' style="max-width:300px;max-height:300px;"'
+
+def _rewrite_links(content, thumb=True):
+    style = THUMB_STYLE if thumb else ""
+    content = NEW_LINK_RE.sub(r'<a href="\2" target="_blank">\1</a>', content)
+    content = IMAGE_LINK_RE.sub(
+        rf'<a href="\2" target="_blank"><img src="\2" alt="\1"{style}></a>',
+        content)
     return content
 
-def replace_markdown_links_in_file(content):
+def replace_markdown_links_in_file(content, thumb=True):
     """Rewrite links outside fenced code blocks, leaving code verbatim."""
     out = []
     pos = 0
     for m in FENCE_RE.finditer(content):
-        out.append(_rewrite_links(content[pos:m.start()]))
+        out.append(_rewrite_links(content[pos:m.start()], thumb))
         out.append(m.group(0))
         pos = m.end()
-    out.append(_rewrite_links(content[pos:]))
+    out.append(_rewrite_links(content[pos:], thumb))
     return ''.join(out)
+
+def is_article(input_path):
+    path = os.path.abspath(input_path).replace(os.sep, "/")
+    return "/blog/posts/" in path or "/blog/enposts/" in path
 
 template = """
 <!DOCTYPE html>
@@ -162,7 +174,7 @@ template = """
 <head>
 <title>{}</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="/style3.css">{}
+<link rel="stylesheet" href="/style4.css">{}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -218,7 +230,7 @@ if __name__ == "__main__":
     title = content.splitlines(1)[0].strip()
     body = ''.join(content.splitlines(1)[2:])
     body, math_items = protect_math(body)
-    body = replace_markdown_links_in_file(body)
+    body = replace_markdown_links_in_file(body, thumb=not is_article(input_file))
     chrome = "\n".join(x for x in (nav_for(input_file), pubdate_for(input_file)) if x)
     html_out = markdown_convert(title, body, chrome)
     html_out = restore_math(html_out, render_math(math_items))
