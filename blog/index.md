@@ -3,7 +3,6 @@ Scriptum Mistiviae
 
 - <span class="pdate">2026-07-18</span>[Python中的表达式问题：一种静态类型解法](/posts/2026-07-18-py-expr-problem/)
 - <span class="pdate">2026-07-05</span>[计算多头注意力](/posts/2026-07-05-attention/)
-- <span class="pdate">2026-06-12</span>[Emacs再访](/posts/2026-06-12-emacs-revisit/)
 - <span class="pdate">2026-05-24</span>[Minecraft服务器搭建](/posts/2026-05-24-mcserver/)
 - <span class="pdate">2026-03-30</span>[给欧拉-拉格朗日方程加上类型注释](/posts/2026-03-30-functional/)
 - <span class="pdate">2026-02-02</span>[写一个虚拟机管理器](/posts/2026-02-02-vmm/)
