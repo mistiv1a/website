@@ -1,14 +1,9 @@
-#import "/template.typ": *
-
-#doc-template(
-title: "The Expression Problem in Python:\nA Static Typing Approach",
-date: "July 18, 2026",
-parindent: 1.2em,
-body: [
+The Expression Problem in Python: A Static Typing Approach
+========
 
 DISCLAIMER: I am not a Python expert, and this is just a note of what I found when exploring Python's type checker. There may be better solutions already but I don't know. And I'm not sure if someone has already written a post about similar approach, though I cannot find one.
 
-= What is the Expression Problem
+## What is the Expression Problem
 
 Let's start with the type definition of an expression AST. For simplicity, only addition and multiplication are included here. Python 3.14.6 and mypy 2.1.0 are used here.
 
@@ -46,23 +41,23 @@ Imagine this code snippet being in a library and the user cannot modify it, yet 
 - Without modifying existing code, add a new operation (e.g., adding a `pretty_print`);
 - Keep type safety.
 
-The definition on #link("https://en.wikipedia.org/wiki/Expression_problem")[Wikipedia] is similar:
+The definition on [Wikipedia](https://en.wikipedia.org/wiki/Expression_problem) is similar:
 
-#myquote[The goal is to define a data abstraction that is extensible both in its representations and its behaviors, where one can add new representations and new behaviors to the data abstraction, without recompiling existing code, and while retaining static type safety (e.g., no casts). ]
+> The goal is to define a data abstraction that is extensible both in its representations and its behaviors, where one can add new representations and new behaviors to the data abstraction, without recompiling existing code, and while retaining static type safety (e.g., no casts).
 
-= Existed Solutions
+## Existed Solutions
 
-Although achieving all three goals above is somewhat difficult, achieving any two of them is quite simple. 
+Although achieving all three goals above is somewhat difficult, achieving any two of them is quite simple.
 
 In the example above, we've actually already achieved type safety and operation extensibility: just define a function that pattern-matches on `Expr`.
 
-Using the traditional OOP approach — defining a base class and subtyping it — you can easily achieve type safety and data type extensibility. However, it's bad at achieving operation extensibility. You have to define a new visitor to extend new operations, and visitors don't have exhaustiveness checks. #link("https://eli.thegreenplace.net/2016/the-expression-problem-and-its-solutions/")[This blog post] has very nice pictures illustrating their drawbacks.
+Using the traditional OOP approach — defining a base class and subtyping it — you can easily achieve type safety and data type extensibility. However, it's bad at achieving operation extensibility. You have to define a new visitor to extend new operations, and visitors don't have exhaustiveness checks. [This blog post](https://eli.thegreenplace.net/2016/the-expression-problem-and-its-solutions/) has very nice pictures illustrating their drawbacks.
 
-Python has also introduced `@singledispatch`. It's very similar to typeclasses in Haskell or `defgeneric` in Lisp. With `@singledispatch`, you can get extensibility in both data types and operations simultaneously. However, type safety is lost — the parameter type of a singledispatched function will be `Any`, so you can call a singledispatched function with arguments of invalid data types. And in a language like Haskell that has type constraints, recursive calls to an operation become a problem, and Haskell's datatypes are closed. This is why Haskell resorts to complex solutions like #link("https://webspace.science.uu.nl/~swier004/publications/2008-jfp.pdf")[_Data Types à la Carte_] to fix the Expression Problem.
+Python has also introduced `@singledispatch`. It's very similar to typeclasses in Haskell or `defgeneric` in Lisp. With `@singledispatch`, you can get extensibility in both data types and operations simultaneously. However, type safety is lost — the parameter type of a singledispatched function will be `Any`, so you can call a singledispatched function with arguments of invalid data types. And in a language like Haskell that has type constraints, recursive calls to an operation become a problem, and Haskell's datatypes are closed. This is why Haskell resorts to complex solutions like [*Data Types à la Carte*](https://webspace.science.uu.nl/~swier004/publications/2008-jfp.pdf) to fix the Expression Problem.
 
-= The Typed Python Approach
+## The Typed Python Approach
 
-== Adding a Type Parameter
+### Adding a Type Parameter
 
 Let's start with the example of `Expr` from above. We first modify the definitions of the two AST nodes, turning them into generic types:
 
@@ -92,7 +87,7 @@ type Expr = ExprBase[Expr]
 
 You can see that the newly defined `Expr` here is essentially the same as the previous `Expr`. But the generic provides space for extensibility.
 
-== Being Recursive
+### Being Recursive
 
 If we write "`evaluate(expr: Expr) -> int`" directly as before, then evaluate will be closed over `Expr`, losing room for extension. Therefore, we make the recursive operation a parameter, and make the operation generic just like the data types above:
 
@@ -116,7 +111,7 @@ def evaluate(expr: Expr) -> int:
     return evaluate_base(evaluate, expr)
 ```
 
-== Extending Data Types
+### Extending Data Types
 
 Now we add a `Minus` node:
 
@@ -146,7 +141,7 @@ def evaluate_v2(e: Expr_v2) -> int:
 
 Now the data types are extended with perfect type safety.
 
-== Extending Operations
+### Extending Operations
 
 As mentioned above, extending operations on union types is a solved problem:
 
@@ -160,8 +155,6 @@ def pretty_print(e: Expr2) -> None:
         case _ as never: assert_never(never)
 ```
 
-= Conclusion
+## Conclusion
 
 Although I think this is a decent solution to the expression problem achiving all three goals, on the other hand it also adds quite a lot of boilerplate. At the same time, as I mentioned before, there may be better solutions already but I don't know, or this approach may have some flaw that I'm not aware of.
-
-])
