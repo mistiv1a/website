@@ -373,6 +373,18 @@ img {
   margin: 1.5rem auto;
 }
 
+/* A photograph set to the full measure crowds the text; hold it in from the
+   margins. On a phone the column is already narrow, so let it fill. */
+body:has(.pubdate) img {
+  max-width: 75%;
+}
+
+@media (max-width: 34rem) {
+  body:has(.pubdate) img {
+    max-width: 100%;
+  }
+}
+
 figcaption {
   text-align: center;
   color: var(--ink-faint);
