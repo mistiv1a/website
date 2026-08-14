@@ -1,72 +1,84 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <title>Setting Up a Minecraft Server</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="/style6.css">
+<link rel="stylesheet" href="/style4.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Type: Blog Article, Author: Mistivia, Title: Setting Up a Minecraft Server">
 </head>
 <body>
-<div class="ipadding">
-<pre class="back" style="display: flex; justify-content: space-between; align-items: center;">
-    <a href="../">../</a>
-</pre>
-<script>
-    if (window.location.hostname.endsWith('translate.goog')) {
-        var myRealDomain = "blog.mistivia.com"; 
-        var currentPath = window.location.pathname;
-        window.location.replace("https://" + myRealDomain + currentPath);
-    }
-</script>
-</div>
-<style>
-.visually-hidden {
-    position: absolute;
-    left: -999px;
-    width: 100px;
-    height: 100px;
-    overflow: hidden;
-}
-</style>
-<main>
-<p id="srctext" class="visually-hidden">
-    #import&#32;&quot;/template.typ&quot;:&#32;*<br><br>#doc-template(<br>title:&#32;&quot;Setting&#32;Up&#32;a&#32;Minecraft&#32;Server&quot;,<br>date:&#32;&quot;May&#32;24,&#32;2026&quot;,<br>parindent:&#32;1.2em,<br>body:&#32;[<br><br>Recently&#32;I&#32;set&#32;up&#32;a&#32;Minecraft&#32;server.&#32;This&#32;server&#32;incorporates&#32;many&#32;mods,&#32;and&#32;rather&#32;than&#32;adopting&#32;an&#32;existing&#32;modpack&#32;such&#32;as&#32;ATM10,&#32;I&#32;selected&#32;the&#32;mods&#32;myself.&#32;Since&#32;LLM&#32;agents&#32;will&#32;help&#32;you&#32;doing&#32;all&#32;the&#32;chores,&#32;I&#32;will&#32;not&#32;elaborate&#32;on&#32;the&#32;details&#32;here&#32;and&#32;will&#32;mention&#32;only&#32;the&#32;high-level&#32;choices.<br><br>=&#32;Version&#32;Selection<br><br>The&#32;main&#32;drive&#32;for&#32;building&#32;this&#32;server&#32;was&#32;that&#32;I&#32;had&#32;watched&#32;several&#32;videos&#32;on&#32;Bilibili&#32;about&#32;the&#32;_Create:&#32;Aeronautics_,&#32;so&#32;I&#32;want&#32;to&#32;try&#32;it.&#32;This&#32;mod&#32;currently&#32;supports&#32;version&#32;1.21.1&#32;primarily,&#32;which&#32;is&#32;also&#32;a&#32;version&#32;with&#32;good&#32;mod&#32;compatibility&#32;at&#32;present,&#32;so&#32;1.21.1&#32;was&#32;the&#32;natural&#32;choice.<br><br>=&#32;Client&#32;Launcher&#32;Selection<br><br>The&#32;most&#32;popular&#32;launcher&#32;at&#32;present&#32;is&#32;#link(&quot;https://prismlauncher.org/&quot;,&#32;&quot;Prism&#32;Launcher&quot;).&#32;However,&#32;this&#32;launcher&#32;supports&#32;only&#32;legitimate&#32;copies&#32;of&#32;the&#32;game.&#32;If&#32;you&#32;also&#32;want&#32;friends&#32;who&#32;have&#32;not&#32;purchased&#32;the&#32;game&#32;to&#32;join&#32;with&#32;a&#32;pirate&#32;copy,&#32;you&#32;need&#32;another&#32;launcher,&#32;such&#32;as&#32;#link(&quot;https://polymc.org/&quot;,&#32;&quot;PolyMC&quot;).&#32;The&#32;two&#32;launchers&#32;share&#32;a&#32;common&#32;origin,&#32;both&#32;being&#32;forks&#32;of&#32;#link(&quot;https://multimc.org/&quot;,&#32;&quot;MultiMC&quot;);&#32;but&#32;their&#32;modpacks&#32;are&#32;not&#32;interchangeable&#32;and&#32;must&#32;be&#32;packed&#32;separately.<br><br>As&#32;for&#32;preparing&#32;a&#32;modpack,&#32;Prism&#32;Launcher&#32;is&#32;more&#32;convenient,&#32;because&#32;it&#32;resolves&#32;mod&#32;dependencies&#32;automatically.&#32;Therefore,&#32;even&#32;if&#32;you&#32;decide&#32;to&#32;use&#32;PolyMC,&#32;I&#32;recommend&#32;installing&#32;the&#32;mods&#32;with&#32;Prism&#32;Launcher&#32;and&#32;then&#32;copying&#32;all&#32;the&#32;mod&#32;jar&#32;files&#32;into&#32;the&#32;PolyMC&#32;instance.<br><br>=&#32;Server&#32;Selection<br><br>After&#32;adding&#32;many&#32;mods,&#32;the&#32;demands&#32;on&#32;memory&#32;and&#32;CPU&#32;rise&#32;sharply.&#32;Memory&#32;prices&#32;are&#32;high&#32;at&#32;present,&#32;and&#32;servers&#32;with&#32;large&#32;memory&#32;have&#32;become&#32;especially&#32;expensive.&#32;If&#32;a&#32;VPS&#32;were&#32;used,&#32;the&#32;expense&#32;would&#32;be&#32;roughly&#32;120&#32;USD&#32;per&#32;month,&#32;which&#32;is&#32;somewhat&#32;difficult&#32;to&#32;afford.&#32;I&#32;therefore&#32;selected&#32;an&#32;old&#32;second-hand&#32;laptop&#32;with&#32;16&#32;GB&#32;of&#32;memory&#32;to&#32;serve&#32;as&#32;the&#32;server,&#32;and&#32;rented&#32;a&#32;VPS&#32;costing&#32;only&#32;15&#32;yuan&#32;per&#32;month&#32;to&#32;act&#32;as&#32;the&#32;public&#32;gateway.&#32;In&#32;this&#32;way,&#32;the&#32;server&#32;is&#32;quite&#32;cheap&#32;—&#32;no&#32;more&#32;than&#32;the&#32;cost&#32;of&#32;a&#32;meal&#32;each&#32;month.<br><br>=&#32;Creating&#32;a&#32;Server-Side&#32;Modpack<br><br>Adding&#32;mods&#32;on&#32;the&#32;client&#32;side&#32;is&#32;very&#32;simple.&#32;But&#32;on&#32;the&#32;server&#32;side&#32;it&#x27;s&#32;a&#32;little&#32;tricky,&#32;the&#32;mod&#32;API&#32;chosen&#32;is&#32;NeoForge,&#32;so&#32;first&#32;download&#32;the&#32;installer&#32;from&#32;the&#32;#link(&quot;https://neoforged.net/&quot;,&#32;&quot;NeoForge&#32;website&quot;),&#32;run&#32;it,&#32;and&#32;choose&#32;to&#32;install&#32;the&#32;server.&#32;Then&#32;open&#32;the&#32;client&#32;instance&#32;directory,&#32;locate&#32;the&#32;`mods/`&#32;directory&#32;inside&#32;it,&#32;and&#32;copy&#32;all&#32;the&#32;jar&#32;files&#32;into&#32;the&#32;mods&#32;directory&#32;of&#32;NeoForge.<br><br>It&#32;is&#32;recommended&#32;to&#32;test&#32;the&#32;functions&#32;in&#32;single-player&#32;mode&#32;before&#32;starting&#32;the&#32;server,&#32;because&#32;once&#32;the&#32;server&#32;is&#32;running&#32;and&#32;a&#32;problem&#32;such&#32;as&#32;incompatibility&#32;is&#32;discovered,&#32;updating&#32;becomes&#32;very&#32;troublesome:&#32;all&#32;users&#32;must&#32;upgrade&#32;together.<br><br>=&#32;Supporting&#32;Both&#32;Legitimate&#32;and&#32;Pirate&#32;Players<br><br>To&#32;allow&#32;players&#32;without&#32;legitimate&#32;copies&#32;to&#32;join,&#32;the&#32;server&#32;is&#32;set&#32;to&#32;offline&#32;mode.&#32;By&#32;default,&#32;however,&#32;the&#32;skins&#32;and&#32;capes&#32;of&#32;players&#32;on&#32;an&#32;offline-mode&#32;server&#32;cannot&#32;be&#32;displayed,&#32;so&#32;the&#32;mod&#32;#link(&quot;https://modrinth.com/mod/trueuuid&quot;,&#32;&quot;TrueUUID&quot;)&#32;must&#32;be&#32;added.&#32;In&#32;addition,&#32;to&#32;prevent&#32;identity&#32;impersonation,&#32;a&#32;login&#32;feature&#32;is&#32;necessary;&#32;here&#32;I&#32;recommend&#32;#link(&quot;https://modrinth.com/mod/nedologin&quot;,&#32;&quot;NedoLogin&quot;).&#32;For&#32;the&#32;sake&#32;of&#32;server&#32;security,&#32;it&#32;is&#32;also&#32;recommended&#32;to&#32;enable&#32;the&#32;whitelist.<br><br>Because&#32;of&#32;some&#32;intricate&#32;UUID&#32;issues,&#32;a&#32;new&#32;user&#32;must&#32;follow&#32;this&#32;procedure&#32;when&#32;joining&#32;the&#32;server:<br><br>1.&#32;Disable&#32;the&#32;server&#32;whitelist&#32;in&#32;the&#32;console;<br>2.&#32;After&#32;the&#32;player&#32;joins,&#32;add&#32;the&#32;player&#32;to&#32;the&#32;whitelist&#32;in&#32;the&#32;console;<br>3.&#32;Re-enable&#32;the&#32;server&#32;whitelist&#32;in&#32;the&#32;console.<br><br>=&#32;Selecting&#32;Mods<br><br>==&#32;Essential&#32;Utility&#32;Mods<br><br>The&#32;following&#32;are&#32;mods&#32;that,&#32;in&#32;my&#32;view,&#32;must&#32;be&#32;installed&#32;in&#32;any&#32;modpack.<br><br>-&#32;#link(&quot;https://modrinth.com/mod/xaeros-minimap&quot;,&#32;&quot;Xaero&#x27;s&#32;Minimap&quot;)&#32;and&#32;#link(&quot;https://modrinth.com/mod/xaeros-world-map/versions&quot;,&#32;&quot;Xaero&#x27;s&#32;World&#32;Map&quot;):&#32;provide&#32;map&#32;features;<br>-&#32;#link(&quot;https://modrinth.com/mod/iris&quot;,&#32;&quot;Iris&#32;Shaders&quot;):&#32;provides&#32;shaders;<br>-&#32;#link(&quot;https://modrinth.com/mod/jei&quot;,&#32;&quot;JEI&quot;):&#32;provides&#32;convenient&#32;crafting&#32;recipe&#32;lookup,&#32;which&#32;is&#32;an&#32;important&#32;guide&#32;when&#32;many&#32;mods&#32;are&#32;installed;<br>-&#32;#link(&quot;https://modrinth.com/mod/jade&quot;,&#32;&quot;Jade&quot;):&#32;provides&#32;information&#32;about&#32;a&#32;block&#32;when&#32;the&#32;mouse&#32;hovers&#32;over&#32;it.<br><br>==&#32;Small&#32;Mods&#32;That&#32;Improve&#32;the&#32;Experience<br><br>Here&#32;are&#32;some&#32;mods&#32;that&#32;improve&#32;the&#32;experience.&#32;They&#32;are&#32;not&#32;strictly&#32;necessary,&#32;but&#32;they&#32;are&#32;definitely&#32;recommended.<br><br>-&#32;#link(&quot;https://modrinth.com/mod/waystones&quot;,&#32;&quot;Waystones&quot;):&#32;teleportation&#32;stones;<br>-&#32;#link(&quot;https://modrinth.com/mod/natures-compass&quot;,&#32;&quot;Nature&#x27;s&#32;Compass&quot;):&#32;locates&#32;biomes;&#32;it&#32;is&#32;very&#32;convenient&#32;when&#32;searching&#32;for&#32;resources;<br>-&#32;#link(&quot;https://modrinth.com/mod/trashslot&quot;,&#32;&quot;TrashSlot&quot;):&#32;a&#32;trash&#32;slot;<br>-&#32;#link(&quot;https://modrinth.com/mod/jump-over-fences&quot;,&#32;&quot;Jump&#32;Over&#32;Fences&quot;):&#32;the&#32;player&#32;can&#32;jump&#32;over&#32;fences,&#32;whereas&#32;monsters&#32;and&#32;animals&#32;cannot;<br>-&#32;#link(&quot;https://modrinth.com/mod/travelers-titles&quot;,&#32;&quot;Traveler&#x27;s&#32;Titles&quot;):&#32;displays&#32;a&#32;caption&#32;when&#32;entering&#32;a&#32;new&#32;biome&#32;or&#32;dimension,&#32;much&#32;like&#32;the&#32;large&#32;&quot;LIMGRAVE&quot;&#32;text&#32;in&#32;Elden&#32;Ring;<br>-&#32;#link(&quot;https://modrinth.com/mod/sophisticated-backpacks&quot;,&#32;&quot;Sophisticated&#32;Backpacks&quot;):&#32;sophisticated&#32;backpacks;<br>-&#32;#link(&quot;https://modrinth.com/mod/distanthorizons&quot;,&#32;&quot;Distant&#32;Horizons&quot;):&#32;provides&#32;a&#32;very&#32;large&#32;view&#32;distance;&#32;combined&#32;with&#32;shaders,&#32;it&#32;produces&#32;a&#32;visual&#32;quality&#32;reminiscent&#32;of&#32;The&#32;Legend&#32;of&#32;Zelda:&#32;Breath&#32;of&#32;the&#32;Wild;<br>-&#32;#link(&quot;https://modrinth.com/mod/clientsort&quot;,&#32;&quot;ClientSort&quot;):&#32;organizes&#32;inventories&#32;and&#32;chests;<br>-&#32;#link(&quot;https://modrinth.com/mod/yes-steve-model&quot;,&#32;&quot;YSM&quot;):&#32;provides&#32;more&#32;refined&#32;player&#32;models&#32;and&#32;animations;&#32;however,&#32;it&#32;supports&#32;only&#32;Windows&#32;and&#32;Linux,&#32;so&#32;players&#32;on&#32;macOS&#32;can&#32;neither&#32;see&#32;nor&#32;use&#32;it.<br><br>==&#32;Large&#32;Mods<br><br>These&#32;are&#32;the&#32;mods&#32;that&#32;I&#32;mainly&#32;intended&#32;to&#32;play;&#32;they&#32;are&#32;listed&#32;here&#32;for&#32;reference.<br><br>-&#32;#link(&quot;https://modrinth.com/mod/create&quot;,&#32;&quot;Create&quot;)<br>-&#32;#link(&quot;https://modrinth.com/mod/create-aeronautics&quot;,&#32;&quot;Create:&#32;Aeronautics&quot;)<br>-&#32;#link(&quot;https://modrinth.com/mod/ars-nouveau&quot;,&#32;&quot;Ars&#32;Nouveau&quot;)<br>-&#32;#link(&quot;https://modrinth.com/mod/bosses-of-mass-destruction&quot;,&#32;&quot;Bosses&#32;of&#32;Mass&#32;Destruction&quot;)<br>-&#32;#link(&quot;https://modrinth.com/mod/l_enders-cataclysm&quot;,&#32;&quot;L_Ender&#x27;s&#32;Cataclysm&quot;)<br>-&#32;#link(&quot;https://modrinth.com/mod/when-dungeons-arise&quot;,&#32;&quot;When&#32;Dungeons&#32;Arise&quot;)<br>-&#32;#link(&quot;https://modrinth.com/mod/farmers-delight&quot;,&#32;&quot;Farmer&#x27;s&#32;Delight&quot;)<br>-&#32;#link(&quot;https://modrinth.com/mod/touhou-little-maid&quot;,&#32;&quot;Touhou&#32;Little&#32;Maid&quot;)<br>-&#32;#link(&quot;https://www.curseforge.com/minecraft/mc-mods/minecolonies&quot;,&#32;&quot;MineColonies&quot;)<br>-&#32;#link(&quot;https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest&quot;,&#32;&quot;The&#32;Twilight&#32;Forest&quot;)<br><br>=&#32;Installing&#32;YSM&#32;Models&#32;on&#32;the&#32;Server<br><br>YSM&#32;models&#32;can&#32;be&#32;found&#32;on&#32;Bilibili;&#32;many&#32;people&#32;provide&#32;modpacks&#32;or&#32;direct&#32;downloads&#32;there.&#32;After&#32;obtaining&#32;the&#32;models,&#32;place&#32;them&#32;in&#32;the&#32;`config/yes_steve_model/custom`&#32;directory&#32;on&#32;the&#32;server,&#32;and&#32;they&#32;will&#32;be&#32;available&#32;to&#32;all&#32;players&#32;on&#32;the&#32;server.<br><br>=&#32;Advertisement<br><br>Finally,&#32;a&#32;brief&#32;advertisement:&#32;if&#32;you&#32;would&#32;like&#32;to&#32;join&#32;the&#32;server&#32;and&#32;play&#32;together,&#32;you&#32;are&#32;welcome&#32;to&#32;contact&#32;me.<br><br>])<br>
-</p>
-</main>
-<div class="content">
-<div class="ipadding"><div class="page">
-<object data="index-01.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-02.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-03.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-04.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-05.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-</div>
-<div class="ipadding">
+<p><span class="masthead-nav"><a href="//blog.mistivia.com/">博客</a> · <a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/enposts/">English</a> · <a href="//blog.mistivia.com/index.xml">RSS</a></span></p>
+<h1>Setting Up a Minecraft Server</h1>
+<p><span class="pubdate">May 24, 2026</span></p>
+<p>Recently I set up a Minecraft server. This server incorporates many mods, and rather than adopting an existing modpack such as ATM10, I selected the mods myself. Since LLM agents will help you doing all the chores, I will not elaborate on the details here and will mention only the high-level choices.</p>
+<h2>Version Selection</h2>
+<p>The main drive for building this server was that I had watched several videos on Bilibili about the <em>Create: Aeronautics</em>, so I want to try it. This mod currently supports version 1.21.1 primarily, which is also a version with good mod compatibility at present, so 1.21.1 was the natural choice.</p>
+<h2>Client Launcher Selection</h2>
+<p>The most popular launcher at present is <a href="https://prismlauncher.org/">Prism Launcher</a>. However, this launcher supports only legitimate copies of the game. If you also want friends who have not purchased the game to join with a pirate copy, you need another launcher, such as <a href="https://polymc.org/">PolyMC</a>. The two launchers share a common origin, both being forks of <a href="https://multimc.org/">MultiMC</a>; but their modpacks are not interchangeable and must be packed separately.</p>
+<p>As for preparing a modpack, Prism Launcher is more convenient, because it resolves mod dependencies automatically. Therefore, even if you decide to use PolyMC, I recommend installing the mods with Prism Launcher and then copying all the mod jar files into the PolyMC instance.</p>
+<h2>Server Selection</h2>
+<p>After adding many mods, the demands on memory and CPU rise sharply. Memory prices are high at present, and servers with large memory have become especially expensive. If a VPS were used, the expense would be roughly 120 USD per month, which is somewhat difficult to afford. I therefore selected an old second-hand laptop with 16 GB of memory to serve as the server, and rented a VPS costing only 15 yuan per month to act as the public gateway. In this way, the server is quite cheap — no more than the cost of a meal each month.</p>
+<h2>Creating a Server-Side Modpack</h2>
+<p>Adding mods on the client side is very simple. But on the server side it’s a little tricky, the mod API chosen is NeoForge, so first download the installer from the <a href="https://neoforged.net/">NeoForge website</a>, run it, and choose to install the server. Then open the client instance directory, locate the <code>mods/</code> directory inside it, and copy all the jar files into the mods directory of NeoForge.</p>
+<p>It is recommended to test the functions in single-player mode before starting the server, because once the server is running and a problem such as incompatibility is discovered, updating becomes very troublesome: all users must upgrade together.</p>
+<h2>Supporting Both Legitimate and Pirate Players</h2>
+<p>To allow players without legitimate copies to join, the server is set to offline mode. By default, however, the skins and capes of players on an offline-mode server cannot be displayed, so the mod <a href="https://modrinth.com/mod/trueuuid">TrueUUID</a> must be added. In addition, to prevent identity impersonation, a login feature is necessary; here I recommend <a href="https://modrinth.com/mod/nedologin">NedoLogin</a>. For the sake of server security, it is also recommended to enable the whitelist.</p>
+<p>Because of some intricate UUID issues, a new user must follow this procedure when joining the server:</p>
+<ol>
+<li>Disable the server whitelist in the console;</li>
+<li>After the player joins, add the player to the whitelist in the console;</li>
+<li>Re-enable the server whitelist in the console.</li>
+</ol>
+<h2>Selecting Mods</h2>
+<h3>Essential Utility Mods</h3>
+<p>The following are mods that, in my view, must be installed in any modpack.</p>
+<ul>
+<li><a href="https://modrinth.com/mod/xaeros-minimap">Xaero’s Minimap</a> and <a href="https://modrinth.com/mod/xaeros-world-map/versions">Xaero’s World Map</a>: provide map features;</li>
+<li><a href="https://modrinth.com/mod/iris">Iris Shaders</a>: provides shaders;</li>
+<li><a href="https://modrinth.com/mod/jei">JEI</a>: provides convenient crafting recipe lookup, which is an important guide when many mods are installed;</li>
+<li><a href="https://modrinth.com/mod/jade">Jade</a>: provides information about a block when the mouse hovers over it.</li>
+</ul>
+<h3>Small Mods That Improve the Experience</h3>
+<p>Here are some mods that improve the experience. They are not strictly necessary, but they are definitely recommended.</p>
+<ul>
+<li><a href="https://modrinth.com/mod/waystones">Waystones</a>: teleportation stones;</li>
+<li><a href="https://modrinth.com/mod/natures-compass">Nature’s Compass</a>: locates biomes; it is very convenient when searching for resources;</li>
+<li><a href="https://modrinth.com/mod/trashslot">TrashSlot</a>: a trash slot;</li>
+<li><a href="https://modrinth.com/mod/jump-over-fences">Jump Over Fences</a>: the player can jump over fences, whereas monsters and animals cannot;</li>
+<li><a href="https://modrinth.com/mod/travelers-titles">Traveler’s Titles</a>: displays a caption when entering a new biome or dimension, much like the large “LIMGRAVE” text in Elden Ring;</li>
+<li><a href="https://modrinth.com/mod/sophisticated-backpacks">Sophisticated Backpacks</a>: sophisticated backpacks;</li>
+<li><a href="https://modrinth.com/mod/distanthorizons">Distant Horizons</a>: provides a very large view distance; combined with shaders, it produces a visual quality reminiscent of The Legend of Zelda: Breath of the Wild;</li>
+<li><a href="https://modrinth.com/mod/clientsort">ClientSort</a>: organizes inventories and chests;</li>
+<li><a href="https://modrinth.com/mod/yes-steve-model">YSM</a>: provides more refined player models and animations; however, it supports only Windows and Linux, so players on macOS can neither see nor use it.</li>
+</ul>
+<h3>Large Mods</h3>
+<p>These are the mods that I mainly intended to play; they are listed here for reference.</p>
+<ul>
+<li><a href="https://modrinth.com/mod/create">Create</a></li>
+<li><a href="https://modrinth.com/mod/create-aeronautics">Create: Aeronautics</a></li>
+<li><a href="https://modrinth.com/mod/ars-nouveau">Ars Nouveau</a></li>
+<li><a href="https://modrinth.com/mod/bosses-of-mass-destruction">Bosses of Mass Destruction</a></li>
+<li><a href="https://modrinth.com/mod/l_enders-cataclysm">L_Ender’s Cataclysm</a></li>
+<li><a href="https://modrinth.com/mod/when-dungeons-arise">When Dungeons Arise</a></li>
+<li><a href="https://modrinth.com/mod/farmers-delight">Farmer’s Delight</a></li>
+<li><a href="https://modrinth.com/mod/touhou-little-maid">Touhou Little Maid</a></li>
+<li><a href="https://www.curseforge.com/minecraft/mc-mods/minecolonies">MineColonies</a></li>
+<li><a href="https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest">The Twilight Forest</a></li>
+</ul>
+<h2>Installing YSM Models on the Server</h2>
+<p>YSM models can be found on Bilibili; many people provide modpacks or direct downloads there. After obtaining the models, place them in the <code>config/yes_steve_model/custom</code> directory on the server, and they will be available to all players on the server.</p>
+<h2>Advertisement</h2>
+<p>Finally, a brief advertisement: if you would like to join the server and play together, you are welcome to contact me.</p>
+
 <hr>
 <p id="email">Email: i (at) mistivia (dot) com</p>
-</div>
 <script>
 var emailElement = document.getElementById('email');
 var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
 var decodedString = atob(base64String);
 emailElement.innerHTML = decodedString;
 </script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-DRZ9ESWCVM');
-</script>
 </body>
 </html>
+

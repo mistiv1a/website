@@ -1,90 +1,230 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <title>Writing a Virtual Machine Manager</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="/style6.css">
+<link rel="stylesheet" href="/style4.css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Type: Blog Article, Author: Mistivia, Title: Writing a Virtual Machine Manager">
 </head>
 <body>
-<div class="ipadding">
-<pre class="back" style="display: flex; justify-content: space-between; align-items: center;">
-    <a href="../">../</a>
-</pre>
-<script>
-    if (window.location.hostname.endsWith('translate.goog')) {
-        var myRealDomain = "blog.mistivia.com"; 
-        var currentPath = window.location.pathname;
-        window.location.replace("https://" + myRealDomain + currentPath);
-    }
-</script>
-</div>
-<style>
-.visually-hidden {
-    position: absolute;
-    left: -999px;
-    width: 100px;
-    height: 100px;
-    overflow: hidden;
+<p><span class="masthead-nav"><a href="//blog.mistivia.com/">博客</a> · <a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/enposts/">English</a> · <a href="//blog.mistivia.com/index.xml">RSS</a></span></p>
+<h1>Writing a Virtual Machine Manager</h1>
+<p><span class="pubdate">February 2, 2026</span></p>
+<p>Recently I decided to learn eBPF, and during this process I encountered <a href="https://firecracker-microvm.github.io/">Firecracker</a>, a virtual machine manager. I never reached eBPF: I took a wrong direction and fell down to the rabbit hole of virtualization instead. Before this, my mental image of a VMM had been an enormous system such as QEMU or VMware, but Firecracker convinced me that a virtual machine manager does not need to be complicated at all. Therefore I decided to construct one myself.</p>
+<p>The final result was a successful Linux kernel boot, which reached a BusyBox shell:</p>
+<p><a href="1.jpg" target="_blank"><img src="1.jpg" alt=""></a></p>
+<p>The code is available on <a href="https://github.com/mistivia/mvvmm">GitHub</a>, and the rest of this post explains it.</p>
+<h2>Creating the Virtual Machine</h2>
+<p>This step consists only of a few <code>ioctl</code> calls to the KVM interfaces, all inside the <code>vm_guest_init</code> function. There is little to explain here; it is entirely routine code:</p>
+<ul>
+<li><code>KVM_CREATE_VM</code>: create the virtual machine</li>
+<li><code>KVM_CREATE_IRQCHIP</code>: create the interrupt chip emulator</li>
+<li><code>KVM_CREATE_PIT2</code>: create the timer chip emulator</li>
+<li><code>KVM_SET_USER_MEMORY_REGION</code>: load the memory allocated with <code>mmap</code></li>
+<li><code>KVM_CREATE_VCPU</code>: create the virtual CPU</li>
+</ul>
+<h2>CPU Initialization</h2>
+<p>Here we arrive at the first decision. Our goal is to load and boot a Linux kernel, and because of x86’s well-known historical complications, a 64-bit Linux kernel has three separate entry points — one for 16-bit mode, one for 32-bit mode, and one for 64-bit mode. We must choose one of them.</p>
+<p>Booting from the 16-bit entry point would require emulating a BIOS, which is tedious even to imagine. Starting from the 64-bit entry point would require placing the CPU into 64-bit mode ourselves, and 64-bit mode on x86 requires paging, so we would also have to determine the memory mapping and construct page tables.</p>
+<p>The 32-bit boot is considerably simpler in comparison: no BIOS and no page tables. Our kernel is 64-bit, but the kernel itself manages paging and the transition into 64-bit mode, so this is not our responsibility. Our purpose is to write a virtual machine manager, not a bootloader or an operating system, which makes the 32-bit entry point the natural choice.</p>
+<p>According to the kernel’s boot protocol, the CPU must be in 32-bit “flat mode” before we jump to the 32-bit entry point. In flat mode the CPU is 32-bit but paging is disabled, so every address maps directly to physical memory.</p>
+<p>On real hardware, reaching this mode requires a famously complicated initialization sequence — the <a href="https://wiki.osdev.org/GDT_Tutorial">OSDev Wiki</a> provides the details. This too is merely x86 historical legacy and not worth the effort here. With the interfaces that KVM provides, it reduces to setting the internal state of the segment registers and the <code>cr0</code> control register, after which the virtual CPU enters 32-bit flat mode:</p>
+<pre><code class="language-c">void set_flat_mode(struct kvm_segment *seg) {
+    seg-&gt;base = 0;
+    seg-&gt;limit = 0xffffffff;
+    seg-&gt;g = 1;
+    seg-&gt;db = 1;
 }
-</style>
-<main>
-<p id="srctext" class="visually-hidden">
-    #import&#32;&quot;/template.typ&quot;:&#32;*<br><br>#doc-template(<br>title:&#32;&quot;Writing&#32;a&#32;Virtual&#32;Machine&#32;Manager&quot;,<br>date:&#32;&quot;February&#32;2,&#32;2026&quot;,<br>parindent:&#32;1.2em,<br>body:&#32;[<br><br>Recently&#32;I&#32;decided&#32;to&#32;learn&#32;eBPF,&#32;and&#32;during&#32;this&#32;process&#32;I&#32;encountered&#32;#link(&quot;https://firecracker-microvm.github.io/&quot;)[Firecracker],&#32;a&#32;virtual&#32;machine&#32;manager.&#32;I&#32;never&#32;reached&#32;eBPF:&#32;I&#32;took&#32;a&#32;wrong&#32;direction&#32;and&#32;fell&#32;down&#32;to&#32;the&#32;rabbit&#32;hole&#32;of&#32;virtualization&#32;instead.&#32;Before&#32;this,&#32;my&#32;mental&#32;image&#32;of&#32;a&#32;VMM&#32;had&#32;been&#32;an&#32;enormous&#32;system&#32;such&#32;as&#32;QEMU&#32;or&#32;VMware,&#32;but&#32;Firecracker&#32;convinced&#32;me&#32;that&#32;a&#32;virtual&#32;machine&#32;manager&#32;does&#32;not&#32;need&#32;to&#32;be&#32;complicated&#32;at&#32;all.&#32;Therefore&#32;I&#32;decided&#32;to&#32;construct&#32;one&#32;myself.<br><br>The&#32;final&#32;result&#32;was&#32;a&#32;successful&#32;Linux&#32;kernel&#32;boot,&#32;which&#32;reached&#32;a&#32;BusyBox&#32;shell:<br><br>#image(&quot;1.jpg&quot;,&#32;width:&#32;75%)<br><br>The&#32;code&#32;is&#32;available&#32;on&#32;#link(&quot;https://github.com/mistivia/mvvmm&quot;)[GitHub],&#32;and&#32;the&#32;rest&#32;of&#32;this&#32;post&#32;explains&#32;it.<br><br>=&#32;Creating&#32;the&#32;Virtual&#32;Machine<br><br>This&#32;step&#32;consists&#32;only&#32;of&#32;a&#32;few&#32;`ioctl`&#32;calls&#32;to&#32;the&#32;KVM&#32;interfaces,&#32;all&#32;inside&#32;the&#32;`vm_guest_init`&#32;function.&#32;There&#32;is&#32;little&#32;to&#32;explain&#32;here;&#32;it&#32;is&#32;entirely&#32;routine&#32;code:<br><br>-&#32;`KVM_CREATE_VM`:&#32;create&#32;the&#32;virtual&#32;machine<br>-&#32;`KVM_CREATE_IRQCHIP`:&#32;create&#32;the&#32;interrupt&#32;chip&#32;emulator<br>-&#32;`KVM_CREATE_PIT2`:&#32;create&#32;the&#32;timer&#32;chip&#32;emulator<br>-&#32;`KVM_SET_USER_MEMORY_REGION`:&#32;load&#32;the&#32;memory&#32;allocated&#32;with&#32;`mmap`<br>-&#32;`KVM_CREATE_VCPU`:&#32;create&#32;the&#32;virtual&#32;CPU<br><br>=&#32;CPU&#32;Initialization<br><br>Here&#32;we&#32;arrive&#32;at&#32;the&#32;first&#32;decision.&#32;Our&#32;goal&#32;is&#32;to&#32;load&#32;and&#32;boot&#32;a&#32;Linux&#32;kernel,&#32;and&#32;because&#32;of&#32;x86&#x27;s&#32;well-known&#32;historical&#32;complications,&#32;a&#32;64-bit&#32;Linux&#32;kernel&#32;has&#32;three&#32;separate&#32;entry&#32;points&#32;—&#32;one&#32;for&#32;16-bit&#32;mode,&#32;one&#32;for&#32;32-bit&#32;mode,&#32;and&#32;one&#32;for&#32;64-bit&#32;mode.&#32;We&#32;must&#32;choose&#32;one&#32;of&#32;them.<br><br>Booting&#32;from&#32;the&#32;16-bit&#32;entry&#32;point&#32;would&#32;require&#32;emulating&#32;a&#32;BIOS,&#32;which&#32;is&#32;tedious&#32;even&#32;to&#32;imagine.&#32;Starting&#32;from&#32;the&#32;64-bit&#32;entry&#32;point&#32;would&#32;require&#32;placing&#32;the&#32;CPU&#32;into&#32;64-bit&#32;mode&#32;ourselves,&#32;and&#32;64-bit&#32;mode&#32;on&#32;x86&#32;requires&#32;paging,&#32;so&#32;we&#32;would&#32;also&#32;have&#32;to&#32;determine&#32;the&#32;memory&#32;mapping&#32;and&#32;construct&#32;page&#32;tables.<br><br>The&#32;32-bit&#32;boot&#32;is&#32;considerably&#32;simpler&#32;in&#32;comparison:&#32;no&#32;BIOS&#32;and&#32;no&#32;page&#32;tables.&#32;Our&#32;kernel&#32;is&#32;64-bit,&#32;but&#32;the&#32;kernel&#32;itself&#32;manages&#32;paging&#32;and&#32;the&#32;transition&#32;into&#32;64-bit&#32;mode,&#32;so&#32;this&#32;is&#32;not&#32;our&#32;responsibility.&#32;Our&#32;purpose&#32;is&#32;to&#32;write&#32;a&#32;virtual&#32;machine&#32;manager,&#32;not&#32;a&#32;bootloader&#32;or&#32;an&#32;operating&#32;system,&#32;which&#32;makes&#32;the&#32;32-bit&#32;entry&#32;point&#32;the&#32;natural&#32;choice.<br><br>According&#32;to&#32;the&#32;kernel&#x27;s&#32;boot&#32;protocol,&#32;the&#32;CPU&#32;must&#32;be&#32;in&#32;32-bit&#32;&quot;flat&#32;mode&quot;&#32;before&#32;we&#32;jump&#32;to&#32;the&#32;32-bit&#32;entry&#32;point.&#32;In&#32;flat&#32;mode&#32;the&#32;CPU&#32;is&#32;32-bit&#32;but&#32;paging&#32;is&#32;disabled,&#32;so&#32;every&#32;address&#32;maps&#32;directly&#32;to&#32;physical&#32;memory.<br><br>On&#32;real&#32;hardware,&#32;reaching&#32;this&#32;mode&#32;requires&#32;a&#32;famously&#32;complicated&#32;initialization&#32;sequence&#32;—&#32;the&#32;#link(&quot;https://wiki.osdev.org/GDT_Tutorial&quot;)[OSDev&#32;Wiki]&#32;provides&#32;the&#32;details.&#32;This&#32;too&#32;is&#32;merely&#32;x86&#32;historical&#32;legacy&#32;and&#32;not&#32;worth&#32;the&#32;effort&#32;here.&#32;With&#32;the&#32;interfaces&#32;that&#32;KVM&#32;provides,&#32;it&#32;reduces&#32;to&#32;setting&#32;the&#32;internal&#32;state&#32;of&#32;the&#32;segment&#32;registers&#32;and&#32;the&#32;`cr0`&#32;control&#32;register,&#32;after&#32;which&#32;the&#32;virtual&#32;CPU&#32;enters&#32;32-bit&#32;flat&#32;mode:<br><br>```c<br>void&#32;set_flat_mode(struct&#32;kvm_segment&#32;*seg)&#32;{<br>&#32;&#32;&#32;&#32;seg-&gt;base&#32;=&#32;0;<br>&#32;&#32;&#32;&#32;seg-&gt;limit&#32;=&#32;0xffffffff;<br>&#32;&#32;&#32;&#32;seg-&gt;g&#32;=&#32;1;<br>&#32;&#32;&#32;&#32;seg-&gt;db&#32;=&#32;1;<br>}<br><br>struct&#32;kvm_sregs&#32;sregs;<br>ioctl(cpu_fd,&#32;KVM_GET_SREGS,&#32;&amp;sregs);<br>set_flat_mode(&amp;sregs.cs);<br>set_flat_mode(&amp;sregs.ds);<br>set_flat_mode(&amp;sregs.es);<br>set_flat_mode(&amp;sregs.fs);<br>set_flat_mode(&amp;sregs.gs);<br>set_flat_mode(&amp;sregs.ss);<br>sregs.cr0&#32;|=&#32;0x1;<br>ioctl(cpu_fd,&#32;KVM_SET_SREGS,&#32;&amp;sregs);<br>```<br><br>Finally,&#32;`rip`&#32;must&#32;point&#32;at&#32;0x100000,&#32;where&#32;the&#32;kernel&#32;entry&#32;point&#32;will&#32;be&#32;loaded&#32;and&#32;where&#32;the&#32;CPU&#32;will&#32;begin&#32;execution,&#32;and&#32;`rsi`&#32;must&#32;point&#32;at&#32;0x10000,&#32;where&#32;the&#32;kernel&#32;boot&#32;parameters&#32;will&#32;be&#32;loaded:<br><br>```c<br>struct&#32;kvm_regs&#32;regs;<br>ioctl(cpu_fd,&#32;KVM_GET_REGS,&#32;&amp;regs);<br>regs.rip&#32;=&#32;0x100000;<br>regs.rsi&#32;=&#32;0x10000;<br>ioctl(cpu_fd,&#32;KVM_SET_REGS,&#32;&amp;regs);<br>```<br><br>Both&#32;of&#32;these&#32;addresses&#32;come&#32;from&#32;the&#32;Linux&#32;kernel&#32;boot&#32;protocol;&#32;the&#32;next&#32;section&#32;explains&#32;why&#32;they&#32;have&#32;these&#32;values.<br><br>The&#32;final&#32;step&#32;is&#32;CPUID:&#32;we&#32;ask&#32;the&#32;KVM&#32;API&#32;which&#32;CPUID&#32;entries&#32;it&#32;supports&#32;and&#32;pass&#32;them&#32;directly&#32;to&#32;the&#32;virtual&#32;CPU:<br><br>```c<br>struct&#32;kvm_cpuid2&#32;*cpuid;<br>int&#32;max_entries&#32;=&#32;100;<br>cpuid&#32;=&#32;malloc(sizeof(*cpuid)&#32;+<br>&#32;&#32;&#32;&#32;max_entries&#32;*&#32;sizeof(struct&#32;kvm_cpuid_entry2));<br>cpuid-&gt;nent&#32;=&#32;max_entries;<br>ioctl(kvm_fd,&#32;KVM_GET_SUPPORTED_CPUID,&#32;cpuid)<br>ioctl(cpu_fd,&#32;KVM_SET_CPUID2,&#32;cpuid)<br>```<br><br>The&#32;CPU&#32;is&#32;now&#32;initialized.&#32;The&#32;only&#32;element&#32;still&#32;missing&#32;is&#32;the&#32;kernel.<br><br>=&#32;Loading&#32;the&#32;Kernel<br><br>To&#32;load&#32;the&#32;kernel&#32;we&#32;first&#32;need&#32;to&#32;understand&#32;how&#32;the&#32;kernel&#32;file&#32;is&#32;organized.&#32;The&#32;format&#32;in&#32;which&#32;a&#32;modern&#32;Linux&#32;kernel&#32;is&#32;distributed&#32;is&#32;called&#32;bzImage.&#32;Traditionally,&#32;each&#32;512-byte&#32;segment&#32;of&#32;a&#32;disk&#32;is&#32;called&#32;a&#32;sector,&#32;and&#32;the&#32;first&#32;sector&#32;of&#32;the&#32;kernel&#32;image&#32;is&#32;the&#32;boot&#32;sector,&#32;used&#32;when&#32;booting&#32;from&#32;16-bit&#32;mode.&#32;After&#32;it&#32;follow&#32;several&#32;sectors&#32;of&#32;boot&#32;parameters&#32;(setup),&#32;and&#32;only&#32;then&#32;does&#32;the&#32;actual&#32;kernel&#32;begin:<br><br>#image(&quot;2.jpg&quot;,&#32;width:&#32;80%)<br><br>The&#32;boot&#32;sector&#32;is&#32;only&#32;for&#32;16-bit&#32;boot,&#32;so&#32;we&#32;can&#32;ignore&#32;it&#32;and&#32;consider&#32;only&#32;the&#32;other&#32;two&#32;parts.&#32;The&#32;boot&#32;protocol&#32;describes&#32;precisely&#32;what&#32;loading&#32;the&#32;kernel&#32;involves:<br><br>-&#32;Prepare&#32;the&#32;boot&#32;parameters&#32;(`boot_params`,&#32;traditionally&#32;called&#32;the&#32;&quot;zero&#32;page&quot;)<br>-&#32;Copy&#32;the&#32;setup&#32;header,&#32;which&#32;begins&#32;at&#32;offset&#32;0x01f1&#32;in&#32;the&#32;kernel&#32;image,&#32;into&#32;`boot_params`&#32;and&#32;verify&#32;it<br>-&#32;Complete&#32;the&#32;remaining&#32;`boot_params`&#32;fields<br>-&#32;Point&#32;the&#32;`%esi`&#32;register&#32;at&#32;`boot_params`<br><br>We&#32;begin&#32;by&#32;mapping&#32;the&#32;bzImage&#32;into&#32;memory:<br><br>```c<br>bz_image&#32;=&#32;map_file(kernel_path,&#32;&amp;bz_image_size);<br>```<br><br>In&#32;the&#32;previous&#32;section&#32;we&#32;pointed&#32;`%rsi`&#32;at&#32;0x10000,&#32;so&#32;this&#32;is&#32;where&#32;`struct&#32;boot_params`&#32;will&#32;reside.&#32;We&#32;place&#32;it&#32;there&#32;and&#32;set&#32;it&#32;to&#32;zero:<br><br>```c<br>zeropage&#32;=&#32;(struct&#32;boot_params&#32;*)(vm-&gt;memory&#32;+&#32;0x10000);<br>memset(zeropage,&#32;0,&#32;sizeof(*zeropage));<br>```<br><br>Then&#32;we&#32;copy&#32;the&#32;setup&#32;header&#32;from&#32;offset&#32;0x01f1:<br><br>```c<br>memcpy(&amp;zeropage-&gt;hdr,&#32;bz_image+0x01f1,&#32;sizeof(zeropage-&gt;hdr));<br>```<br><br>The&#32;command-line&#32;arguments&#32;also&#32;require&#32;a&#32;free&#32;location&#32;in&#32;memory;&#32;I&#32;chose&#32;0x20000.&#32;We&#32;have&#32;no&#32;VGA&#32;display,&#32;only&#32;a&#32;serial&#32;port,&#32;so&#32;the&#32;arguments&#32;instruct&#32;the&#32;kernel&#32;to&#32;print&#32;to&#32;the&#32;serial&#32;console&#32;and&#32;to&#32;enable&#32;debug&#32;output:<br><br>```c<br>#define&#32;KERNEL_ARGS&#32;&quot;console=ttyS0&#32;debug&quot;<br>cmd_line&#32;=&#32;(char&#32;*)(vm-&gt;memory&#32;+&#32;0x20000);<br>memcpy(cmd_line,&#32;KERNEL_ARGS,&#32;strlen(KERNEL_ARGS)&#32;+&#32;1);<br>```<br><br>We&#32;may&#32;also&#32;want&#32;an&#32;initial&#32;RAM&#32;disk&#32;(initrd).&#32;The&#32;kernel&#32;is&#32;not&#32;strict&#32;about&#32;where&#32;the&#32;initrd&#32;resides&#32;—&#32;any&#32;location&#32;is&#32;acceptable,&#32;provided&#32;we&#32;indicate&#32;that&#32;location.&#32;I&#32;placed&#32;mine&#32;at&#32;the&#32;512&#32;MB&#32;position,&#32;in&#32;the&#32;`load_initrd`&#32;function:<br><br>```c<br>uint32_t&#32;initrd_addr&#32;=&#32;0x20000000;<br>memcpy(vm-&gt;memory&#32;+&#32;initrd_addr,&#32;initrd,&#32;st.st_size);<br>```<br><br>Then&#32;we&#32;complete&#32;the&#32;kernel&#x27;s&#32;boot&#32;parameters.&#32;First,&#32;the&#32;location&#32;of&#32;the&#32;command-line&#32;arguments:<br><br>```c<br>zeropage-&gt;hdr.cmd_line_ptr&#32;=&#32;0x20000;<br>```<br><br>The&#32;video&#32;mode&#32;field&#32;receives&#32;the&#32;default&#32;value&#32;0xFFFF:<br><br>```c<br>zeropage-&gt;hdr.vid_mode&#32;=&#32;0xFFFF;<br>```<br><br>There&#32;is&#32;no&#32;bootloader&#32;here&#32;—&#32;we&#32;are&#32;emulating&#32;the&#32;loading&#32;process&#32;ourselves&#32;—&#32;so&#32;the&#32;bootloader&#32;field&#32;may&#32;contain&#32;any&#32;value:<br><br>```c<br>zeropage-&gt;hdr.type_of_loader&#32;=&#32;0xFF;<br>```<br><br>The&#32;location&#32;of&#32;the&#32;RAM&#32;disk:<br><br>```c<br>zeropage-&gt;hdr.ramdisk_image&#32;=&#32;initrd_addr;<br>zeropage-&gt;hdr.ramdisk_size&#32;=&#32;st.st_size;<br>```<br><br>And&#32;a&#32;flag&#32;that&#32;informs&#32;the&#32;kernel&#32;we&#32;are&#32;loading&#32;it&#32;at&#32;the&#32;1&#32;MB&#32;position:<br><br>```c<br>zeropage-&gt;hdr.loadflags&#32;|=&#32;LOADED_HIGH;<br>```<br><br>The&#32;most&#32;delicate&#32;step&#32;is&#32;the&#32;memory&#32;layout.&#32;I&#32;marked&#32;two&#32;regions&#32;as&#32;usable&#32;memory:&#32;0–640&#32;KB&#32;and&#32;1&#32;MB–1&#32;GB.&#32;Why&#32;there&#32;must&#32;be&#32;a&#32;gap&#32;between&#32;640&#32;KB&#32;and&#32;1&#32;MB,&#32;I&#32;do&#32;not&#32;know;&#32;all&#32;I&#32;discovered&#32;is&#32;that&#32;an&#32;incorrect&#32;value&#32;can&#32;cause&#32;a&#32;kernel&#32;panic.&#32;This&#32;is&#32;more&#32;x86&#32;historical&#32;residue,&#32;and&#32;I&#32;have&#32;chosen&#32;not&#32;to&#32;investigate&#32;further.<br><br>```c<br>zeropage-&gt;e820_entries&#32;=&#32;2;<br>//&#32;first&#32;640KB<br>zeropage-&gt;e820_table[0].addr&#32;=&#32;0;<br>zeropage-&gt;e820_table[0].size&#32;=&#32;0xA0000;<br>zeropage-&gt;e820_table[0].type&#32;=&#32;1;<br>//&#32;&gt;&#32;1MB<br>zeropage-&gt;e820_table[1].addr&#32;=&#32;0x100000;<br>zeropage-&gt;e820_table[1].size&#32;=&#32;MEM_SIZE&#32;-&#32;0x100000;<br>zeropage-&gt;e820_table[1].type&#32;=&#32;1;<br>```<br><br>Finally&#32;we&#32;copy&#32;the&#32;kernel&#32;portion&#32;of&#32;the&#32;bzImage&#32;to&#32;the&#32;1&#32;MB&#32;position.&#32;To&#32;determine&#32;where&#32;that&#32;portion&#32;begins,&#32;we&#32;need&#32;the&#32;combined&#32;size&#32;of&#32;the&#32;boot&#32;and&#32;setup&#32;parts:&#32;boot&#32;is&#32;a&#32;fixed&#32;512&#32;bytes,&#32;and&#32;the&#32;setup&#32;size&#32;is&#32;stored&#32;in&#32;the&#32;setup&#32;header&#32;we&#32;just&#32;copied,&#32;measured&#32;in&#32;512-byte&#32;sectors.&#32;This&#32;gives&#32;us&#32;the&#32;kernel&#x27;s&#32;offset:<br><br>```c<br>setup_size&#32;=&#32;(zeropage-&gt;hdr.setup_sects&#32;+&#32;1)&#32;*&#32;512;<br>memcpy(vm-&gt;memory&#32;+&#32;0x100000,<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;(char&#32;*)bz_image&#32;+&#32;setup_size,<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;bz_image_size&#32;-&#32;setup_size);<br>```<br><br>And&#32;with&#32;this,&#32;the&#32;kernel&#32;is&#32;loaded.<br><br>=&#32;Serial&#32;Port&#32;Emulation<br><br>Until&#32;a&#32;network&#32;device&#32;emulator&#32;exists,&#32;the&#32;serial&#32;port&#32;is&#32;our&#32;only&#32;means&#32;of&#32;interacting&#32;with&#32;the&#32;virtual&#32;machine:&#32;it&#32;prints&#32;the&#32;kernel&#x27;s&#32;debug&#32;output,&#32;and&#32;it&#32;can&#32;host&#32;a&#32;shell.&#32;There&#32;is&#32;not&#32;much&#32;to&#32;this&#32;section,&#32;however.&#32;I&#32;did&#32;not&#32;want&#32;to&#32;read&#32;the&#32;hardware&#32;manual,&#32;so&#32;I&#32;asked&#32;Kimi&#32;to&#32;generate&#32;a&#32;serial&#32;port&#32;emulator&#32;that&#32;is&#32;adequate&#32;for&#32;our&#32;purpose.&#32;It&#32;can&#32;only&#32;write,&#32;never&#32;read&#32;—&#32;no&#32;input&#32;whatsoever&#32;—&#32;but&#32;at&#32;this&#32;stage&#32;that&#32;is&#32;sufficient.<br><br>The&#32;serial&#32;code&#32;is&#32;located&#32;in&#32;the&#32;`serial_init`&#32;and&#32;`handle_serial`&#32;functions.&#32;Note&#32;that&#32;the&#32;emulator&#x27;s&#32;initialization&#32;must&#32;occur&#32;at&#32;the&#32;moment&#32;we&#32;create&#32;the&#32;virtual&#32;machine.<br><br>=&#32;Running&#32;the&#32;Virtual&#32;CPU<br><br>This&#32;section&#32;concerns&#32;mainly&#32;the&#32;`vm_run`&#32;function.<br><br>Before&#32;we&#32;can&#32;run&#32;the&#32;virtual&#32;CPU,&#32;we&#32;must&#32;map&#32;a&#32;small&#32;region&#32;of&#32;memory&#32;located&#32;behind&#32;the&#32;virtual&#32;CPU&#x27;s&#32;file&#32;descriptor;&#32;`KVM_GET_VCPU_MMAP_SIZE`&#32;tells&#32;us&#32;its&#32;size.&#32;Through&#32;this&#32;region&#32;KVM&#32;later&#32;provides&#32;us&#32;with&#32;the&#32;details&#32;of&#32;IO&#32;and&#32;MMIO&#32;exits:<br><br>```c<br>mmap_size&#32;=&#32;ioctl(vm-&gt;kvm_fd,&#32;KVM_GET_VCPU_MMAP_SIZE,&#32;0);<br>run&#32;=&#32;mmap(NULL,&#32;mmap_size,&#32;PROT_READ&#32;|&#32;PROT_WRITE,<br>&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;MAP_SHARED,&#32;vm-&gt;cpu_fd,&#32;0);<br>```<br><br>Once&#32;the&#32;mapping&#32;is&#32;complete,&#32;we&#32;can&#32;run&#32;the&#32;virtual&#32;CPU&#32;through&#32;the&#32;`KVM_RUN`&#32;interface:<br><br>```c<br>ioctl(vm-&gt;cpu_fd,&#32;KVM_RUN,&#32;0)<br>```<br><br>The&#32;CPU&#32;then&#32;runs&#32;until&#32;it&#32;returns&#32;control&#32;to&#32;us,&#32;for&#32;one&#32;of&#32;several&#32;reasons:<br><br>-&#32;The&#32;virtual&#32;machine&#32;has&#32;shut&#32;down<br>-&#32;The&#32;virtual&#32;machine&#32;has&#32;requested&#32;IO<br>-&#32;The&#32;virtual&#32;machine&#32;has&#32;requested&#32;memory-mapped&#32;IO&#32;(MMIO)<br><br>MMIO&#32;is&#32;indispensable&#32;for&#32;modern&#32;block&#32;and&#32;network&#32;devices,&#32;but&#32;we&#32;do&#32;not&#32;need&#32;any&#32;of&#32;that&#32;yet,&#32;so&#32;we&#32;ignore&#32;it&#32;entirely.&#32;On&#32;a&#32;shutdown&#32;request,&#32;we&#32;simply&#32;terminate.<br><br>IO&#32;requests&#32;here&#32;refer&#32;to&#32;x86&#x27;s&#32;#link(&quot;https://wiki.osdev.org/I/O_Ports&quot;)[IO&#32;ports].&#32;Most&#32;of&#32;them&#32;we&#32;can&#32;ignore&#32;completely,&#32;but&#32;the&#32;serial&#32;port&#x27;s&#32;requests&#32;we&#32;must&#32;handle.&#32;The&#32;details&#32;reside&#32;in&#32;the&#32;memory&#32;we&#32;mapped&#32;earlier:&#32;we&#32;examine&#32;the&#32;port&#32;number,&#32;and&#32;if&#32;it&#32;lies&#32;between&#32;0x3f8&#32;and&#32;0x3ff&#32;it&#32;belongs&#32;to&#32;the&#32;serial&#32;port,&#32;so&#32;we&#32;pass&#32;it&#32;to&#32;`handle_serial`:<br><br>```c<br>if&#32;(run-&gt;io.port&#32;&gt;=&#32;0x3f8&#32;&amp;&amp;&#32;run-&gt;io.port&#32;&lt;=&#32;0x3ff)&#32;{<br>&#32;&#32;&#32;&#32;handle_serial(vm,&#32;run);<br>}<br>```<br><br>=&#32;Creating&#32;the&#32;BusyBox&#32;RAM&#32;Disk<br><br>First,&#32;install&#32;BusyBox:<br><br>```bash<br>sudo&#32;pacman&#32;-S&#32;busybox<br>```<br><br>Create&#32;a&#32;rootfs&#32;directory:<br><br>```bash<br>mkdir&#32;rootfs<br>```<br><br>Then&#32;the&#32;directories&#32;we&#32;cannot&#32;omit:<br><br>```bash<br>cd&#32;rootfs<br>mkdir&#32;dev&#32;sys&#32;proc&#32;bin<br>```<br><br>Install&#32;BusyBox&#32;into&#32;it:<br><br>```bash<br>busybox&#32;--install&#32;bin/<br>```<br><br>Write&#32;an&#32;init&#32;script:<br><br>```bash<br>#!/bin/sh<br><br>mount&#32;-t&#32;devtmpfs&#32;devtmpfs&#32;/dev<br>mount&#32;-t&#32;proc&#32;proc&#32;/proc<br>mount&#32;-t&#32;sysfs&#32;sys&#32;/sys<br>mdev&#32;-s<br><br>echo&#32;&quot;BusyBox!&quot;<br>/bin/sh&#32;-l<br><br>while&#32;:&#32;;&#32;do<br>&#32;&#32;&#32;&#32;sleep&#32;1<br>done<br>```<br><br>Make&#32;it&#32;executable,&#32;then&#32;package&#32;the&#32;entire&#32;directory&#32;into&#32;a&#32;cpio&#32;image:<br><br>```bash<br>chmod&#32;+x&#32;init<br>find&#32;.&#32;-print0&#32;|&#32;cpio&#32;--null&#32;-ov&#32;--format=newc&#32;|&#32;gzip&#32;&gt;&#32;../initrd<br>```<br><br>And&#32;this&#32;gives&#32;us&#32;our&#32;initial&#32;RAM&#32;disk:&#32;the&#32;initrd&#32;file.<br><br>=&#32;Wrapping&#32;Up<br><br>At&#32;this&#32;point&#32;we&#32;can&#32;start&#32;the&#32;virtual&#32;machine.&#32;First,&#32;obtain&#32;a&#32;kernel&#32;from&#32;the&#32;host&#32;machine:<br><br>```bash<br>cp&#32;/boot/vmlinuz-linux&#32;./vmlinuz<br>```<br><br>The&#32;filename&#32;varies&#32;from&#32;one&#32;distribution&#32;to&#32;another,&#32;but&#32;it&#32;is&#32;always&#32;similar&#32;to&#32;this.<br><br>Then&#32;compile&#32;the&#32;virtual&#32;machine&#32;manager:<br><br>```bash<br>gcc&#32;small_vmm.c&#32;-o&#32;small_vmm<br>```<br><br>And&#32;run&#32;it:<br><br>```bash<br>sudo&#32;./small_vmm&#32;vmlinuz&#32;initrd<br>```<br><br>If&#32;everything&#32;proceeds&#32;correctly,&#32;you&#32;will&#32;obtain&#32;the&#32;BusyBox&#32;shell&#32;prompt&#32;shown&#32;in&#32;the&#32;screenshot&#32;at&#32;the&#32;beginning.&#32;Typing&#32;into&#32;it&#32;will&#32;have&#32;no&#32;effect,&#32;however&#32;—&#32;the&#32;serial&#32;emulation&#32;is&#32;incomplete&#32;and&#32;has&#32;no&#32;input&#32;path&#32;—&#32;so&#32;the&#32;only&#32;available&#32;action&#32;is&#32;to&#32;press&#32;Ctrl+C&#32;to&#32;exit.<br><br>=&#32;Summary<br><br>This&#32;brings&#32;our&#32;virtual&#32;machine&#32;manager&#32;to&#32;a&#32;reasonable&#32;stopping&#32;point.&#32;As&#32;for&#32;the&#32;next&#32;steps,&#32;the&#32;first&#32;evident&#32;task&#32;is&#32;completing&#32;the&#32;serial&#32;emulation&#32;so&#32;that&#32;we&#32;can&#32;actually&#32;type&#32;at&#32;the&#32;console,&#32;which&#32;probably&#32;requires&#32;reading&#32;the&#32;manual&#32;and&#32;whatever&#32;other&#32;material&#32;I&#32;can&#32;find&#32;about&#32;the&#32;8250&#32;chip.<br><br>After&#32;that&#32;comes&#32;the&#32;emulation&#32;of&#32;virtio&#32;devices,&#32;which&#32;requires&#32;working&#32;from&#32;#link(&quot;https://docs.oasis-open.org/virtio/virtio/v1.0/virtio-v1.0.html&quot;)[this&#32;specification].&#32;A&#32;complete&#32;implementation&#32;must&#32;emulate&#32;the&#32;PCI&#32;bus,&#32;but&#32;Linux&#32;offers&#32;a&#32;command-line&#32;parameter&#32;for&#32;providing&#32;the&#32;kernel&#32;with&#32;a&#32;virtio&#32;device&#x27;s&#32;MMIO&#32;address&#32;directly,&#32;without&#32;any&#32;PCI&#32;bus,&#32;which&#32;reduces&#32;the&#32;work&#32;dramatically.<br><br>And&#32;then&#32;there&#32;is&#32;multiprocessor&#32;support,&#32;another&#32;substantial&#32;amount&#32;of&#32;work&#32;in&#32;addition&#32;to&#32;all&#32;this.<br><br>In&#32;its&#32;current&#32;state,&#32;this&#32;virtual&#32;machine&#32;manager&#32;is&#32;of&#32;course&#32;useless.&#32;But&#32;it&#32;is&#32;not&#32;far&#32;from&#32;being&#32;genuinely&#32;useful,&#32;either.&#32;With&#32;the&#32;addition&#32;of&#32;block&#32;and&#32;network&#32;device&#32;emulation,&#32;it&#32;would&#32;be&#32;adequate&#32;for&#32;deploying&#32;backend&#32;applications&#32;that&#32;require&#32;environment&#32;isolation&#32;—&#32;running&#32;an&#32;application&#32;such&#32;as&#32;clawdbot&#32;would&#32;be&#32;entirely&#32;feasible.<br><br>If&#32;application&#32;development,&#32;frontend&#32;work,&#32;and&#32;CRUD&#32;backends&#32;form&#32;the&#32;popular&#32;curriculum,&#32;then&#32;the&#32;lower&#32;levels&#32;of&#32;computing&#32;form&#32;the&#32;hidden&#32;one.&#32;None&#32;of&#32;it&#32;is&#32;genuinely&#32;difficult;&#32;it&#32;is&#32;merely&#32;specialized,&#32;so&#32;much&#32;of&#32;the&#32;knowledge&#32;is&#32;transmitted&#32;through&#32;personal&#32;communication&#32;and&#32;through&#32;careful&#32;reading&#32;of&#32;source&#32;code&#32;—&#32;sometimes&#32;even&#32;the&#32;most&#32;capable&#32;AI&#32;cannot&#32;provide&#32;an&#32;adequate&#32;answer.&#32;Virtualization&#32;is&#32;a&#32;relatively&#32;mainstream&#32;technology,&#32;yet&#32;when&#32;one&#32;examines&#32;the&#32;details&#32;it&#32;becomes&#32;hidden&#32;once&#32;again.&#32;This&#32;is&#32;what&#32;motivated&#32;me&#32;to&#32;write&#32;this&#32;post.<br><br>=&#32;References<br><br>-&#32;#link(&quot;https://www.kernel.org/doc/html/v6.1/x86/boot.html&quot;)[The&#32;Linux/x86&#32;Boot&#32;Protocol]<br>-&#32;#link(&quot;https://docs.kernel.org/virt/kvm/api.html&quot;)[The&#32;Definitive&#32;KVM&#32;API&#32;Documentation]<br>-&#32;#link(&quot;https://wdv4758h.github.io/notes/blog/linux-kernel-boot.html&quot;)[Linux&#32;Kernel&#32;Boot]<br>-&#32;#link(&quot;https://www.ihcblog.com/rust-mini-vmm-1/&quot;)[用Rust实现极简VMM&#32;-&#32;Ihcblog!]<br>-&#32;#link(&quot;https://docs.kernel.org/admin-guide/kernel-parameters.html&quot;)[The&#32;kernel&#x27;s&#32;command-line&#32;parameters]<br>-&#32;#link(&quot;https://gist.github.com/zserge/ae9098a75b2b83a1299d19b79b5fe488&quot;)[kvm_host.c&#32;-&#32;GitHub&#32;Gist]<br>-&#32;#link(&quot;https://github.com/rust-vmm/vmm-reference/&quot;)[vmm-reference&#32;-&#32;GitHub]<br><br>])<br>
-</p>
-</main>
-<div class="content">
-<div class="ipadding"><div class="page">
-<object data="index-01.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-02.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-03.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-04.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-05.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-06.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-07.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-08.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-09.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-10.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-<div class="ipadding"><div class="page">
-<object data="index-11.svg" type="image/svg+xml" style="width:100%;height:auto;display:block;"></object>
-</div></div>
-</div>
-<div class="ipadding">
+
+struct kvm_sregs sregs;
+ioctl(cpu_fd, KVM_GET_SREGS, &amp;sregs);
+set_flat_mode(&amp;sregs.cs);
+set_flat_mode(&amp;sregs.ds);
+set_flat_mode(&amp;sregs.es);
+set_flat_mode(&amp;sregs.fs);
+set_flat_mode(&amp;sregs.gs);
+set_flat_mode(&amp;sregs.ss);
+sregs.cr0 |= 0x1;
+ioctl(cpu_fd, KVM_SET_SREGS, &amp;sregs);
+</code></pre>
+<p>Finally, <code>rip</code> must point at 0x100000, where the kernel entry point will be loaded and where the CPU will begin execution, and <code>rsi</code> must point at 0x10000, where the kernel boot parameters will be loaded:</p>
+<pre><code class="language-c">struct kvm_regs regs;
+ioctl(cpu_fd, KVM_GET_REGS, &amp;regs);
+regs.rip = 0x100000;
+regs.rsi = 0x10000;
+ioctl(cpu_fd, KVM_SET_REGS, &amp;regs);
+</code></pre>
+<p>Both of these addresses come from the Linux kernel boot protocol; the next section explains why they have these values.</p>
+<p>The final step is CPUID: we ask the KVM API which CPUID entries it supports and pass them directly to the virtual CPU:</p>
+<pre><code class="language-c">struct kvm_cpuid2 *cpuid;
+int max_entries = 100;
+cpuid = malloc(sizeof(*cpuid) +
+    max_entries * sizeof(struct kvm_cpuid_entry2));
+cpuid-&gt;nent = max_entries;
+ioctl(kvm_fd, KVM_GET_SUPPORTED_CPUID, cpuid)
+ioctl(cpu_fd, KVM_SET_CPUID2, cpuid)
+</code></pre>
+<p>The CPU is now initialized. The only element still missing is the kernel.</p>
+<h2>Loading the Kernel</h2>
+<p>To load the kernel we first need to understand how the kernel file is organized. The format in which a modern Linux kernel is distributed is called bzImage. Traditionally, each 512-byte segment of a disk is called a sector, and the first sector of the kernel image is the boot sector, used when booting from 16-bit mode. After it follow several sectors of boot parameters (setup), and only then does the actual kernel begin:</p>
+<p><a href="2.jpg" target="_blank"><img src="2.jpg" alt=""></a></p>
+<p>The boot sector is only for 16-bit boot, so we can ignore it and consider only the other two parts. The boot protocol describes precisely what loading the kernel involves:</p>
+<ul>
+<li>Prepare the boot parameters (<code>boot_params</code>, traditionally called the “zero page”)</li>
+<li>Copy the setup header, which begins at offset 0x01f1 in the kernel image, into <code>boot_params</code> and verify it</li>
+<li>Complete the remaining <code>boot_params</code> fields</li>
+<li>Point the <code>%esi</code> register at <code>boot_params</code></li>
+</ul>
+<p>We begin by mapping the bzImage into memory:</p>
+<pre><code class="language-c">bz_image = map_file(kernel_path, &amp;bz_image_size);
+</code></pre>
+<p>In the previous section we pointed <code>%rsi</code> at 0x10000, so this is where <code>struct boot_params</code> will reside. We place it there and set it to zero:</p>
+<pre><code class="language-c">zeropage = (struct boot_params *)(vm-&gt;memory + 0x10000);
+memset(zeropage, 0, sizeof(*zeropage));
+</code></pre>
+<p>Then we copy the setup header from offset 0x01f1:</p>
+<pre><code class="language-c">memcpy(&amp;zeropage-&gt;hdr, bz_image+0x01f1, sizeof(zeropage-&gt;hdr));
+</code></pre>
+<p>The command-line arguments also require a free location in memory; I chose 0x20000. We have no VGA display, only a serial port, so the arguments instruct the kernel to print to the serial console and to enable debug output:</p>
+<pre><code class="language-c">#define KERNEL_ARGS &quot;console=ttyS0 debug&quot;
+cmd_line = (char *)(vm-&gt;memory + 0x20000);
+memcpy(cmd_line, KERNEL_ARGS, strlen(KERNEL_ARGS) + 1);
+</code></pre>
+<p>We may also want an initial RAM disk (initrd). The kernel is not strict about where the initrd resides — any location is acceptable, provided we indicate that location. I placed mine at the 512 MB position, in the <code>load_initrd</code> function:</p>
+<pre><code class="language-c">uint32_t initrd_addr = 0x20000000;
+memcpy(vm-&gt;memory + initrd_addr, initrd, st.st_size);
+</code></pre>
+<p>Then we complete the kernel’s boot parameters. First, the location of the command-line arguments:</p>
+<pre><code class="language-c">zeropage-&gt;hdr.cmd_line_ptr = 0x20000;
+</code></pre>
+<p>The video mode field receives the default value 0xFFFF:</p>
+<pre><code class="language-c">zeropage-&gt;hdr.vid_mode = 0xFFFF;
+</code></pre>
+<p>There is no bootloader here — we are emulating the loading process ourselves — so the bootloader field may contain any value:</p>
+<pre><code class="language-c">zeropage-&gt;hdr.type_of_loader = 0xFF;
+</code></pre>
+<p>The location of the RAM disk:</p>
+<pre><code class="language-c">zeropage-&gt;hdr.ramdisk_image = initrd_addr;
+zeropage-&gt;hdr.ramdisk_size = st.st_size;
+</code></pre>
+<p>And a flag that informs the kernel we are loading it at the 1 MB position:</p>
+<pre><code class="language-c">zeropage-&gt;hdr.loadflags |= LOADED_HIGH;
+</code></pre>
+<p>The most delicate step is the memory layout. I marked two regions as usable memory: 0–640 KB and 1 MB–1 GB. Why there must be a gap between 640 KB and 1 MB, I do not know; all I discovered is that an incorrect value can cause a kernel panic. This is more x86 historical residue, and I have chosen not to investigate further.</p>
+<pre><code class="language-c">zeropage-&gt;e820_entries = 2;
+// first 640KB
+zeropage-&gt;e820_table[0].addr = 0;
+zeropage-&gt;e820_table[0].size = 0xA0000;
+zeropage-&gt;e820_table[0].type = 1;
+// &gt; 1MB
+zeropage-&gt;e820_table[1].addr = 0x100000;
+zeropage-&gt;e820_table[1].size = MEM_SIZE - 0x100000;
+zeropage-&gt;e820_table[1].type = 1;
+</code></pre>
+<p>Finally we copy the kernel portion of the bzImage to the 1 MB position. To determine where that portion begins, we need the combined size of the boot and setup parts: boot is a fixed 512 bytes, and the setup size is stored in the setup header we just copied, measured in 512-byte sectors. This gives us the kernel’s offset:</p>
+<pre><code class="language-c">setup_size = (zeropage-&gt;hdr.setup_sects + 1) * 512;
+memcpy(vm-&gt;memory + 0x100000,
+       (char *)bz_image + setup_size,
+       bz_image_size - setup_size);
+</code></pre>
+<p>And with this, the kernel is loaded.</p>
+<h2>Serial Port Emulation</h2>
+<p>Until a network device emulator exists, the serial port is our only means of interacting with the virtual machine: it prints the kernel’s debug output, and it can host a shell. There is not much to this section, however. I did not want to read the hardware manual, so I asked Kimi to generate a serial port emulator that is adequate for our purpose. It can only write, never read — no input whatsoever — but at this stage that is sufficient.</p>
+<p>The serial code is located in the <code>serial_init</code> and <code>handle_serial</code> functions. Note that the emulator’s initialization must occur at the moment we create the virtual machine.</p>
+<h2>Running the Virtual CPU</h2>
+<p>This section concerns mainly the <code>vm_run</code> function.</p>
+<p>Before we can run the virtual CPU, we must map a small region of memory located behind the virtual CPU’s file descriptor; <code>KVM_GET_VCPU_MMAP_SIZE</code> tells us its size. Through this region KVM later provides us with the details of IO and MMIO exits:</p>
+<pre><code class="language-c">mmap_size = ioctl(vm-&gt;kvm_fd, KVM_GET_VCPU_MMAP_SIZE, 0);
+run = mmap(NULL, mmap_size, PROT_READ | PROT_WRITE,
+           MAP_SHARED, vm-&gt;cpu_fd, 0);
+</code></pre>
+<p>Once the mapping is complete, we can run the virtual CPU through the <code>KVM_RUN</code> interface:</p>
+<pre><code class="language-c">ioctl(vm-&gt;cpu_fd, KVM_RUN, 0)
+</code></pre>
+<p>The CPU then runs until it returns control to us, for one of several reasons:</p>
+<ul>
+<li>The virtual machine has shut down</li>
+<li>The virtual machine has requested IO</li>
+<li>The virtual machine has requested memory-mapped IO (MMIO)</li>
+</ul>
+<p>MMIO is indispensable for modern block and network devices, but we do not need any of that yet, so we ignore it entirely. On a shutdown request, we simply terminate.</p>
+<p>IO requests here refer to x86’s <a href="https://wiki.osdev.org/I/O_Ports">IO ports</a>. Most of them we can ignore completely, but the serial port’s requests we must handle. The details reside in the memory we mapped earlier: we examine the port number, and if it lies between 0x3f8 and 0x3ff it belongs to the serial port, so we pass it to <code>handle_serial</code>:</p>
+<pre><code class="language-c">if (run-&gt;io.port &gt;= 0x3f8 &amp;&amp; run-&gt;io.port &lt;= 0x3ff) {
+    handle_serial(vm, run);
+}
+</code></pre>
+<h2>Creating the BusyBox RAM Disk</h2>
+<p>First, install BusyBox:</p>
+<pre><code class="language-bash">sudo pacman -S busybox
+</code></pre>
+<p>Create a rootfs directory:</p>
+<pre><code class="language-bash">mkdir rootfs
+</code></pre>
+<p>Then the directories we cannot omit:</p>
+<pre><code class="language-bash">cd rootfs
+mkdir dev sys proc bin
+</code></pre>
+<p>Install BusyBox into it:</p>
+<pre><code class="language-bash">busybox --install bin/
+</code></pre>
+<p>Write an init script:</p>
+<pre><code class="language-bash">#!/bin/sh
+
+mount -t devtmpfs devtmpfs /dev
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mdev -s
+
+echo &quot;BusyBox!&quot;
+/bin/sh -l
+
+while : ; do
+    sleep 1
+done
+</code></pre>
+<p>Make it executable, then package the entire directory into a cpio image:</p>
+<pre><code class="language-bash">chmod +x init
+find . -print0 | cpio --null -ov --format=newc | gzip &gt; ../initrd
+</code></pre>
+<p>And this gives us our initial RAM disk: the initrd file.</p>
+<h2>Wrapping Up</h2>
+<p>At this point we can start the virtual machine. First, obtain a kernel from the host machine:</p>
+<pre><code class="language-bash">cp /boot/vmlinuz-linux ./vmlinuz
+</code></pre>
+<p>The filename varies from one distribution to another, but it is always similar to this.</p>
+<p>Then compile the virtual machine manager:</p>
+<pre><code class="language-bash">gcc small_vmm.c -o small_vmm
+</code></pre>
+<p>And run it:</p>
+<pre><code class="language-bash">sudo ./small_vmm vmlinuz initrd
+</code></pre>
+<p>If everything proceeds correctly, you will obtain the BusyBox shell prompt shown in the screenshot at the beginning. Typing into it will have no effect, however — the serial emulation is incomplete and has no input path — so the only available action is to press Ctrl+C to exit.</p>
+<h2>Summary</h2>
+<p>This brings our virtual machine manager to a reasonable stopping point. As for the next steps, the first evident task is completing the serial emulation so that we can actually type at the console, which probably requires reading the manual and whatever other material I can find about the 8250 chip.</p>
+<p>After that comes the emulation of virtio devices, which requires working from <a href="https://docs.oasis-open.org/virtio/virtio/v1.0/virtio-v1.0.html">this specification</a>. A complete implementation must emulate the PCI bus, but Linux offers a command-line parameter for providing the kernel with a virtio device’s MMIO address directly, without any PCI bus, which reduces the work dramatically.</p>
+<p>And then there is multiprocessor support, another substantial amount of work in addition to all this.</p>
+<p>In its current state, this virtual machine manager is of course useless. But it is not far from being genuinely useful, either. With the addition of block and network device emulation, it would be adequate for deploying backend applications that require environment isolation — running an application such as clawdbot would be entirely feasible.</p>
+<p>If application development, frontend work, and CRUD backends form the popular curriculum, then the lower levels of computing form the hidden one. None of it is genuinely difficult; it is merely specialized, so much of the knowledge is transmitted through personal communication and through careful reading of source code — sometimes even the most capable AI cannot provide an adequate answer. Virtualization is a relatively mainstream technology, yet when one examines the details it becomes hidden once again. This is what motivated me to write this post.</p>
+<h2>References</h2>
+<ul>
+<li><a href="https://www.kernel.org/doc/html/v6.1/x86/boot.html">The Linux/x86 Boot Protocol</a></li>
+<li><a href="https://docs.kernel.org/virt/kvm/api.html">The Definitive KVM API Documentation</a></li>
+<li><a href="https://wdv4758h.github.io/notes/blog/linux-kernel-boot.html">Linux Kernel Boot</a></li>
+<li><a href="https://www.ihcblog.com/rust-mini-vmm-1/">用Rust实现极简VMM - Ihcblog!</a></li>
+<li><a href="https://docs.kernel.org/admin-guide/kernel-parameters.html">The kernel’s command-line parameters</a></li>
+<li><a href="https://gist.github.com/zserge/ae9098a75b2b83a1299d19b79b5fe488">kvm_host.c - GitHub Gist</a></li>
+<li><a href="https://github.com/rust-vmm/vmm-reference/">vmm-reference - GitHub</a></li>
+</ul>
+
 <hr>
 <p id="email">Email: i (at) mistivia (dot) com</p>
-</div>
 <script>
 var emailElement = document.getElementById('email');
 var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
 var decodedString = atob(base64String);
 emailElement.innerHTML = decodedString;
 </script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-DRZ9ESWCVM');
-</script>
 </body>
 </html>
+
