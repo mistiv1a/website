@@ -44,7 +44,7 @@ body {
   line-height: 1.78;
   color: var(--ink);
   background-color: var(--paper);
-  max-width: 34rem;
+  max-width: 39rem;
   margin: 0 auto;
   padding: 4.5rem 1.5rem 3rem;
   min-height: 100%;
@@ -146,6 +146,29 @@ ul:has(> li > .pdate) li {
     grid-template-columns: 1fr;
     padding: 0.5em 0;
   }
+}
+
+/* --- Homepage: a short hand-list of destinations ------------------------ */
+
+.homelinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.homelinks li {
+  margin: 0;
+  padding: 0.5em 0;
+}
+
+.homelinks a {
+  border-bottom: none;
+  letter-spacing: 0.02em;
+}
+
+.homelinks a:hover {
+  border-bottom: 1px solid var(--ink);
 }
 
 /* --- Back-of-book index (friend links) ---------------------------------- */

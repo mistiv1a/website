@@ -7,12 +7,17 @@ FENCE_RE = re.compile(r'^(```|~~~).*?^\1[ \t]*$', re.MULTILINE | re.DOTALL)
 
 # The site nav is inserted here, after conversion, so there is exactly one
 # definition of it rather than a copy pasted into every source file.
+# Addresses are absolute because this same nav is served from two hosts
+# (mistivia.com and blog.mistivia.com); a site-relative "/links/" would point
+# at mistivia.com/links/ when the nav appears on the homepage.
+# Note: "关于" is written without a trailing slash so sync.sh's yggdrasil
+# rewrite of href="//mistivia.com" keeps matching.
 BLOG_NAV = [
-    ("首页", "/"),
+    ("首页", "//blog.mistivia.com/"),
     ("关于", "//mistivia.com"),
-    ("友链", "/links/"),
-    ("English", "/enposts/"),
-    ("RSS", "/index.xml"),
+    ("友链", "//blog.mistivia.com/links/"),
+    ("English", "//blog.mistivia.com/enposts/"),
+    ("RSS", "//blog.mistivia.com/index.xml"),
 ]
 
 PROJECT_NAV = [
@@ -27,10 +32,10 @@ def render_nav(items):
 def nav_for(input_path):
     """Pick the nav belonging to the site this page is part of."""
     path = os.path.abspath(input_path).replace(os.sep, "/")
-    if "/blog/" in path:
-        return render_nav(BLOG_NAV)
     if "/homepage/projects/" in path:
         return render_nav(PROJECT_NAV)
+    if "/blog/" in path or path.endswith("/homepage/index.md"):
+        return render_nav(BLOG_NAV)
     return ""
 
 # A post lives in a directory named YYYY-MM-DD-slug; that name is the single

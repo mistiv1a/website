@@ -1,15 +1,6 @@
+Mistivia
+========
 
-<!DOCTYPE html>
-<html>
-<head>
-<title>Mistivia</title>
-<meta charset="utf-8">
-<link rel="stylesheet" href="/style3.css">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-<h1>Mistivia</h1>
-<p><span class="masthead-nav"><a href="//blog.mistivia.com/">首页</a> · <a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/enposts/">English</a> · <a href="//blog.mistivia.com/index.xml">RSS</a></span></p>
 <div id="ennav" style="display: none;">
 <ul class="homelinks">
 <li><a href="//blog.mistivia.com/">Blog</a></li>
@@ -18,6 +9,7 @@
 <li><a href="http://github.com/mistivias?tab=repositories">GitHub</a></li>
 </ul>
 </div>
+
 <div id="zhnav">
 <ul class="homelinks">
 <li><a href="//blog.mistivia.com/">博客</a></li>
@@ -26,6 +18,7 @@
 <li><a href="http://github.com/mistivia?tab=repositories">GitHub</a></li>
 </ul>
 </div>
+
 <script>
 var userLang = navigator.language || navigator.userLanguage;
 if (!userLang.startsWith('zh')) {
@@ -33,15 +26,3 @@ if (!userLang.startsWith('zh')) {
     document.getElementById('ennav').style.display = 'block';
 }
 </script>
-
-<hr>
-<p id="email">Email: i (at) mistivia (dot) com</p>
-<script>
-var emailElement = document.getElementById('email');
-var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
-var decodedString = atob(base64String);
-emailElement.innerHTML = decodedString;
-</script>
-</body>
-</html>
-

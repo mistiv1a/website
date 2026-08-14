@@ -148,6 +148,29 @@ ul:has(> li > .pdate) li {
   }
 }
 
+/* --- Homepage: a short hand-list of destinations ------------------------ */
+
+.homelinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.homelinks li {
+  margin: 0;
+  padding: 0.5em 0;
+}
+
+.homelinks a {
+  border-bottom: none;
+  letter-spacing: 0.02em;
+}
+
+.homelinks a:hover {
+  border-bottom: 1px solid var(--ink);
+}
+
 /* --- Back-of-book index (friend links) ---------------------------------- */
 
 #lnks {
