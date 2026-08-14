@@ -23,8 +23,8 @@
      register for a site whose name means "the writings of". */
   --face-text: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua",
     "URW Palladio L", "P052", Georgia, "Times New Roman", "SiteSerifBody", "Songti SC", "STSong", "SimSun", serif;
-  --face-heading-text: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua",
-    "URW Palladio L", "P052", Georgia, "Times New Roman", "SiteSerifHeading", "Songti SC", "STSong", "SimSun", serif;
+  --face-heading-text: "SiteSerifHeading", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua",
+    "URW Palladio L", "P052", Georgia, "Times New Roman", "Songti SC", "STSong", "SimSun", serif;
   --face-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", sans-chinese, monospace;
 
