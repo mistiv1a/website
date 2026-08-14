@@ -30,11 +30,11 @@ nntps://raye.mistivia.com:563/sharknews
 
 打开雷鸟后，点击右上角菜单。选择“添加帐号”。
 
-![](addaccount.jpg);
+![](addaccount.jpg)
 
 选择“新闻组”。
 
-![](newsgroup.jpg);
+![](newsgroup.jpg)
 
 填入自己的昵称和电子邮箱地址。
 
@@ -42,7 +42,7 @@ nntps://raye.mistivia.com:563/sharknews
 
 填入服务器地址：“raye.mistivia.com”。
 
-![](serveraddr.jpg);
+![](serveraddr.jpg)
 
 添加完成之后重启雷鸟。
 
@@ -52,34 +52,34 @@ nntps://raye.mistivia.com:563/sharknews
 
 在左侧栏选中新闻组服务器，点击“账户设置”。
 
-![](accountsetting.jpg);
+![](accountsetting.jpg)
 
 然后选择“服务器”，把“连接安全”改成“SSL/TLS”。
 
-![](tls.jpg);
+![](tls.jpg)
 
 ### 订阅新闻组
 
 在刚才添加的新闻组服务器上右击，选择“订阅”。
 
-![](subscribe.jpg);
+![](subscribe.jpg)
 
 勾选上“sharknews”组，然后确认。
 
-![](sharknews.jpg);
+![](sharknews.jpg)
 
 ### 发贴
 
 在左侧栏选中“sharknews”组，然后点击“写信”：
 
-![](write.jpg);
+![](write.jpg)
 
 即可向新闻组发贴。
 
-![](compose.jpg);
+![](compose.jpg)
 
 ### 回复贴子
 
 如果要回复某一篇贴子，则选中想要回复的贴子，然后再点击“回复组”。即可在新闻组中跟贴。
 
-![](reply.jpg);
+![](reply.jpg)
