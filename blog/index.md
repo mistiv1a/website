@@ -26,7 +26,6 @@ Scriptum Mistiviae
 - 2023-07-15 [让Linux失去色彩](/posts/2023-07-15-colorless-linux/)
 - 2023-04-02 [现代经济中的货币扩张](/posts/2023-04-02-money/)
 - 2023-01-25 [我的Email工作流](/posts/2023-01-25-email/)
-- 2023-01-07 [C99的指定初始化](/posts/2023-01-07-c99-init/)
 - 2022-12-13 [邪道Scheme](/posts/2022-12-13-scheme/)
 - 2022-12-03 [用Vim制作文本处理工具](/posts/2022-12-03-vim/)
 - 2022-11-15 [钩子注入](/posts/2022-11-15-hooks/)
