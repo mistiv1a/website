@@ -18,4 +18,8 @@ scripts/vendor/
 .basher/
 blog/**/serif-*.woff2
 *.woff2
+blog/index.html
+blog/enposts/index.html
+blog/links/index.html
+homepage/index.html
 homepage/*.woff2
