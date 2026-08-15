@@ -128,8 +128,8 @@ def restore_math(html_text, rendered):
 # Note: "关于" is written without a trailing slash so sync.sh's yggdrasil
 # rewrite of href="//mistivia.com" keeps matching.
 BLOG_NAV = [
-    ("博客", "//blog.mistivia.com/"),
     ("关于", "//mistivia.com"),
+    ("归档", "//blog.mistivia.com/"),
     ("友链", "//blog.mistivia.com/links/"),
     ("订阅", "//blog.mistivia.com/index.xml"),
 ]
