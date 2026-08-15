@@ -6,6 +6,6 @@ Mistivia
 <ul>
 <li><a href="//raye.mistivia.com/gallery/">摄影集</a></li>
 <li><a href="//mistivia.com/chat">IRC 聊天室</a></li>
-<li><a href="https://github.com/mistivia?tab=repositories">GitHub</a></li>
+<li><a href="https://github.com/mistivia?tab=repositories&q=&type=&language=&sort=stargazers">GitHub</a></li>
 </ul>
 
