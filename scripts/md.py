@@ -131,8 +131,7 @@ BLOG_NAV = [
     ("博客", "//blog.mistivia.com/"),
     ("关于", "//mistivia.com"),
     ("友链", "//blog.mistivia.com/links/"),
-    ("English", "//blog.mistivia.com/enposts/"),
-    ("RSS", "//blog.mistivia.com/index.xml"),
+    ("订阅", "//blog.mistivia.com/index.xml"),
 ]
 
 def render_nav(items):
