@@ -9,11 +9,11 @@ Scriptum Mistiviae
 - <span class="pdate">2026-03-30</span>[Adding Type Annotations to the Euler-Lagrange Equation](/enposts/2026-03-30-functional/)
 - <span class="pdate">2026-02-02</span>[Writing a Virtual Machine Manager](/enposts/2026-02-02-vmm/)
 - <span class="pdate">2026-01-14</span>[A Trip to Northwest China](/enposts/2026-01-14-nwtravel/)
+- <span class="pdate">2026-01-12</span>[Curing All Sorts of Online Gaming Connectivity Issues](/enposts/2026-01-12-full-cone-nat/)
 - <span class="pdate">2025-07-17</span>[Tokyo Travelogue](/enposts/2025-07-17-tokyo/)
 
 ## Untranslated
 
-- <span class="pdate">2026-01-12</span>[Curing All Sorts of Online Gaming Connectivity Issues](/posts/2026-01-12-full-cone-nat/)
 - <span class="pdate">2025-09-27</span>[EZLive: Set Up a Private Livestream Without a Server](/posts/2025-09-27-ezlive/)
 - <span class="pdate">2025-06-04</span>[How to Use Newsgroups](/posts/2025-06-04-newsgroup/)
 - <span class="pdate">2025-05-31</span>[Using Haskell Like Rust](/posts/2025-05-31-linear-haskell/)
