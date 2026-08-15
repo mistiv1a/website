@@ -16,6 +16,6 @@ text2html
 CLAUDE.*
 scripts/vendor/
 .basher/
-blog/**/serif-*-subset.woff2
+blog/**/serif-*.woff2
 *.woff2
 homepage/*.woff2

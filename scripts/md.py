@@ -3,6 +3,8 @@ import os
 import re
 import sys
 import subprocess
+import glob
+import uuid
 
 FENCE_RE = re.compile(r'^(```|~~~).*?^\1[ \t]*$', re.MULTILINE | re.DOTALL)
 INLINE_CODE_RE = re.compile(r'(?<!`)(`+)(?!`).+?(?<!`)\1(?!`)', re.DOTALL)
@@ -232,10 +234,22 @@ def make_serif_subset(font_path, chars, out_path, keep_ascii=False):
 HEADING_TAG_RE = re.compile(r"<h[1-6][^>]*>(.*?)</h[1-6]>", re.S)
 
 def serif_face_extra(input_path, html_text):
-    """Write per-page subsets and return <style> content ("" if skipped)."""
+    """Write per-page subsets and return <style> content ("" if skipped).
+
+    Each page owns a namespaced pair of files
+    (serif-body-<slug>-<rand>.woff2 etc.), so pages that share an output
+    directory (e.g. AGENTS.md and CLAUDE.md in the repo root) never delete
+    each other's fonts. A fresh random suffix defeats stale HTTP caches;
+    superseded files of the same page are removed after the new ones are
+    safely on disk.
+    """
     out_dir = os.path.dirname(os.path.abspath(input_path))
-    body_font = os.path.join(out_dir, SERIF_BODY_FONT)
-    heading_font = os.path.join(out_dir, SERIF_HEADING_FONT)
+    slug = os.path.splitext(os.path.basename(input_path))[0].lower()
+    rand = uuid.uuid4().hex[:8]
+    body_font_name = f"serif-body-{slug}-{rand}.woff2"
+    heading_font_name = f"serif-heading-{slug}-{rand}.woff2"
+    body_font = os.path.join(out_dir, body_font_name)
+    heading_font = os.path.join(out_dir, heading_font_name)
 
     heading_text = "".join(HEADING_TAG_RE.findall(html_text))
     body_html = HEADING_TAG_RE.sub("", html_text)
@@ -244,18 +258,38 @@ def serif_face_extra(input_path, html_text):
     heading_ok = make_serif_subset(find_font_source(SERIF_HEADING_SOURCE),
                                    heading_text, heading_font, keep_ascii=True)
 
+    if body_ok:
+        for old in glob.glob(os.path.join(out_dir, f"serif-body-{slug}*.woff2")):
+            if old != body_font:
+                try:
+                    os.remove(old)
+                except OSError:
+                    pass
+    if heading_ok:
+        for old in glob.glob(os.path.join(out_dir, f"serif-heading-{slug}*.woff2")):
+            if old != heading_font:
+                try:
+                    os.remove(old)
+                except OSError:
+                    pass
+
+    # CJK range: Latin stays on Palatino, while CJK ideographs (simplified
+    # and traditional), Japanese kana, Korean hangul and CJK extensions B-F
+    # all fall on the serif webfont.
+    CJK_RANGE = "U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF"
+
     faces = []
     if body_ok:
         faces.append(
             f'@font-face{{font-family:"{SERIF_BODY_FAMILY}";'
-            f'src:url("{SERIF_BODY_FONT}") format("woff2");'
-            f"unicode-range:U+2000-FFFF;font-style:normal;font-weight:400;"
+            f'src:url("{body_font_name}") format("woff2");'
+            f"unicode-range:{CJK_RANGE};font-style:normal;font-weight:400;"
             f"font-display:swap;}}")
     if heading_ok:
         faces.append(
             f'@font-face{{font-family:"{SERIF_HEADING_FAMILY}";'
-            f'src:url("{SERIF_HEADING_FONT}") format("woff2");'
-            f"unicode-range:U+0000-FFFF;font-style:normal;font-weight:600;"
+            f'src:url("{heading_font_name}") format("woff2");'
+            f"unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;"
             f"font-display:swap;}}")
     return "\n".join(faces)
 
