@@ -8,7 +8,6 @@ Scriptum Mistiviae
 - <span class="pdate">2026-02-02</span>[写一个虚拟机管理器](/posts/2026-02-02-vmm/)
 - <span class="pdate">2026-01-14</span>[西北之行](/posts/2026-01-14-nwtravel/)
 - <span class="pdate">2026-01-12</span>[专治各种游戏联机疑难杂症](/posts/2026-01-12-full-cone-nat/)
-- <span class="pdate">2025-09-27</span>[EZLive: 无需服务器，轻松搭建私人直播间](/posts/2025-09-27-ezlive/)
 - <span class="pdate">2025-07-17</span>[东京游记](/posts/2025-07-17-tokyo/)
 - <span class="pdate">2025-06-04</span>[如何使用新闻组](/posts/2025-06-04-newsgroup/)
 - <span class="pdate">2025-05-31</span>[像Rust一样使用Haskell](/posts/2025-05-31-linear-haskell/)
