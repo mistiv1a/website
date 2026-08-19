@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>如何制作出极小的超轻量Docker镜像</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style4.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-c25db3d1.woff2") format("woff2");unicode-range:U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifHeading";src:url("serif-heading-index-c25db3d1.woff2") format("woff2");unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>如何制作出极小的超轻量Docker镜像</h1>
+<p><span class="pubdate">2025年5月16日</span></p>
+<p>使用Ubuntu作为基础镜像构建出来的Docker镜像动辄几百MB，甚至上GB。但是实际上，运行一个二进制程序依赖的文件并不多，如果只保留运行程序必备的文件，势必能大量缩减镜像尺寸。</p>
+<p>这里以一个Rust应用为例，尝试打包一个可以运行ripgrep的镜像，C/C++、Go等编译型语言也可以依葫芦画瓢。</p>
+<h2>准备文件</h2>
+<p>用<code>ldd</code>命令查看ripgrep的动态链接库依赖：</p>
+<pre><code class="language-sh">ldd /usr/bin/rg
+</code></pre>
+<p>得到：</p>
+<pre><code>linux-vdso.so.1 (0x00007bd80ef30000)
+libpcre2-8.so.0 =&gt; /usr/lib/libpcre2-8.so.0 (0x00007bd80e912000)
+libgcc_s.so.1 =&gt; /usr/lib/libgcc_s.so.1 (0x00007bd80eefd000)
+libc.so.6 =&gt; /usr/lib/libc.so.6 (0x00007bd80e722000)
+/lib64/ld-linux-x86-64.so.2 =&gt; /usr/lib64/ld-linux-x86-64.so.2
+(0x00007bd80ef32000)
+</code></pre>
+<p>其中第一条是内核插入内存的，不需要理会。因此，<code>rg</code>最少只需要四个so文件即可运行。</p>
+<p>创建一个新目录：</p>
+<pre><code class="language-sh">mkdir rootfs
+</code></pre>
+<p>编写一个脚本把这些so文件都复制rootfs中的对应位置：</p>
+<pre><code class="language-sh">#!/bin/bash
+
+copy_file () {
+    local dir=$(dirname $1)
+    mkdir -p rootfs/$dir
+    cp $1 rootfs/$dir
+}
+
+for f in $(ldd /usr/bin/rg | grep '=&gt;' | awk '{print $3}'); do
+    copy_file $f
+done
+</code></pre>
+<p>运行脚本。然后注意到</p>
+<pre><code>/lib64/ld-linux-x86-64.so.2 =&gt; /usr/lib64/ld-linux-x86-64.so.2
+(0x00007bd80ef32000)
+</code></pre>
+<p>把<code>ld-linux-x86-64.so.2</code>复制到<code>rootfs/lib64</code>中。</p>
+<pre><code class="language-sh">mkdir -p rootfs/lib64
+cp rootfs/usr/lib64/ld-linux-x86-64.so.2 rootfs/lib64/
+</code></pre>
+<p>然后把<code>rg</code>本体复制到rootfs：</p>
+<pre><code class="language-sh">cp /usr/bin/rg rootfs/
+</code></pre>
+<p>至此，Docker镜像的文件系统准备完毕。</p>
+<h2>创建镜像</h2>
+<p>创建<code>Dockerfile</code>：</p>
+<pre><code class="language-Dockerfile">FROM scratch
+COPY rootfs /
+ENTRYPOINT [&quot;/rg&quot;]
+</code></pre>
+<p>创建Docker镜像：</p>
+<pre><code class="language-sh">sudo docker build -t myrg .
+</code></pre>
+<p>尝试运行：</p>
+<pre><code class="language-sh">sudo docker run --rm myrg --version
+</code></pre>
+<p>得到：</p>
+<pre><code>$ sudo docker run --rm myrg --version
+ripgrep 14.1.1
+
+features:+pcre2
+simd(compile):+SSE2,-SSSE3,-AVX2
+simd(runtime):+SSE2,+SSSE3,+AVX2
+
+PCRE2 10.43 is available (JIT is available)
+</code></pre>
+<p>至此Docker镜像构建完成。</p>
+<p>查看尺寸：</p>
+<pre><code class="language-sh">sudo docker images
+</code></pre>
+<p>得到：</p>
+<pre><code>REPOSITORY         TAG         IMAGE ID      CREATED      SIZE
+localhost/myrg     latest      89ce8f41feaa  4 minutes ago  9.23 MB
+</code></pre>
+<p>可以看到只有9.23MB。</p>
+<h2>Chroot Jail</h2>
+<p>其实这种方式跟创建chroot jail的原理是一样的，用chroot也可以运行：</p>
+<pre><code class="language-sh">sudo chroot rootfs /rg --version
+</code></pre>
+<p>现实中，如果真的要这么部署此类应用，考虑到安全问题，最好用普通用户权限运行。</p>
+<pre><code class="language-sh">sudo chroot --userspec 1000:1000 rootfs /rg --version
+</code></pre>
+<h2>局限性</h2>
+<p>有的应用，尤其是Python之类的动态语言，非常依赖用<code>dlopen</code>动态加载so文件，这些文件无法用ldd查询到，无法用这种方式打包。虽然也可以用<code>strace</code>分析系统调用，查看程序具体打开过哪些文件，但是这样仍然很难保证复制到加载所有的动态链接库。</p>
+<p>因此，该方法通常只适合编译型语言，如C/C++、Go、Rust、Haskell等等。</p>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+

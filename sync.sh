@@ -6,8 +6,8 @@ python3 scripts/sitemap.py
 sed -i 's#href="\.\./"#href="//mistivia.com"#g' blog/index.html
 
 git add *
-git commit -am "update"
-proxychains -q git push
+git commit --amend  -am "update"
+proxychains -q git push -f
 
 cp homepage/style*.css blog/
 cp homepage/style*.css /var/ygg/web/

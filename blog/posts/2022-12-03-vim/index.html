@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>用Vim制作文本处理工具</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style4.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-350e6f4b.woff2") format("woff2");unicode-range:U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifHeading";src:url("serif-heading-index-350e6f4b.woff2") format("woff2");unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>用Vim制作文本处理工具</h1>
+<p><span class="pubdate">2022年12月3日</span></p>
+<p>首先创建vim脚本，例如，用vim给文本在70列的时候自动断行的脚本如下:</p>
+<pre><code class="language-v">:set tw=70
+gggqG
+:wq
+</code></pre>
+<p>保存为<code>~/.vim/scripts/wrap</code>，然后可以处理文件：</p>
+<pre><code class="language-bash">vim -s ~/.vim/scripts/wrap input.txt
+</code></pre>
+<p>如果要以stdin为输入，stdout为输出，以便放进管道，给其他程序调用，可以用bash脚本包装一下：</p>
+<pre><code class="language-bash">#!/bin/bash
+
+BUF=/tmp/$(head -c 15 /dev/urandom | base32)
+cat &gt; $BUF
+/usr/bin/vim -s ~/.vim/scripts/wrap $BUF 1&gt;/dev/null 2&gt;/dev/null
+cat $BUF
+rm $BUF
+</code></pre>
+<p>这样一个小工具就完成了。</p>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+

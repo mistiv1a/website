@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>让Linux失去色彩</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style4.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-5864ab31.woff2") format("woff2");unicode-range:U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifHeading";src:url("serif-heading-index-5864ab31.woff2") format("woff2");unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>让Linux失去色彩</h1>
+<p><span class="pubdate">2023年7月15日</span></p>
+<p>这件事情的起因是我看了这么一篇文章：《<a href="https://cn.wsj.com/articles/%E6%88%92%E6%8E%89-%E6%89%8B%E6%A9%9F%E7%99%AE-%E4%BD%A0%E9%9C%80%E8%A6%81%E9%80%99%E5%80%8B%E5%B0%8F%E6%8A%80%E5%B7%A7-4f91c59d">戒掉“手机瘾”，你需要这个小技巧</a>》</p>
+<p>有个新研究显示，相较于用应用程序来限制使用时间，把手机改成黑白屏幕的效果更好。</p>
+<p>其中iOS和Android都自带了把屏幕显示变成黑白灰度的功能，主要是提供给色盲群体。而Windows 10上也有类似的功能。我现在手头没有macOS设备，不过既然iOS上有，macOS自然也没有不行的道理。</p>
+<p>问题来到了Linux这里。Linux上是没有原生提供这种工具的，唯一一个比较接近的是<a href="https://github.com/jonls/redshift">RedShift</a>。但是这个工具的原理是调节Gamma值，因此只能调整红绿蓝三种颜色的比例，而不能把屏幕变成灰度。</p>
+<p>最后我找到的解决方案是用<a href="https://github.com/yshui/picom">picom</a>。</p>
+<p>Picom是一个X compositor，支持OpenGL渲染，所以可以自己写一个OpenGL着色器控制显示效果：</p>
+<pre><code class="language-glsl">#version 330
+
+in vec2 texcoord;
+uniform sampler2D tex;
+
+vec4 window_shader() {
+	vec4 c = texelFetch(tex, ivec2(texcoord), 0);
+
+	float grayscale = c.x * 0.299 + c.y * 0.587 + c.z * 0.114;
+	c.x = grayscale;
+	c.y = grayscale;
+	c.z = grayscale;
+	return c;
+}
+</code></pre>
+<p>因为人眼对于红绿蓝三种颜色的敏感程度不同，所以这里用了NTSC制式下的彩色转黑白公式，将红绿蓝以0.299:0.587:0.114的比例配比，计算出灰度值，然后把红绿蓝都设置为这个灰度值，就可以把彩色图像转成黑白。其实用红绿蓝三个颜色的强度的平均值也可以，效果也差不多。</p>
+<p>把着色器保存在<code>~/.picom.glsl</code>，然后运行picom：</p>
+<pre><code class="language-sh">picom --backend glx --window-shader-fg '/home/mistivia/.picom.glsl' &amp;
+</code></pre>
+<p>就可以看到屏幕变成了黑白。如果要开机自动执行的话，可以把这行命令放到<code>.xinitrc</code>里面。如果要恢复成彩色的话，只要把picom进程杀掉就可以了。</p>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+

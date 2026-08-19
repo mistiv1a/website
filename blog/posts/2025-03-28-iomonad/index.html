@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>从Hello World到IO Monad</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style4.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-d8c2524a.woff2") format("woff2");unicode-range:U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifHeading";src:url("serif-heading-index-d8c2524a.woff2") format("woff2");unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>从Hello World到IO Monad</h1>
+<p><span class="pubdate">2025年3月28日</span></p>
+<p>这是一段平平无奇的Python代码：</p>
+<pre><code class="language-py">def main():
+    x = input()
+    y = input()
+    print(x + y)
+
+main()
+</code></pre>
+<p>这段代码的主要作用是输出“Hello World”。</p>
+<p>第一步：输入“Hello”：</p>
+<pre><code>hello
+</code></pre>
+<p>第二步：输入“ World”：</p>
+<pre><code>hello
+    world
+</code></pre>
+<p>最后按下回车，第三步就会得到：</p>
+<pre><code>hello world
+</code></pre>
+<p>如果接触过一些异步编程的话，我们会注意到，input是一个I/O操作，如果想要高效执行I/O，往往需要做异步的I/O。</p>
+<p>在async/await尚未诞生的远古时代，如果我们想要把一个程序异步化，就必须要写成回调函数的形式。</p>
+<p>当然，这里的<code>input</code>并不是一个异步的I/O函数，不过这不妨碍我们把这段程序改成回调函数的形式，只是为了好玩。</p>
+<p>我们把<code>main</code>拆成三个函数，每一个函数会在结尾调用下一步：</p>
+<pre><code class="language-py">def main():
+    step1()
+
+def step1():
+    x = input()
+    step2(x)
+
+def step2(x):
+    y = input()
+    step3(x, y)
+
+def step3(x, y):
+    print(x + y)
+</code></pre>
+<p>这段代码和最初的版本功能是一样的。</p>
+<p>接着把代码改紧凑一点：</p>
+<pre><code class="language-py">def main():
+    step1()
+
+def step1():
+    step2(input())
+
+def step2(x):
+    step3(x, input())
+
+def step3(x, y):
+    print(x + y)
+</code></pre>
+<p>Python是允许在函数里面定义函数的，就像这样：</p>
+<pre><code class="language-py">def f1():
+    def f2():
+        do_something()
+    f2()
+</code></pre>
+<p>我们就用这样的方式，把函数全部堆在一起，每一步函数都在上一步里面定义，这样还是只有一个<code>main</code>函数：</p>
+<pre><code class="language-py">def main():
+    def step1():
+        def step2(x):
+            def step3(x, y):
+                print(x + y)
+            step3(x, input())
+        step2(input());
+    step1()
+</code></pre>
+<p>Python里面有个叫做“闭包”的功能。因为<code>step3</code>是在<code>step2</code>里面定义的，所以<code>step3</code>中可以直接访问<code>step2</code>的参数<code>x</code>，不需要再专门传递进去。所以我们可以稍微简化一下：</p>
+<pre><code class="language-py">def main():
+    def step1():
+        def step2(x):
+            def step3(y):
+                print(x + y)
+            step3(x, input())
+        step2(input());
+    step1()
+</code></pre>
+<p>上面的代码中，<code>step1</code>和<code>step2</code>的结构很相似，都是这样：</p>
+<pre><code class="language-py">def step(...):
+    def next_step(...) 
+        ...
+    next_step(input())
+</code></pre>
+<p>注意最后一行的<code>next_step(input())</code>，其作用是调用<code>input</code>，获取输入结果之后，作为参数传递给下一步。既然<code>input()</code>这个步骤是固定的，变化的只有下一步的函数，那么我们干脆把下一步的函数当成参数，定义一个新函数：</p>
+<pre><code class="language-py">def input_and_do(next_step):
+    next_step(input())
+</code></pre>
+<p>这个函数的作用和<code>next_step(input())</code>相同。</p>
+<p>然后，用这个新定义的<code>input_and_do</code>改写<code>main</code>函数：</p>
+<pre><code class="language-py">def main():
+    def step2(x):
+        def step3(y):
+            print(x + y)
+        input_and_do(step3)
+    input_and_do(step2)
+</code></pre>
+<p>Python中有个功能叫lambda表达式。原本要两行才能定义的函数：</p>
+<pre><code class="language-py">def fn(x):
+    return meow(x)
+</code></pre>
+<p>用上了lambda之后只需要一行:</p>
+<pre><code class="language-py">lambda x: meow(x)
+</code></pre>
+<p>所以，<code>step3</code>可以写成这样:</p>
+<pre><code class="language-py">lambda y: print(x + y)
+</code></pre>
+<p><code>step2</code>可以写成这样：</p>
+<pre><code class="language-py">lambda x: input_and_do(step3)
+</code></pre>
+<p>把<code>step3</code>代进去，<code>step2</code>就变成了：</p>
+<pre><code class="language-py">lambda x: input_and_do(lambda y: print(x+y))
+</code></pre>
+<p>这样<code>main</code>就可以改写成一行：</p>
+<pre><code class="language-py">def main():
+    input_and_do(lambda x: input_and_do(lambda y: print(x+y)))
+</code></pre>
+<p>不过这样看起来有点乱，所以稍微做一些排版。得到了最终的Python程序，看上去非常抽象（整活意味上的）：</p>
+<pre><code class="language-py">def input_and_do(next_step):
+    next_step(input())
+
+def main():
+    input_and_do(lambda x: ( \
+        input_and_do(lambda y: \
+            print(x + y))))
+</code></pre>
+<p>既然标题里面写了IO monad了，接下来要开始Haskell了。我们尝试把上面这段Python代码改写成Haskell。既然已经写成了全是lambda的样子，那么自然也可以像素级复刻这段代码了。</p>
+<p>不过Haskell标准库里面的函数名字稍微有点区别，<code>input</code>对应<code>getLine</code>，<code>print</code>对应putStrLn：</p>
+<pre><code class="language-hs">inputAndDo nextStep = nextStep getLine    
+
+main :: IO ()
+main = inputAndDo(\x -&gt;
+            inputAndDo(\y -&gt;
+                putStrLn (x ++ y)))
+</code></pre>
+<p>不出意外的话，这段代码是可以运行的。</p>
+<p>但是出意外了：</p>
+<pre><code>• Couldn't match expected type: [Char]
+                with actual type: IO String
+• In the first argument of ‘(++)’, namely ‘x’
+    In the first argument of ‘putStrLn’, namely ‘(x ++ y)’
+    In the expression: putStrLn (x ++ y)
+</code></pre>
+<p>我们原来期望<code>x</code>和<code>y</code>的类型是<code>String</code>，但是实际上它们变成了<code>IO String</code>。问题出在<code>getLine</code>这里，<code>getLine</code>返回的并不是一个简单的<code>String</code>，而是一个<code>IO String</code>：</p>
+<pre><code>ghci&gt; :t getLine
+getLine :: IO String
+</code></pre>
+<p><code>getLine</code>的返回值（<code>IO String</code>类型）变成了<code>x</code>和<code>y</code>传给了<code>putStrLn</code>，但是<code>putStrLn</code>期望的参数类型是<code>String</code>，所以报错了。</p>
+<p>我们想要的<code>String</code>被IO monad包起来了，我们需要“解包”，把<code>IO String</code>“变成”
+<code>String</code>。</p>
+<p>要解决这个问题，先看看<code>IO String</code>是什么。<code>IO</code>是一个monad，monad的定义是：</p>
+<pre><code class="language-hs">class Monad m where
+    (&gt;&gt;=)  :: m a -&gt; (a -&gt; m b) -&gt; m b
+    -- ...
+    -- ...
+</code></pre>
+<p>具体到<code>IO</code>和<code>IO String</code>的话，也就是说，<code>(&gt;&gt;=)</code>这个操作符的类型变成了：</p>
+<pre><code class="language-hs">IO String -&gt; (String -&gt; IO b) -&gt; IO b
+</code></pre>
+<p>一个只接受<code>String</code>作为参数的函数，只要使用<code>(&gt;&gt;=)</code>就可以把<code>IO String</code>塞进去，“解包”，得到其中的<code>String</code>。</p>
+<p>但是力量往往伴随着代价，如果一个函数想要用<code>(&gt;&gt;=)</code>解开IO monad的封印，那么这个函数的返回值也必须是一个IO monad。</p>
+<p>我们选择接受这个代价，修改一下<code>inputAndDo</code>：</p>
+<pre><code class="language-hs">inputAndDo nextStep = (&gt;&gt;=) getLine nextStep
+</code></pre>
+<p>再改成中缀形式：</p>
+<pre><code class="language-hs">inputAndDo nextStep = getLine &gt;&gt;= nextStep
+</code></pre>
+<p>最终的Haskell代码如下：</p>
+<pre><code class="language-hs">inputAndDo nextStep = (getLine &gt;&gt;= nextStep)
+
+main :: IO ()
+main = inputAndDo(\x -&gt;
+            inputAndDo(\y -&gt;
+                putStrLn (x ++ y)))
+</code></pre>
+<p>这段代码可以工作，撒花~</p>
+<p>既然<code>inputAndDo nextStep</code>等价于<code>getLine &gt;&gt;= nextStep</code>，那么其实可以直接把<code>inputAndDo</code>改成<code>getLine &gt;&gt;=</code>：</p>
+<pre><code class="language-hs">main :: IO ()
+main = getLine &gt;&gt;= (\x-&gt;
+            getLine &gt;&gt;= (\y -&gt;
+                putStrLn (x ++ y)))
+</code></pre>
+<p>效果是一样的。不过这段代码和上面的抽象版本Python代码一样，仍然看起来很糟心。</p>
+<p>好在Haskell里面有个语法糖，叫做do notation，可以把这样的表达式：</p>
+<pre><code class="language-hs">uwu &gt;&gt;= (\x -&gt; ...)
+</code></pre>
+<p>变成这样：</p>
+<pre><code class="language-hs">do
+    x &lt;- uwu
+    ...
+</code></pre>
+<p>这样看起来舒服一点。</p>
+<p>所以我们就这样改一下，先改第一步：</p>
+<pre><code class="language-hs">main :: IO ()
+main = do
+    x &lt;- getLine
+    getLine &gt;&gt;= (\y -&gt;
+                    putStrLn (x ++ y))
+</code></pre>
+<p>第二步也是同样的形式，所以可以接着爆改：</p>
+<pre><code class="language-hs">main :: IO ()
+main = do
+    x &lt;- getLine
+    y &lt;- getLine
+    putStrLn (x ++ y)
+</code></pre>
+<p>改造完毕，跟一开始的Python代码对比一下：</p>
+<pre><code class="language-hs">def main():
+    x = input()
+    y = input()
+    print(x + y)
+</code></pre>
+<p>完 全 一 致</p>
+<p>就这样，我们回到了最初的原点。这段旅程就此结束。</p>
+<h2>免责声明</h2>
+<p>本文并没有介绍什么是Monad。只是介绍了Haskell中的do记号实际上在做什么。至于monad本身，还是需要额外的学习。</p>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+

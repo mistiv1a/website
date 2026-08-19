@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rank-N类型的简单例子</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style4.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-21564740.woff2") format("woff2");unicode-range:U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifHeading";src:url("serif-heading-index-21564740.woff2") format("woff2");unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>Rank-N类型的简单例子</h1>
+<p><span class="pubdate">2025年3月29日</span></p>
+<p>考虑一段简单的代码：</p>
+<pre><code class="language-hs">highOrderFunc :: (Num b) =&gt; ([a] -&gt; b) -&gt; b
+highOrderFunc f = f [1,2,3] + f [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+
+main = do print $ highOrderFunc length
+</code></pre>
+<p>这里是无法通过编译的。</p>
+<p><code>highOrderFunc</code>的类型完整写出来实际上是：</p>
+<pre><code class="language-hs">highOrderFunc :: forall a b. (Num b) =&gt; ([a] -&gt; b) -&gt; b
+</code></pre>
+<p>对于一个<code>highOrderFunc</code>函数的实例，<code>a</code>只能是一个确定的类型，比如<code>String</code>，或者<code>Int</code>。</p>
+<pre><code class="language-hs">highOrderFunc f = f [1,2,3] + f [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
+</code></pre>
+<p>但是这里要求a又可以是Int又可以是String。</p>
+<p>所以使用Rank-2类型：</p>
+<pre><code class="language-hs">highOrderFunc :: forall b. (Num b) =&gt; (forall a. [a] -&gt; b) -&gt; b
+</code></pre>
+<p>此时对于一个<code>highOrderFunc</code>实例，<code>f</code>是一个泛型函数，<code>a</code>不再有只能确定为一个类型的限制。</p>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+

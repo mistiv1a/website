@@ -9,7 +9,6 @@ Scriptum Mistiviae
 - <span class="pdate">2026-01-14</span>[西北之行](/posts/2026-01-14-nwtravel/)
 - <span class="pdate">2026-01-12</span>[专治各种游戏联机疑难杂症](/posts/2026-01-12-full-cone-nat/)
 - <span class="pdate">2025-07-17</span>[东京游记](/posts/2025-07-17-tokyo/)
-- <span class="pdate">2025-06-04</span>[如何使用新闻组](/posts/2025-06-04-newsgroup/)
 - <span class="pdate">2025-05-31</span>[像Rust一样使用Haskell](/posts/2025-05-31-linear-haskell/)
 - <span class="pdate">2025-05-17</span>[类型级编程：一个最平凡的例子](/posts/2025-05-17-singleton-types/)
 - <span class="pdate">2025-05-16</span>[如何制作出极小的超轻量Docker镜像](/posts/2025-05-16-min-docker-image/)

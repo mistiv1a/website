@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>类型级编程：一个最平凡的例子</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style4.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-0f5571ad.woff2") format("woff2");unicode-range:U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifHeading";src:url("serif-heading-index-0f5571ad.woff2") format("woff2");unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>类型级编程：一个最平凡的例子</h1>
+<p><span class="pubdate">2025年5月17日</span></p>
+<p>本文将使用Haskell。</p>
+<p>起手先开一些扩展：</p>
+<pre><code class="language-hs">{-# LANGUAGE GADTs #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE DataKinds#-}
+{-# LANGUAGE TypeOperators #-}
+{-# OPTIONS_GHC -Werror=incomplete-patterns #-}
+
+import Data.Type.Equality
+</code></pre>
+<h2>零一</h2>
+<p>计算机中的一切都是「零」和「一」：</p>
+<pre><code class="language-hs">data Bit = Zero | One
+</code></pre>
+<p>为Bit类型中的两个值：「零」和「一」，各自创建类型，是为单例类型（Singleton
+Type）：</p>
+<pre><code class="language-hs">-- 前缀S，是Singleton的缩写
+data SBit :: Bit -&gt; * where
+    SZero :: SBit 'Zero
+    SOne  :: SBit 'One
+</code></pre>
+<h2>与非门</h2>
+<p>一切布尔电路都可以用「与非门」完成，但是我们首先要定义「与非门」：</p>
+<pre><code class="language-hs">type family Nand (a :: Bit) (b :: Bit) :: Bit where
+    Nand 'One 'One = 'Zero
+    Nand _ _ = 'One
+</code></pre>
+<p><code>type family</code>给出的是“定义”，也可以称为“标准”（Specification/Spec）。证明也好，检查也好，都是要让程序必须符合这里的标准。</p>
+<p>然后我们可以实现它：</p>
+<pre><code class="language-hs">nandGate :: SBit a -&gt; SBit b -&gt; SBit (Nand a b)
+nandGate SOne SOne = SZero
+nandGate SZero _ = SOne
+nandGate _ SZero = SOne
+</code></pre>
+<h2>非门</h2>
+<p>零变成一，一变成零，这就是非门。因此给出定义：</p>
+<pre><code class="language-hs">type family Not (a :: Bit) :: Bit where
+    Not 'One = 'Zero
+    Not 'Zero = 'One
+</code></pre>
+<p>「非门」可以利用「与非门」实现：</p>
+<pre><code class="language-hs">notGateImpl x = nandGate x x
+</code></pre>
+<p>把实现提交给编译器：</p>
+<pre><code class="language-hs">notGate :: SBit a -&gt; SBit (Not a)
+notGate = notGateImpl
+</code></pre>
+<p>被编译器驳回：</p>
+<pre><code>Couldn't match type: Nand a a
+            with: Not a
+Expected: SBit a -&gt; SBit (Not a)
+Actual: SBit a -&gt; SBit (Nand a a)
+</code></pre>
+<p>notGateImpl返回的是<code>SBit (Nand a a)</code>，而notGate的返回值所期望的是<code>SBit (Not a)</code>。我们需要证明<code>SBit (Not a)</code>和<code>SBit (Nand a a)</code>是同一个东西。这样，就可以实现转化。</p>
+<p>这里有两种思路，第一种是用纯粹的力量碾压过去，用暴力枚举证明这个东西就是绝对成立的：</p>
+<pre><code class="language-hs">notGateProof :: SBit a -&gt; SBit (Nand a a) :~: SBit (Not a)
+notGateProof SOne = Refl
+notGateProof SZero = Refl
+</code></pre>
+<p>然后利用这个证明实现安全的类型转换：</p>
+<pre><code class="language-hs">notGate :: SBit a -&gt; SBit (Not a)
+notGate x = castWith (notGateProof x) (notGateImpl x)
+</code></pre>
+<p>这样「非门」就完成了。</p>
+<p>第二种则是退而求其次，只增加一个类型约束：</p>
+<pre><code class="language-hs">notGate :: (SBit (Nand a a) ~ SBit (Not a)) =&gt; SBit a -&gt; SBit (Not a)
+notGate x = nandGate x x
+</code></pre>
+<p>这样的也能通过编译，而且代码比较简单。</p>
+<p>不过这样更像是一种“静态检查”。例如，我们故意写一个错误的实现：</p>
+<pre><code class="language-hs">notGate :: (SBit 'Zero ~ SBit (Not a)) =&gt; SBit a -&gt; SBit (Not a)
+notGate x = SZero
+</code></pre>
+<p>显然，<code>SBit 'Zero</code>和<code>SBit (Not a)</code>在<code>a</code>是<code>'Zero</code>的时候是不等价的，但是这里还是可以通过编译。</p>
+<p>如果程序中出现了<code>x</code>是SOne的<code>notGate</code>调用：</p>
+<pre><code class="language-hs">zero = notGate SOne
+</code></pre>
+<p>因为恰好满足条件，还是可以通过编译。</p>
+<p>只有在程序中出现<code>x</code>是<code>SZero</code>的<code>notGate</code>调用时：</p>
+<pre><code class="language-hs">one = notGate SZero
+</code></pre>
+<p>才会在类型检查中发现问题，此时编译器会报错：</p>
+<pre><code>• Couldn't match type ‘'Zero’ with ‘'One’
+    arising from a use of ‘notGate’
+• In the expression: notGate SZero
+    In an equation for ‘one’: one = notGate SZero 
+</code></pre>
+<p>因为第二种比较简单，所以后面不再赘述，只介绍第一种。从实用的角度来看，第一种的证明经常难以给出，大多数时候只需要第二种这样的“静态检查”就够了。</p>
+<h2>与门</h2>
+<p>何为「与门」？一一得一，余下皆零：</p>
+<pre><code class="language-hs">type family And (a :: Bit) (b :: Bit) :: Bit where
+    And 'One 'One = 'One
+    And _ _ = 'Zero
+</code></pre>
+<p>与非门加上非门，就是与门：</p>
+<pre><code class="language-hs">andGateImpl a b = notGate $ nandGate a b
+</code></pre>
+<p>用枚举法暴力求证：</p>
+<pre><code class="language-hs">andGateProof :: SBit a -&gt; SBit b -&gt; SBit (Not (Nand a b)) :~: SBit (And a b)
+andGateProof SZero SOne = Refl
+andGateProof SZero SZero = Refl
+andGateProof SOne SOne = Refl
+andGateProof SOne SZero = Refl
+</code></pre>
+<p>提交给编译器：</p>
+<pre><code class="language-hs">andGate :: SBit a -&gt; SBit b -&gt; SBit (And a b)
+andGate a b = castWith (andGateProof a b) (andGateImpl a b)
+</code></pre>
+<p>「与门」完成了。</p>
+<h2>或门</h2>
+<p>照例先给出定义，零零得零，余下皆一：</p>
+<pre><code class="language-hs">type family Or (a :: Bit) (b :: Bit) :: Bit where
+    Or 'Zero 'Zero = 'Zero
+    Or _ _ = 'One
+</code></pre>
+<p>尝试一下花哨的实现方法，利用De Morgan定律，利用「与门」和「非门」组合出「或门」：</p>
+<pre><code class="language-hs">orGateImpl a b = notGate (andGate (notGate a) (notGate b))
+</code></pre>
+<p>继续暴力枚举证明自己是对的：</p>
+<pre><code class="language-hs">orGateProof :: SBit a -&gt; SBit b
+    -&gt; SBit(Not (And (Not a) (Not b))) :~: SBit (Or a b)
+orGateProof SZero SZero = Refl
+orGateProof SZero SOne = Refl
+orGateProof SOne SZero = Refl
+orGateProof SOne SOne = Refl
+</code></pre>
+<p>编译器欣然接受：</p>
+<pre><code class="language-hs">orGate :: SBit a -&gt; SBit b -&gt; SBit (Or a b)
+orGate a b = castWith (orGateProof a b) (orGateImpl a b)
+</code></pre>
+<h2>结尾</h2>
+<p>这里给出的是一个平凡到不能再平凡的例子，不过用到的语言特性还挺多的，算是对最近学习的一个小结。但是如果要实现一些不平凡的例子的话，往往要用一些很复杂很丑的Template Haskell库，不太想碰，所以准备后面去看看Lean 4去。</p>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+

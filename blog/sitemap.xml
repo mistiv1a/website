@@ -2,12 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://blog.mistivia.com/</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://blog.mistivia.com/posts/</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
@@ -163,11 +163,6 @@
   <url>
     <loc>https://blog.mistivia.com/posts/2025-05-31-linear-haskell/</loc>
     <lastmod>2025-05-31</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://blog.mistivia.com/posts/2025-06-04-newsgroup/</loc>
-    <lastmod>2025-06-04</lastmod>
     <priority>0.6</priority>
   </url>
   <url>

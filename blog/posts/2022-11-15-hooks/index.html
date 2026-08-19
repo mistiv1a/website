@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>钩子注入</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style4.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-17ab76a3.woff2") format("woff2");unicode-range:U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifHeading";src:url("serif-heading-index-17ab76a3.woff2") format("woff2");unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>钩子注入</h1>
+<p><span class="pubdate">2022年11月15日</span></p>
+<p>钩子（hooking）是外挂开发中的常用技巧：把一小段机器码（通常是一个jmp指令）放到内存中原本是正常函数的地方，就可以改变这个函数的行为。这个技巧不仅在外挂开发中有用，在软件测试当中也很有用，可以用来mock一个非虚函数。钩子实现起来也非常简单。</p>
+<p>比如下面这段代码：</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int func()
+{
+    printf(&quot;hello, beautiful world&quot;);
+    return 0;
+}
+
+int main()
+{
+    return func();
+}
+</code></pre>
+<p>虽然在这里如果想要修改func函数很简单，但是可以假设其实func函数是在一个动态链接库里面，或者一个静态库里面，我们没有其源代码。这时候就可以利用钩子在运行时修改func函数。</p>
+<p>这里以x64架构的Linux为例。一般来说，代码位于.text段中，这里的内存是不可以修改的，所以我们用mprotect函数修改这里的内存属性，允许写入这段内存：</p>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+#include &lt;sys/mman.h&gt;
+
+// 假设被钩住的函数是orig_func
+int page_size = getpagesizes();
+void *aligned_addr = (void *)(((uintptr_t)orig_func) &amp; (~(page_size - 1)));
+if (mprotect(aligned_addr,
+             page_size * 2,
+             PROT_EXEC | PROT_WRITE | PROT_READ ) != 0) {
+    err_log(&quot;failed to modify mem props&quot;);
+    exit(EXIT_FAILURE);
+}
+</code></pre>
+<p>随后写入跳转的机器码，其汇编伪代码如下：</p>
+<pre><code class="language-c">mov rax, &amp;hook_func
+jmp rax
+</code></pre>
+<p>因为rax寄存器在C/C++的ABI中是用来存储返回值的，可以任意修改，所以这里不用担心修改rax寄存器会改变程序的行为。</p>
+<p>具体的程序的话是这样：</p>
+<pre><code class="language-c">uint8_t hook_mcode[] = {0x48, 0xB8, 0x00, 0x00, 0x00, 0x00,
+                        0x00, 0x00, 0x00, 0x00, 0xFF, 0xE0};
+*(uintptr_t*)(hook_code + 2) = (uintptr_t)hook_func;
+memcpy(orig_func, hook_mcode, 12);
+</code></pre>
+<p>最后我们得到了完整的代码：</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;string.h&gt;
+
+#include &lt;unistd.h&gt;
+#include &lt;sys/mman.h&gt;
+
+int func()
+{
+    printf(&quot;hello, beautiful world\n&quot;);
+    return 0;
+}
+
+int hook_func()
+{
+    printf(&quot;farewell, cruel world\n&quot;);
+    return 0;
+}
+
+void hook(void *orig_func, void *hook_func, uint8_t *mcode_backup)
+{
+    int page_size;
+    void *aligned_addr;
+    uint8_t hook_mcode[12] = {0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00,
+                              0x00, 0x00, 0x00, 0xFF, 0xE0};
+
+    page_size = getpagesizes();
+    aligned_addr = (void *)(((uintptr_t)orig_func) &amp; (~(page_size - 1)));
+    if (mprotect(aligned_addr,
+                 page_size * 2,
+                 PROT_EXEC | PROT_WRITE | PROT_READ ) != 0) {
+        fprintf(stderr, &quot;failed to modify mem props\n&quot;);
+        exit(EXIT_FAILURE);
+    }
+    *(uintptr_t*)(hook_mcode + 2) = (uintptr_t)hook_func;
+    memcpy(mcode_backup, orig_func, 12);
+    memcpy(orig_func, hook_mcode, 12);
+}
+
+void restore(void *func, uint8_t *mcode)
+{
+    memcpy(func, mcode, 12);
+}
+
+int main()
+{
+    uint8_t mcode_backup[12] = {0};
+    func();
+    hook(func, hook_func, mcode_backup);
+    func();
+    restore(func, mcode_backup);
+    func();
+    return 0;
+}
+</code></pre>
+<p>程序运行结果如下：</p>
+<pre><code>hello, beautiful world
+farewell, cruel world
+hello, beautiful world
+</code></pre>
+<p>其中，第一行是原本的函数的输出结果，第二行是被hook之后的输出结果，最后一行是恢复之后的输出结果。</p>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+

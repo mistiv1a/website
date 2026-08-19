@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>邪道Scheme</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style4.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-5ba15e3a.woff2") format("woff2");unicode-range:U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifHeading";src:url("serif-heading-index-5ba15e3a.woff2") format("woff2");unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>邪道Scheme</h1>
+<p><span class="pubdate">2022年12月13日</span></p>
+<p>因为Scheme和Lisp系的其他语言一样，过于灵活，因此可以往语言里面加入很多奇怪的东西。甚至，如果想用命令式的方式，像Python一样编写Scheme代码，也是可以的。</p>
+<p>这篇文章中的代码都是为GNU Guile和TinyScheme而写的，这两个解释器都支持老式的Lisp宏。这种宏在Common Lisp当中更多见，并不卫生，也不属于任何Scheme标准。但是大多数解释器和编译器都支持。</p>
+<p>例如，假如想在Racket中运行，只需要在代码前面加入下面这段语法就可以了：</p>
+<pre><code class="language-rkt">#lang racket
+
+(define-syntax define-macro
+  (lambda (x)
+    (syntax-case x ()
+      ((_ (macro . args) body ...)
+       #'(define-macro macro (lambda args body ...)))
+      ((_ macro transformer)
+       #'(define-syntax macro
+           (lambda (y)
+             (syntax-case y ()
+               ((_ . args)
+                (let ((v (syntax-&gt;datum #'args)))
+                  (datum-&gt;syntax y (apply transformer v)))))))))))
+</code></pre>
+<h2>hello, world</h2>
+<p>Python代码：</p>
+<pre><code class="language-py">print(&quot;hello, world&quot;)
+</code></pre>
+<p>函数定义：</p>
+<pre><code class="language-rkt">(define println
+    (lambda x
+      (apply display x)
+      (newline)))
+</code></pre>
+<p>最终效果：</p>
+<pre><code class="language-rkt">(println &quot;hello world&quot;)
+</code></pre>
+<h2>Def</h2>
+<p>Python代码：</p>
+<pre><code class="language-py">def is_even(x):
+    if x % 2 == 0:
+        return True
+    return False
+</code></pre>
+<p>宏定义：</p>
+<pre><code class="language-rkt">(define-macro (def form . body)
+    `(define ,form
+         (call/cc (lambda (return)
+            ,@body))))
+</code></pre>
+<p>最终效果：</p>
+<pre><code class="language-rkt">(def (is-even x)
+    (cond ((= 0 (modulo x 2))
+        (return #t)))
+    (return #f))
+</code></pre>
+<h2>While</h2>
+<p>Python代码：</p>
+<pre><code class="language-py">i = 0
+while True:
+    i = i + 1
+    if x % 2 == 0:
+        continue
+    print(i)
+    if i &gt; 10:
+        break
+</code></pre>
+<p>宏定义：</p>
+<pre><code class="language-rkt">(define-macro (while condition . body)
+    (let ((loop (gensym)))
+        `(call/cc (lambda (break)
+            (letrec ((,loop (lambda ()
+                (cond (,condition
+                    (call/cc (lambda (continue)
+                            ,@body))
+                    (,loop))))))
+                (,loop))))))
+</code></pre>
+<p>最终效果：</p>
+<pre><code class="language-rkt">(let ((i 0))
+(while #t
+    (set! i (+ i 1))
+    (cond ((= (modulo i 2) 0)
+         (continue)))
+    (cond ((&gt; i 10)
+        (break)))
+    (println i)))
+</code></pre>
+<h2>For</h2>
+<p>Python代码：</p>
+<pre><code class="language-py">for i in range(0, 10):
+    print(i)
+</code></pre>
+<p>宏和工具函数定义：</p>
+<pre><code class="language-rkt">(define (iter-get iter)
+    (cond ((list? iter)
+        (car iter))
+    (else
+        (iter 'get))))
+
+(define (iter-next iter)
+    (cond ((list? iter)
+        (cdr iter))
+    (else
+        (iter 'next))))
+
+(define (range start end)
+    (lambda (method)
+        (cond ((eq? 'get method)
+            (if (&gt;= start end)
+                '()
+                start))
+        ((eq? 'next method)
+            (range (+ 1 start) end)))))
+
+(define-macro (for i range . body)
+    (let ((loop (gensym))
+          (iter (gensym)))
+    `(call/cc (lambda (break)
+        (letrec
+            ((,loop (lambda (,iter)
+                (if (eq? (iter-get ,iter) '())
+                    '()
+                    (let ((,i (iter-get ,iter)))
+                          (call/cc (lambda (continue)
+                             ,@body))
+                          (,loop (iter-next ,iter)))))))
+            (,loop ,range))))))
+</code></pre>
+<p>最终效果：</p>
+<pre><code class="language-rkt">(for i (range 0 10)
+    (println i))
+</code></pre>
+<h2>Goto</h2>
+<p>这个还是算了吧！</p>
+<h2>Fizz Buzz!</h2>
+<p>Python写出来是这样：</p>
+<pre><code class="language-py">for i in range(35):
+    if i % 15 == 0:
+        print(&quot;FizzBuzz&quot;)
+        continue
+    if i % 3 == 0:
+        print(&quot;Fizz&quot;)
+        continue
+    if i % 5 == 0:
+        print(&quot;Buzz&quot;)
+        continue
+    print(i)
+</code></pre>
+<p>用Scheme的话，加上上面的宏，几乎可以一一对应：</p>
+<pre><code class="language-rkt">(for i (range 1 35)
+    (cond ((= 0 (modulo i 15))
+        (println &quot;FizzBuzz&quot;)
+        (continue)))
+    (cond ((= 0 (modulo i 3))
+        (println &quot;Fizz&quot;)
+        (continue)))
+    (cond ((= 0 (modulo i 5))
+        (println &quot;Buzz&quot;)
+        (continue)))
+    (println i))
+</code></pre>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+
