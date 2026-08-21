@@ -423,3 +423,7 @@ code.has-jax {
   border: none !important;
   font-size: 100%;
 }
+
+#nl-badge-frame {
+  visibility: hidden;
+}

@@ -139,11 +139,8 @@ def render_nav(items):
     return f'<p><span class="masthead-nav">{links}</span></p>'
 
 def nav_for(input_path):
-    """Pick the nav belonging to the site this page is part of."""
-    path = os.path.abspath(input_path).replace(os.sep, "/")
-    if "/blog/" in path or path.endswith("/homepage/index.md"):
-        return render_nav(BLOG_NAV)
-    return ""
+    """Render the shared navigation for every Markdown page."""
+    return render_nav(BLOG_NAV)
 
 # A post lives in a directory named YYYY-MM-DD-slug; that name is the single
 # source of the publication date, so it is never written by hand in the body.
@@ -362,4 +359,3 @@ if __name__ == "__main__":
     if serif_extra:
         head_extra += f"\n<style>\n{serif_extra}\n</style>"
     print(template.format(title, head_extra, html_out))
-

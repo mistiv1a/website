@@ -109,7 +109,7 @@ pip install --target=scripts/vendor brotli==1.2.0
 | 方正新书宋 FZXSSJW.TTF | `/usr/share/fonts/FZXSSJW.TTF` | 正文 CJK 衬线字体 | `SERIF_BODY_FONT_SRC` |
 | 思源宋体 Source Han Serif CN SemiBold | `/usr/share/fonts/adobe-source-han-serif/SourceHanSerifCN-SemiBold.otf` | 标题衬线字体 | `SERIF_HEADING_FONT_SRC` |
 
-`template.typ` 中的代码块使用 **Sarasa Mono SC** 等宽字体（`/usr/share/fonts/sarasa/`），该字体也需在构建机上安装。
+`template.typ`中的代码块使用 **Sarasa Mono SC** 等宽字体（`/usr/share/fonts/sarasa/`），该字体也需在构建机上安装。
 
 ### PDF 阅读器（pdfjs）
 
