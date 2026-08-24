@@ -1,6 +1,8 @@
 Scriptum Mistiviae
 ========
 
+- <span class="pdate">2026-08-28</span>[如何用汇编刷算法题](/posts/2026-08-28-asmoj/)
+- <span class="pdate">2026-08-27</span>[手写汇编小窍门（x86-64）](/posts/2026-08-27-asm/)
 - <span class="pdate">2026-07-18</span>[Python中的表达式问题：一种静态类型解法](/posts/2026-07-18-py-expr-problem/)
 - <span class="pdate">2026-07-05</span>[计算多头注意力](/posts/2026-07-05-attention/)
 - <span class="pdate">2026-05-24</span>[Minecraft服务器搭建](/posts/2026-05-24-mcserver/)
@@ -40,4 +42,3 @@ Scriptum Mistiviae
 - <span class="pdate">2017-09-26</span>[谈一谈乱序时间线](/posts/2017-09-26-sns-timeline/)
 - <span class="pdate">2017-06-21</span>[毕业记](/posts/2017-06-21-graduate/)
 - <span class="pdate">2017-04-18</span>[社交网络的戒断反应](/posts/2017-04-18-sns-addict/)
-

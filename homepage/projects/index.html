@@ -4,10 +4,11 @@
 <head>
 <title>业余项目</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="/style4.css">
+<link rel="stylesheet" href="/style5.css">
 <style>
-@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-8d3dca71.woff2") format("woff2");unicode-range:U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
-@font-face{font-family:"SiteSerifHeading";src:url("serif-heading-index-8d3dca71.woff2") format("woff2");unicode-range:U+0000-10FFFF;font-style:normal;font-weight:600;font-display:swap;}
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-e6546d92.woff2") format("woff2");unicode-range:U+0030-0039,U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-latin-index-e6546d92.woff2") format("woff2");unicode-range:U+0000-002F,U+003A-024F,U+1E00-1EFF,U+2000-206F,U+20AC,U+2122;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-latin-italic-index-e6546d92.woff2") format("woff2");unicode-range:U+0000-002F,U+003A-024F,U+1E00-1EFF,U+2000-206F,U+20AC,U+2122;font-style:italic;font-weight:400;font-display:swap;}
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -16,18 +17,20 @@
 <h1>业余项目</h1>
 <p>现在这个时代其实开源已经没有什么意义了，这里只是记录一下自己做过的东西：</p>
 <h2>Haskell</h2>
-<p><a href="https://github.com/mistivia/accessor-hs/archive/refs/heads/master.zip">accessor-hs</a>: 一个类似lens的库，但是没有那么复杂，用了一些技巧把getter、setter串起来。可能它们的本质就是某种functor，但是我不擅长范畴论，无法看破其中的奥妙。</p>
-<p><a href="https://github.com/mistivia/flex-record/archive/refs/heads/master.zip">flex-record</a>: 用了很多类型级编程技巧创建的在类型层可以获得字段名字和类型的record类型和sum type。有点类似<a href="https://github.com/VinylRecords/Vinyl">Vinyl</a>。</p>
-<p><a href="https://github.com/mistivia/typed-rpc/archive/refs/heads/master.zip">typed-rpc</a>: 基于上述两个库创建的强类型JSON API服务端框架，可以看成是穷人的servant。</p>
+<p><a href="https://raye.mistivia.com/releases/accessor-hs.zip">accessor-hs</a>: 一个类似lens的库，但是没有那么复杂，用了一些技巧把getter、setter串起来。可能它们的本质就是某种functor，但是我不擅长范畴论，无法看破其中的奥妙。</p>
+<p><a href="https://raye.mistivia.com/releases/flex-record.zip">flex-record</a>: 用了很多类型级编程技巧创建的在类型层可以获得字段名字和类型的record类型和sum type。有点类似<a href="https://github.com/VinylRecords/Vinyl">Vinyl</a>。</p>
+<p><a href="https://raye.mistivia.com/releases/typed-rpc.zip">typed-rpc</a>: 基于上述两个库创建的强类型JSON API服务端框架，可以看成是穷人的servant。</p>
 <h2>C/C++</h2>
-<p><a href="https://github.com/mistivia/hive-mind-ygo/archive/refs/heads/master.zip">hive-mind-ygo</a>: 游戏王轮抽工具。不过目前还没有找到足够的人一起玩游戏王轮抽，有兴趣的话欢迎联系我。</p>
-<p><a href="https://github.com/mistivia/ezlive/archive/refs/heads/master.zip">ezlive</a>: 直播工具，可以接受OBS推流然后转成HLS流，上传到S3兼容的存储捅上。主要目的是利用免费的Cloudflare R1搭建地下直播间。</p>
-<p><a href="https://github.com/mistivia/lmp/archive/refs/heads/master.zip">lmp</a>: 一个整活项目。用C++模板元编程实现了类似Lisp的功能（cons, car, cdr, reverse, 等等）。曾<a href="https://news.ycombinator.com/item?id=47292029">一度登上Hacker News首页</a>。</p>
-<p><a href="https://github.com/mistivia/mvvmm/archive/refs/heads/master.zip">mvvmm</a>: 我的得意作品，用1000多行C代码实现了完整的基于KVM的虚拟机管理器，实现了块设备和网络设备的VirtIO模拟，可以运行主流Linux发行版，并且性能不低。</p>
+<p><a href="https://raye.mistivia.com/releases/hive-mind-ygo.zip">hive-mind-ygo</a>: 游戏王轮抽工具。不过目前还没有找到足够的人一起玩游戏王轮抽，有兴趣的话欢迎联系我。</p>
+<p><a href="https://raye.mistivia.com/releases/ezlive.zip">ezlive</a>: 直播工具，可以接受OBS推流然后转成HLS流，上传到S3兼容的存储捅上。主要目的是利用免费的Cloudflare R1搭建地下直播间。</p>
+<p><a href="https://raye.mistivia.com/releases/lmp.zip">lmp</a>: 一个整活项目。用C++模板元编程实现了类似Lisp的功能（cons, car, cdr, reverse, 等等）。曾<a href="https://news.ycombinator.com/item?id=47292029">一度登上Hacker News首页</a>。</p>
+<p><a href="https://raye.mistivia.com/releases/mvvmm.zip">mvvmm</a>: 我的得意作品，用1000多行C代码实现了完整的基于KVM的虚拟机管理器，实现了块设备和网络设备的VirtIO模拟，可以运行主流Linux发行版，并且性能不低。</p>
 <h2>JavaScript</h2>
-<p><a href="https://github.com/mistivia/ygo-deck-builder/archive/refs/heads/master.zip">ygo-deck-builder</a>: 一个游戏王卡组编辑器，支持中文、英文、日文，OCG、简中文、TCG、Genesys等多种环境。<a href="https://raye.mistivia.com/ygodeck/">【传送门】</a>。</p>
+<p><a href="https://raye.mistivia.com/releases/ygo-deck-builder.zip">ygo-deck-builder</a>: 一个游戏王卡组编辑器，支持中文、英文、日文，OCG、简中文、TCG、Genesys等多种环境。<a href="https://raye.mistivia.com/ygodeck/">【传送门】</a>。</p>
+<h2>Python</h2>
+<p><a href="https://raye.mistivia.com/releases/jitasm-py.zip">jitasm</a>: Python中的x86-64 JIT汇编器。</p>
 <h2>汇编</h2>
-<p><a href="https://github.com/mistivia/asmrt/archive/refs/heads/master.zip">asmrt</a>: 一个目前未完成的x86-64 Linux汇编运行时，主要用来练习汇编编程。愿景是封装libc常用功能，实现常用数据结构。</p>
+<p><a href="https://raye.mistivia.com/releases/asmrt.zip">asmrt</a>: 一个目前未完成的x86-64 Linux汇编运行时，主要用来练习汇编编程。愿景是封装libc常用功能，实现常用数据结构。</p>
 
 <hr>
 <p id="email">Email: i (at) mistivia (dot) com</p>

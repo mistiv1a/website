@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>如何用汇编刷算法题</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style5.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-a45d4501.woff2") format("woff2");unicode-range:U+0030-0039,U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-latin-index-a45d4501.woff2") format("woff2");unicode-range:U+0000-002F,U+003A-024F,U+1E00-1EFF,U+2000-206F,U+20AC,U+2122;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-latin-italic-index-a45d4501.woff2") format("woff2");unicode-range:U+0000-002F,U+003A-024F,U+1E00-1EFF,U+2000-206F,U+20AC,U+2122;font-style:italic;font-weight:400;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>如何用汇编刷算法题</h1>
+<p><span class="pubdate">2026年8月28日</span></p>
+<p>刷算法题是学了新编程语言后练手的绝佳方式。之前写了一篇手写汇编]的内容，但是支持汇编的刷题网站是很少的。</p>
+<p>不过好在基本上大部分地方都支持C语言，也用gcc编译器，这样我们就能用inline汇编来实现用汇编刷算法题了。</p>
+<p>gcc通常的inline汇编语法大概是这样：</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    int a = 10;
+    int b = 20;
+    int result;
+
+    asm (
+        &quot;addl %2, %0&quot;
+        : &quot;=r&quot; (result)     // 输出
+        : &quot;0&quot; (a), &quot;r&quot; (b)  // 输入
+    );
+
+    printf(&quot;result = %d\n&quot;, result);
+    return 0;
+}
+</code></pre>
+<p>不光用的是晦涩的AT&amp;T语法，后面的一坨<code>: &quot;=r&quot; (result)</code>以及<code>&quot;0&quot; (a), &quot;r&quot; (b)</code>，意味不明、复杂难记，寄存器也不能自己分配。</p>
+<p>所以我更倾向直接用<code>__attribute__((naked))</code>汇编，看起来会清爽很多。</p>
+<p>这里用Leetcode上最最最简单的一道题为例：<a href="https://leetcode.com/problems/add-two-integers/">Add Two Integers</a>。</p>
+<p>这道题的答案就一行：</p>
+<pre><code class="language-c">int sum(int num1, int num2) {
+    return num1 + num2;
+}
+</code></pre>
+<p>如果用<code>__attribute__((naked))</code>汇编的话就是这样：</p>
+<pre><code class="language-c">__attribute__((naked))
+int sum(int num1, int num2) {
+    __asm__ volatile (
+        &quot;.intel_syntax noprefix\n&quot;   // 开启intel语法
+        &quot;add rdi, rsi\n&quot;
+        &quot;mov rax, rdi\n&quot;
+        &quot;ret\n&quot;
+        &quot;.att_syntax prefix\n&quot;       // 恢复gcc默认的AT&amp;T语法
+    );
+}
+</code></pre>
+<p>这样看起来就规整不少了。除了首尾一些模板代码，核心部分很简单：</p>
+<pre><code class="language-c">&quot;add rdi, rsi\n&quot;
+&quot;mov rax, rdi\n&quot;
+&quot;ret\n&quot;
+</code></pre>
+<p>然后因为__asm__里面的汇编代码是直接插入到编译结果里面的，所以甚至可以不用管函数边界，直接在函数里面定义汇编函数，比如这样：</p>
+<pre><code class="language-c">int sum(int num1, int num2);
+
+__attribute__((naked))
+void impl() {
+    __asm__ volatile (
+        &quot;.intel_syntax noprefix\n&quot;   // 开启intel语法
+        &quot;ret\n&quot;
+        &quot;sum:\n&quot;
+        &quot;    add rdi, rsi\n&quot;
+        &quot;    mov rax, rdi\n&quot;
+        &quot;    ret\n&quot;
+        &quot;.att_syntax prefix\n&quot;       // 恢复gcc默认的AT&amp;T语法
+    );
+}
+</code></pre>
+<p>唯二的麻烦大概是gcc的inline汇编必须是字符串，要处理C语言的escape，另外也用不了宏。不过这些也很好解决，用AI生成一个Python脚本，读入汇编源代码文件，用C预处理器<code>cpp</code>处理好，宏都展开，然后做一下字符串escaping，换行符替换成<code>\n</code>，<code>&quot;</code>变成<code>\&quot;</code>等等，最后填入<code>__attribute__((naked))</code>、<code>__asm__ volatile</code>，以及<code>.att_syntax prefix</code>这些模板。</p>
+<h2>效果展示</h2>
+<p><a href="./001.jpg" target="_blank"><img src="./001.jpg" alt=""></a></p>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+

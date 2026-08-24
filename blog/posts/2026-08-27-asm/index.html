@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>手写汇编小窍门（x86-64）</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/style5.css">
+<style>
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-index-0caf31e7.woff2") format("woff2");unicode-range:U+0030-0039,U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-latin-index-0caf31e7.woff2") format("woff2");unicode-range:U+0000-002F,U+003A-024F,U+1E00-1EFF,U+2000-206F,U+20AC,U+2122;font-style:normal;font-weight:400;font-display:swap;}
+@font-face{font-family:"SiteSerifBody";src:url("serif-body-latin-italic-index-0caf31e7.woff2") format("woff2");unicode-range:U+0000-002F,U+003A-024F,U+1E00-1EFF,U+2000-206F,U+20AC,U+2122;font-style:italic;font-weight:400;font-display:swap;}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<p><span class="masthead-nav"><a href="//mistivia.com">关于</a> · <a href="//blog.mistivia.com/">归档</a> · <a href="//blog.mistivia.com/links/">友链</a> · <a href="//blog.mistivia.com/index.xml">订阅</a></span></p>
+<h1>手写汇编小窍门（x86-64）</h1>
+<p><span class="pubdate">2026年8月27日</span></p>
+<p>这里假设使用的是GAS（也就是as命令）。虽然纯汇编编程的汇编器以nasm更常见，但是下面两个原因让我决定还是选择GAS：</p>
+<ol>
+<li>GAS跟gcc是一家，交互比较容易；</li>
+<li>nasm只支持x86-64架构，而GAS有RISC-V、ARM等其它架构的版本，在GAS上学到的技巧更加泛用。</li>
+</ol>
+<h2>使用Intel格式</h2>
+<p>GAS默认使用AT&amp;T格式，这个格式很垃圾，不要学。我们直接用intel格式。在文件开头加上这么一行：</p>
+<pre><code class="language-asm">.intel_syntax noprefix
+</code></pre>
+<h2>使用RISC-V风格的寄存器别名</h2>
+<p>8086早期的寄存器的名字都是有含义的，比如<code>bx</code>代表“基址 (base)”，<code>cx</code>代表“计数器 (counter)”。然后这些寄存器又扩展成32位的ebx、ecx，以及64位的rbx、rcx。但是对于现代CPU来说，现如今这些寄存器含义早就消解了，大家都是通用寄存器。</p>
+<p>在Linux上，调用函数的时候，参数和寄存器关系如下：</p>
+<ul>
+<li>参数1：rdi</li>
+<li>参数2：rsi</li>
+<li>参数3：rdx</li>
+<li>参数4：rcx</li>
+<li>参数5：r8</li>
+<li>参数6：r9</li>
+</ul>
+<p>这个顺序实在太难记了，所以不妨效仿RISC-V汇编，给它们一个能表示ABI语义的别名:</p>
+<pre><code class="language-asm">/* arguments */
+#define a0 rdi
+#define a1 rsi
+#define a2 rdx
+#define a3 rcx
+#define a4 r8
+#define a5 r9
+</code></pre>
+<p>rax用来存放返回值，起名r0:</p>
+<pre><code class="language-asm">#define r0 rax
+</code></pre>
+<p>此外还有两个寄存器，由调用方（caller）负责保存，但是不用来传参，很适合用来存储临时值：</p>
+<pre><code class="language-asm">/* other caller-saved registers */
+#define t0  r10
+#define t1  r11
+</code></pre>
+<p>最后是一些由被调用方（callee）负责保存的寄存器。函数中如果要使用的话，要在函数开头push到栈上，然后在函数结尾pop恢复。这些寄存器都很适合用来保存本地变量。这里以“s”开头，意为“save”：</p>
+<pre><code class="language-asm">/* callee-saved registers */
+#define s0 rbx
+#define s1 r12
+#define s2 r13
+#define s3 r14
+#define s4 r15
+</code></pre>
+<p>注意，因为这里用了C语言风格的宏，所以源代码文件的扩展名必须是大写的字母S，也就是<code>filename.S</code>。然后统一用<code>gcc</code>编译即可。</p>
+<h2>栈管理</h2>
+<p>大多数函数都要在最开始处创建栈帧，并在结束时恢复栈帧。这是固定操作，所以用宏：</p>
+<pre><code class="language-asm">.macro begin
+    push rbp
+    mov rbp, rsp
+.endm
+
+.macro return
+    mov rsp, rbp
+    pop rbp
+    ret
+.endm
+</code></pre>
+<h2>例子：FNV-1 64位哈希</h2>
+<p>这个哈希函数的C代码是这样的：</p>
+<pre><code class="language-c">#define FNV_PRIME 0x100000001b3
+
+uint64_t fnv64(const unsigned char *bytes, size_t length, uint64_t input)
+{
+    uint64_t hash = input;
+    for (size_t i = 0; i &lt; length; ++i) {
+        hash *= FNV_PRIME;
+        hash ^= (uint64_t)bytes[i];
+    }
+    return hash;
+}
+</code></pre>
+<p>因为足够简单所以很适合用来作为例子。手写出来的汇编大概是这样：</p>
+<pre><code class="language-s">#define FNV_PRIME 0x100000001b3
+
+.section .text
+.globl fnv64
+
+/* fnv64(data, dataSize, input) -&gt; output */
+fnv64:
+    /* 参数 */
+    #define data     a0
+    #define dataSize a1
+    #define input    a2
+    
+    begin
+    
+    /* 本地变量 */
+    #define hash  a3
+    #define i     a4
+    #define prime a5
+    
+    /* 变量初始化 */
+    mov prime, FNV_PRIME
+    mov hash, input
+    mov i, 0
+.Lloop:
+    /* while i &lt; dataSize */
+    cmp i, dataSize
+    jae .Lendloop
+        /* hash *= prime */
+        imul hash, prime
+        /* hash ^= data[i] */
+        movzx t0, byte ptr [data + i] /* t0 = data[i] */
+        xor hash, t0
+        inc i
+        jmp .Lloop
+.Lendloop:
+    mov r0, hash
+    return
+    #undef data
+    #undef dataSize
+    #undef input
+    #undef hash
+    #undef i
+    #undef prime
+</code></pre>
+<p>几个值得注意的地方：</p>
+<h3>叶子函数</h3>
+<p>这个函数本身没有调用其他函数，所以所有的<code>aX</code>寄存器和<code>tX</code>寄存器都可以当成变量用。</p>
+<p>与之对应，如果是普通函数，本地变量最好分配成<code>sX</code>寄存器，或者溢出到栈上。此时<code>aX</code>寄存器和<code>tX</code>寄存器只适合存储一些生命周期极短的临时变量。否则每次调用其他函数都需要push这些寄存器，然后恢复，很麻烦。</p>
+<h3>寄存器分配</h3>
+<p>我们这里可以用宏给他们分配变量名。编译器后端在进行寄存器分配的时候也会做类似的事情。人自然比不上机器，没法进行图着色分配，但是简单模拟一个线性扫描的话基本问题不大：</p>
+<pre><code class="language-c">/* 参数 */
+#define data     a0
+#define dataSize a1
+#define input    a2
+
+/* 本地变量 */
+#define hash  a3
+#define i     a4
+#define prime a5
+</code></pre>
+<p>如果变量在栈上的话也一样：</p>
+<pre><code class="language-c">#define varName [rbp - varOffset]
+</code></pre>
+<h3>标签</h3>
+<p>在GAS中，.L开头的标签不会进入<code>.o</code>文件，适合用作函数内部的跳转标签。</p>
+<p>例如上面程序中的：</p>
+<pre><code class="language-asm">.Lloop:
+</code></pre>
+<p>和</p>
+<pre><code class="language-asm">.Lendloop:
+</code></pre>
+<p>但是要注意，标签在每一个文件中必须是唯一的，如果有好几个loop，那可能就要写成 <code>.Lloop1:</code>、<code>.Lloop2:</code>…，这样。</p>
+<p>另一种方法是数字：</p>
+<pre><code class="language-asm">1:
+    ...
+    ...
+2:
+    ...
+    ...
+</code></pre>
+<p>然后，这些数字是可以重复的，例如，编号为1的label可能有多个，为了避免歧义，跳转的时候要注明是往前跳还是往后跳：</p>
+<pre><code class="language-asm">/* 往前跳（向下） */
+    jmp 1f
+
+/* 往后跳（向上） */
+    jmp 1b
+</code></pre>
+<h3>结构化编程</h3>
+<p>虽然汇编里面只有跳转和条件跳转，也就是说，只有GOTO。但是作为写汇编体验生活的现代人，我们可以“手中无剑，心中有剑”，依然用结构化编程的形式来组织程序，加上注释，然后在合适的地方缩进：</p>
+<pre><code class="language-asm">.Lloop:
+    /* while i &lt; dataSize */
+    cmp i, dataSize
+    jae .Lendloop
+        /* hash *= prime */
+        imul hash, prime
+        /* hash ^= data[i] */
+        movzx t0, byte ptr [data + i] /* t0 = data[i] */
+        xor hash, t0
+        inc i
+        jmp .Lloop
+.Lendloop:
+</code></pre>
+<h2>结构体</h2>
+<p>假设有2个这样的结构体：</p>
+<pre><code class="language-c">struct Point {
+    int32_t x;
+    int32_t y;
+    int32_t z;
+};
+
+struct Line {
+    struct Point p1;
+    struct point p2;
+};
+</code></pre>
+<p>那么GAS中可以这么定义：</p>
+<pre><code class="language-asm">.set Point_x,      0
+.set Point_y,      4 + Point_x
+.set Point_z,      4 + Point_y
+.set sizeof_Point, 4 + Point_z
+
+.set Line_p1,     0
+.set Line_p2,     sizeof_Point + Line_p1
+.set sizeof_Line, sizeof_Point + Line_p2
+</code></pre>
+<p>这样就可以得到一个可维护的结构体偏移量和结构体尺寸。</p>
+<p>在使用时，假如<code>t0</code>寄存器中存储了一个<code>struct Line</code>的指针，如果我们要获得 t0-&gt;p2.x，只需要：</p>
+<pre><code class="language-asm">movsx t0, dword ptr [t0 + Line_p2 + Point_x]
+</code></pre>
+<h2>栈帧</h2>
+<p>栈帧上的变量也可以用类似方式，通过<code>.set</code>分配其偏移量。</p>
+<p>假如一个函数中有这些本地变量需要保存在栈上：</p>
+<pre><code class="language-c">int32_t x;
+int32_t y;
+int64_t z;
+struct Line line;
+</code></pre>
+<p>那么就可以这么写：</p>
+<pre><code class="language-asm">.set x,    4
+.set y,    4 + x
+.set z,    8 + y
+.set line, sizeof_Line + z
+</code></pre>
+<p>要注意到：本地变量的栈帧是向下增长的，所以，最后一个变量line的偏移量也就是栈帧的尺寸。但是C ABI要求栈帧必须16字节对齐，也就是说，栈帧尺寸的字节数必须是16的倍数，所以我们用一个宏辅助向上取到16的倍数：</p>
+<pre><code class="language-asm">#define align16(_var) (((_var) + 15) &amp; (-16))
+
+.set stackFrameSize, align16(line)
+</code></pre>
+<p>然后创建栈帧：</p>
+<pre><code class="language-asm">sub rsp, stackFrameSize
+</code></pre>
+<p>随后，相对<code>rbp</code>进行寻址就可以访问这些本地变量。注意到本地变量的栈帧是从高到低增长的，所以对本地变量寻址应该做减法。而成员变量的偏移是从低到高，所以对成员变量做寻址应该做加法：</p>
+<pre><code class="language-asm">/* t0 = line.p1.y; */
+movsx t0, dword ptr [rbp - line + Line_p1 + Point_y]
+</code></pre>
+
+<hr>
+<p id="email">Email: i (at) mistivia (dot) com</p>
+<script>
+var emailElement = document.getElementById('email');
+var base64String = "RW1haWw6IGlAbWlzdGl2aWEuY29tCg==";
+var decodedString = atob(base64String);
+emailElement.innerHTML = decodedString;
+</script>
+</body>
+</html>
+
