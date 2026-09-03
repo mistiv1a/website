@@ -58,23 +58,7 @@ Write like a fluent non-native English language speaker writing at CEFR C1 would
 
 ## 三方依赖与安装方式
 
-本项目构建依赖以下三方组件。除 `scripts/vendor/` 下的 Python 库可随仓库分发外，其余均为系统级命令/文件，需在构建机上预先安装。
-
-### scripts/vendor/ 中的 Python 库（已随仓库分发）
-
-这些库已安装到 `scripts/vendor/`，如缺失可用 pip 重装到该目录：
-
-```bash
-# fonttools 4.63.0（字体子集化，md.py 生成 serif webfont 时使用）
-pip install --target=scripts/vendor fonttools==4.63.0
-
-# brotli 1.2.0（fonttools 的 WOFF2 压缩依赖）
-pip install --target=scripts/vendor brotli==1.2.0
-```
-
-- 代码通过 `sys.path.insert(0, os.path.join(HERE, "vendor"))` 导入（见 `scripts/md.py`）。
-- fontTools 是可选的：缺失时 `HAS_FONTTOOLS=False`，构建仍会成功，页面回退到系统衬线字体。
-- `scripts/vendor/` 已被 `.gitignore` 忽略，不会进入仓库。
+本项目构建依赖以下三方组件。JavaScript 库随仓库分发，系统命令需在构建机上预先安装。正文和标题使用浏览器的系统无衬线字体，不需要字体构建依赖。
 
 ### JavaScript 库
 
@@ -99,17 +83,6 @@ pip install --target=scripts/vendor brotli==1.2.0
   gcc -o text2html text2html.c
   ```
 - 当前项目中没有 `.pre` 文件，此工具仅在存在 `.pre` 源文件时被 `Makefile` 调用。
-
-### 系统字体依赖
-
-构建时 `scripts/md.py` 会用 fontTools 对以下字体做字符子集化，生成页面引用的 `serif-*.woff2`：
-
-| 字体 | 路径 | 用途 | 环境变量覆盖 |
-|---|---|---|---|
-| 方正新书宋 FZXSSJW.TTF | `/usr/share/fonts/FZXSSJW.TTF` | 正文 CJK 衬线字体 | `SERIF_BODY_FONT_SRC` |
-| 思源宋体 Source Han Serif CN SemiBold | `/usr/share/fonts/adobe-source-han-serif/SourceHanSerifCN-SemiBold.otf` | 标题衬线字体 | `SERIF_HEADING_FONT_SRC` |
-
-`template.typ`中的代码块使用 **Sarasa Mono SC** 等宽字体（`/usr/share/fonts/sarasa/`），该字体也需在构建机上安装。
 
 ### PDF 阅读器（pdfjs）
 

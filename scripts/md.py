@@ -3,8 +3,6 @@ import os
 import re
 import sys
 import subprocess
-import glob
-import uuid
 
 FENCE_RE = re.compile(r'^(```|~~~).*?^\1[ \t]*$', re.MULTILINE | re.DOTALL)
 INLINE_CODE_RE = re.compile(r'(?<!`)(`+)(?!`).+?(?<!`)\1(?!`)', re.DOTALL)
@@ -17,31 +15,6 @@ KATEX_JS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                         "vendor", "katex.min.js")
 KATEX_CSS_LINK = '<link rel="stylesheet" href="/katex.min.css">'
 
-# --- Serif webfont ---------------------------------------------------------
-# Each page carries character-subsetted woff2 faces: Old Song for CJK text
-# and IM FELL English for Latin text, including headings and publication dates.
-# This keeps the typography consistent across platforms.
-# fontTools lives in scripts/vendor; if absent the build still succeeds and
-# pages simply fall back to the system serif stack.
-HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(HERE, "vendor"))
-try:
-    from fontTools.subset import Options, Subsetter
-    from fontTools.ttLib import TTFont
-    HAS_FONTTOOLS = True
-except Exception:
-    HAS_FONTTOOLS = False
-
-SERIF_BODY_FAMILY = "SiteSerifBody"
-PROJECT_ROOT = os.path.dirname(HERE)
-SERIF_BODY_SOURCE = os.environ.get(
-    "SERIF_BODY_FONT_SRC", os.path.join(PROJECT_ROOT, "fonts", "oldsong.ttf"))
-SERIF_LATIN_SOURCE = os.environ.get(
-    "SERIF_LATIN_FONT_SRC",
-    os.path.join(PROJECT_ROOT, "fonts", "IMFeENrm28P.ttf"))
-SERIF_LATIN_ITALIC_SOURCE = os.environ.get(
-    "SERIF_LATIN_ITALIC_FONT_SRC",
-    os.path.join(PROJECT_ROOT, "fonts", "IMFeENit28P.ttf"))
 DISPLAY_MATH_RE = re.compile(r'\$\$(.+?)\$\$', re.DOTALL)
 INLINE_MATH_RE = re.compile(r'(?<!\$)\$(?!\s)([^\n$]+?)(?<!\s)\$(?!\$)')
 
@@ -193,133 +166,13 @@ def is_article(input_path):
     path = os.path.abspath(input_path).replace(os.sep, "/")
     return bool(ARTICLE_PATH_RE.search(path))
 
-def find_font_source(path):
-    return path if path and os.path.isfile(path) else None
-
-def make_serif_subset(font_path, chars, out_path, keep_ascii=False):
-    """Build a woff2 containing exactly the glyphs given.
-
-    By default only non-ASCII glyphs are kept, which is suitable for the CJK
-    face. Latin faces pass keep_ascii=True.
-    """
-    if not HAS_FONTTOOLS or not font_path:
-        return False
-    if keep_ascii:
-        chars = set(chars)
-    else:
-        chars = {ch for ch in chars if ord(ch) > 0x7e}
-    chars.update("0123456789，。、；：？！“”‘’（）《》〈〉【】—…「」·")
-    if not chars:
-        return False
-    try:
-        font = TTFont(font_path)
-        options = Options()
-        options.flavor = "woff2"
-        subsetter = Subsetter(options)
-        subsetter.populate(text="".join(chars))
-        subsetter.subset(font)
-        font.save(out_path)
-        font.close()
-        return True
-    except Exception as e:
-        print(f"warning: serif subset failed for {out_path}: {e}",
-              file=sys.stderr)
-        return False
-
-def serif_face_extra(input_path, html_text):
-    """Write per-page subsets and return <style> content ("" if skipped).
-
-    Each page owns namespaced font files (serif-body-<slug>-<rand>.woff2
-    etc.), so pages that share an output
-    directory (e.g. AGENTS.md and CLAUDE.md in the repo root) never delete
-    each other's fonts. A fresh random suffix defeats stale HTTP caches;
-    superseded files of the same page are removed after the new ones are
-    safely on disk.
-    """
-    out_dir = os.path.dirname(os.path.abspath(input_path))
-    slug = os.path.splitext(os.path.basename(input_path))[0].lower()
-    rand = uuid.uuid4().hex[:8]
-    body_font_name = f"serif-body-{slug}-{rand}.woff2"
-    latin_font_name = f"serif-body-latin-{slug}-{rand}.woff2"
-    latin_italic_font_name = f"serif-body-latin-italic-{slug}-{rand}.woff2"
-    body_font = os.path.join(out_dir, body_font_name)
-    latin_font = os.path.join(out_dir, latin_font_name)
-    latin_italic_font = os.path.join(out_dir, latin_italic_font_name)
-
-    body_ok = make_serif_subset(find_font_source(SERIF_BODY_SOURCE),
-                                html_text, body_font)
-    latin_ok = make_serif_subset(find_font_source(SERIF_LATIN_SOURCE),
-                                 html_text, latin_font, keep_ascii=True)
-    latin_italic_ok = make_serif_subset(
-        find_font_source(SERIF_LATIN_ITALIC_SOURCE), html_text,
-        latin_italic_font, keep_ascii=True)
-
-    if body_ok:
-        for old in glob.glob(os.path.join(out_dir, f"serif-body-{slug}*.woff2")):
-            if old != body_font:
-                try:
-                    os.remove(old)
-                except OSError:
-                    pass
-    if latin_ok:
-        for old in glob.glob(os.path.join(
-                out_dir, f"serif-body-latin-{slug}-*.woff2")):
-            if old != latin_font:
-                try:
-                    os.remove(old)
-                except OSError:
-                    pass
-    if latin_italic_ok:
-        for old in glob.glob(os.path.join(
-                out_dir, f"serif-body-latin-italic-{slug}-*.woff2")):
-            if old != latin_italic_font:
-                try:
-                    os.remove(old)
-                except OSError:
-                    pass
-    if body_ok and latin_ok:
-        for old in glob.glob(os.path.join(
-                out_dir, f"serif-heading-{slug}*.woff2")):
-            try:
-                os.remove(old)
-            except OSError:
-                pass
-
-    # CJK range: Latin stays on Palatino, while CJK ideographs (simplified
-    # and traditional), Japanese kana, Korean hangul and CJK extensions B-F
-    # all fall on the serif webfont.
-    CJK_RANGE = "U+0030-0039,U+1100-11FF,U+2E80-FFFF,U+10000-10FFFF"
-    LATIN_RANGE = ("U+0000-002F,U+003A-024F,U+1E00-1EFF,U+2000-206F,"
-                   "U+20AC,U+2122")
-
-    faces = []
-    if body_ok:
-        faces.append(
-            f'@font-face{{font-family:"{SERIF_BODY_FAMILY}";'
-            f'src:url("{body_font_name}") format("woff2");'
-            f"unicode-range:{CJK_RANGE};font-style:normal;font-weight:400;"
-            f"font-display:swap;}}")
-    if latin_ok:
-        faces.append(
-            f'@font-face{{font-family:"{SERIF_BODY_FAMILY}";'
-            f'src:url("{latin_font_name}") format("woff2");'
-            f"unicode-range:{LATIN_RANGE};font-style:normal;font-weight:400;"
-            f"font-display:swap;}}")
-    if latin_italic_ok:
-        faces.append(
-            f'@font-face{{font-family:"{SERIF_BODY_FAMILY}";'
-            f'src:url("{latin_italic_font_name}") format("woff2");'
-            f"unicode-range:{LATIN_RANGE};font-style:italic;font-weight:400;"
-            f"font-display:swap;}}")
-    return "\n".join(faces)
-
 template = """
 <!DOCTYPE html>
 <html>
 <head>
 <title>{}</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="/style5.css">{}
+<link rel="stylesheet" href="/style6.css">{}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -378,8 +231,5 @@ if __name__ == "__main__":
     html_out = markdown_convert(title, body,
                                 nav_for(input_file), pubdate_for(input_file))
     html_out = restore_math(html_out, render_math(math_items))
-    serif_extra = serif_face_extra(input_file, html_out)
     head_extra = "\n" + KATEX_CSS_LINK if math_items else ""
-    if serif_extra:
-        head_extra += f"\n<style>\n{serif_extra}\n</style>"
     print(template.format(title, head_extra, html_out))
