@@ -8,6 +8,14 @@
     <generator>Python Plain String RSS Generator</generator>
 
     <item>
+      <title>C语言中的一等函数</title>
+      <link>https://blog.mistivia.com/posts/2026-09-06-c-func/</link>
+      <description>Link to the post: https://blog.mistivia.com/posts/2026-09-06-c-func/</description>
+      <guid>https://blog.mistivia.com/posts/2026-09-06-c-func/</guid>
+      <pubDate>Sun, 06 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+
+    <item>
       <title>如何用汇编刷算法题</title>
       <link>https://blog.mistivia.com/posts/2026-08-28-asmoj/</link>
       <description>Link to the post: https://blog.mistivia.com/posts/2026-08-28-asmoj/</description>
@@ -45,14 +53,6 @@
       <description>Link to the post: https://blog.mistivia.com/posts/2026-05-24-mcserver/</description>
       <guid>https://blog.mistivia.com/posts/2026-05-24-mcserver/</guid>
       <pubDate>Sun, 24 May 2026 00:00:00 GMT</pubDate>
-    </item>
-
-    <item>
-      <title>给欧拉-拉格朗日方程加上类型注释</title>
-      <link>https://blog.mistivia.com/posts/2026-03-30-functional/</link>
-      <description>Link to the post: https://blog.mistivia.com/posts/2026-03-30-functional/</description>
-      <guid>https://blog.mistivia.com/posts/2026-03-30-functional/</guid>
-      <pubDate>Mon, 30 Mar 2026 00:00:00 GMT</pubDate>
     </item>
 
   </channel>

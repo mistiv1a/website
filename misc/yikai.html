@@ -1,0 +1,3809 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.2" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>yikai</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1 id="异解40-张竞技取向构筑与展开说明">异解△：40
+张竞技取向构筑与展开说明</h1>
+<p>成品：<a
+href="https://raye.mistivia.com/ygodeck/#F/T5BRf0+QUX9PkFGPT5BRj0+QUY9PkFGfT5BRn0+QUZ9PkFGvT5BRr0+QUb9PkFG/T5BRz0+QUc9PkFHPT5BR30+QUd9PkFHfT5BR70+QUf9PkFH/T5BR/0+QUg9PkFIPT5BSD0+QU/DRoCPw0aAj8NGgKuYAkErmAJBIphPgSvI94AryPeACqVZQH9iZwFNQeDAjUHgwI1B4MCPzrqAw==!sUmeBY0nmAPaI+sDyhq/AakafgBJJZYApJorAPlRfwSyxU8Evw5JAvLD7gLERCEFyjz1A7pO2QWZn5oD!IkiZACJImQAiSJkAxzRIA8c0SANvdu8Ab3bvAG927wCEJX4AhCV+AIQlfgDXGp8B+twUASOx8gMjsfID">yikai.ydk</a>，<strong>主牌
+40／额外 15／副牌 15</strong>。 采用 OCG <strong>2026-07-01</strong>
+禁限表，资料核对日期 <strong>2026-09-06</strong>。</p>
+<p>我的选择是本家高浓度、七张主牌手坑、一张抹杀，保留额外干扰；不以暴食兽和哲罕南的40张阈值作为主要赢法。核心终场优先黄泉／狂岚、葬岭保护和能实际连接出S:P的I:P，后攻先靠手坑与换备牌削弱对方。</p>
+<p>这是目前有理由选择的竞技取向版本；没有实际赛事成绩或完整对战引擎的胜率来证明“全卡池最优”。下面把构筑判断、抽手持有率、有限展开及人工分支分开说明。</p>
+<p><strong>导入格式：</strong> 本家采用任务指定萌卡 JSON
+的九位预发行ID，须用包含对应预发行卡的客户端；它们不是正式卡面密码。正式OCG的CID另有记录。本地普通卡库未收录异解，因此随附<a
+href="ygo_cards/analysis/yikai/cards.json">补充卡库</a>进行离线校验，没有猜造正式密码。官方商品页显示异解所在DBGV已于2026-09-05发售，实体发售与客户端数据更新是两件事。<a
+href="https://www.yugioh-card.com/japan/products/dbgv/">官方商品页</a></p>
+<h2 id="完整牌表与数量判断">1. 完整牌表与数量判断</h2>
+<h3 id="主牌28-怪兽12-魔法">主牌：28 怪兽／12 魔法</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">数量</th>
+<th>卡名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">3</td>
+<td>虚之异解△ 矶汉拿</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>天之异解△ 希屋尔</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>碧之异解△ 图奥内拉</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>绯之异解△ 那落迦</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>天霆异解△ 黄泉</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>葬岭异解△ 弗尔海姆</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>狂岚异解△ 普鲁托尼翁</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>虚蚀异解△ 哲罕南</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>异解△领域-魔之异界域</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>异解△福音</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>强欲而贪欲之壶</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>紧急瞬移</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>机巧蛇－丛云远吕智</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>灰流丽</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>增殖的Z</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>抽牌小丑与封锁鸟</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>多多迷宝・软绵雀精</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>抹杀之指名者</td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>本家</th>
+<th>用量理由及职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>矶汉拿3，暗／1星</td>
+<td>空场自跳省通召，回收两个不同名本家怪兽。满三；但单卡只盲除外1张，不能当稳定一卡启动。</td>
+</tr>
+<tr>
+<td>希屋尔3，光／2星</td>
+<td>有本家即可手牌自跳，回收本家魔陷，维持领域和福音周转。</td>
+</tr>
+<tr>
+<td>图奥内拉3，水／3星</td>
+<td>从里侧除外叫上级的主要出口；先攻不能用“对方怪兽更多”的条件自跳，靠通召或瞬移。</td>
+</tr>
+<tr>
+<td>那落迦2，炎／4星</td>
+<td>先攻较慢，但需要炎属性弹药及对手回合的续接。不能因追求启动率删光。</td>
+</tr>
+<tr>
+<td>黄泉2，光／5星</td>
+<td>手牌换回非5星本家，场上提供同属性怪效无效。两张兼顾手牌功能与站场；光属性弹药另有三张希屋尔。</td>
+</tr>
+<tr>
+<td>葬岭3，地／6星</td>
+<td>手牌快速换出里侧非6星本家，场上副本保护其他本家。手牌和场上用途都重要，满三。</td>
+</tr>
+<tr>
+<td>狂岚3，风／7星</td>
+<td>手牌与另一张本家换二；场上提供不取对象的同属性回牌组，也能只回自己的卡补牌库。满三。</td>
+</tr>
+<tr>
+<td>哲罕南1，暗／8星</td>
+<td>可由图奥内拉、福音等叫出的取对象炸卡点；手中自身不启动，降低到一。被壶里侧除外仍可用本家叫出。</td>
+</tr>
+<tr>
+<td>领域3、福音3</td>
+<td>每张发动支付5张里侧除外，分别提供补件、额外本家通召与低星换上级，满三。</td>
+</tr>
+<tr>
+<td>审判0</td>
+<td>对手回合需要先满足召唤和属性匹配，①又会锁住后续I:P／S:P及泛用手坑。没有为了收齐系列而保留它。</td>
+</tr>
+</tbody>
+</table>
+<p>外援的具体取舍：</p>
+<ul class="incremental">
+<li><strong>强贪壶3：</strong>
+除外10与抽二同时服务资源和卡差。复数有负担，但五卡出现两张以上仅约3.72%，首张价值高。</li>
+<li><strong>瞬移2＋丛云1：</strong>
+瞬移精准叫低星；丛云除外8且产一个可解放身体，灰不能直接无效其①，山雀也不因其从手牌特召抽牌。两类分散功能和受击点。三瞬移版本也做了对照，没有足够差异证明某一张绝对正确，本版保留一张丛云的不同作用。</li>
+<li><strong>灰2、G1、山雀3、锁鸟1：</strong>
+共七张手坑，提高后攻可参与对局的概率。灰、G、锁鸟分别按本环境准限二、限一、限一；山雀不限。它们被里侧除外后不是本家弹药，也不能用矶汉拿找回。山雀场上有卡时不能发动；G与山雀在自己牌库很少时均有抽穿风险，不是做完场仍必定可用的妨害。</li>
+<li><strong>抹杀1：</strong>
+可处理尚在连锁中的对应手坑，但要在本家限制前使用，宣言的同名卡须仍在牌库。壶把唯一G／锁鸟除外后，抹杀就不能再宣言那张。墓穴在2026-07表中禁止，未投入。</li>
+<li><strong>暴食兽0：</strong>
+三张起手占位、自己不能启动本家、G下多一次特召、吃掉额外目的地；40张跳抽卡也不等于赢。本版将这些资源用于前期交互。暴食兽不是弱卡，而是它的收益没有优先于当前构筑的实际问题。</li>
+</ul>
+<h3 id="额外15">额外：15</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">数量</th>
+<th>卡名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>纳祭魔・阿尼玛</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>转生炎兽独角兔</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>I：P百变莱娜</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>S：P小夜骑士</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>暗影之暗灵使 达尔克</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>照耀之光灵使 莱娜</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>梦魇曲・不死鸟</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>梦魇曲・地狱犬</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>渗透测试锹形虫</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>梦魇曲・独角兽</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>混元的战士 混沌士兵</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>访问码语者</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>拓扑逻辑零衔尾蛇</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>闭界冥神 蚀日的埃列丝</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>念力终焉处刑者</td>
+</tr>
+</tbody>
+</table>
+<p>额外按功能使用，不是假设一局全部召唤：</p>
+<ul class="incremental">
+<li><strong>I:P／S:P：</strong>
+两只非连接身体做I:P，送入额外怪兽区腾格。对手回合I:P加一只效果怪兽做S:P，使用了I:P这个连接素材才满足S:P①的素材条件。S:P是限一卡，确实保留在额外，才算有这条路线。</li>
+<li><strong>阿尼玛／独角兔：</strong>
+矶汉拿可转阿尼玛；独角兔需要通常召唤过且攻击力不高于1000的怪兽，不能把瞬移特召的图奥内拉直接当合法素材。</li>
+<li><strong>达尔克／莱娜／梦魇曲三种／访问码：</strong>
+符合素材和墓地／弃手等条件，且自身发动效果不被本家限制挡住时使用。锁后裸做访问码不能立即加攻和炸卡。</li>
+<li><strong>渗透测试锹形虫、混沌士兵、零衔尾蛇：</strong>
+分别保留持续贯通、含7星以上素材取得抗性、除外数量对应打点的残局选项；不是核心先攻终场。</li>
+<li><strong>闭界冥神：</strong>
+4只以上效果怪兽、连接值合计5，可用对手一只怪兽作素材处理部分抗性；不能仅凭“场上有几只”忽略素材要求。</li>
+<li><strong>念力终焉处刑者：</strong>
+灰流丽3星调整＋狂岚7星＋矶汉拿1星可以同调11；LP不高于对方时的抗性不需要发动。是能凑到素材的残局替代线，不为它专门消耗正常的灰。</li>
+</ul>
+<p>本家限制只持续当回合。因此自己回合锁后可以合法连接召唤I:P而不发动非本家效果，进入对手回合后限制重置。对手回合若先点那落迦③，又会把后续I:P／S:P锁掉；这些路线要排序或二选一。</p>
+<h3 id="副牌15">副牌：15</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">数量</th>
+<th>卡名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">3</td>
+<td>无限泡影</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>海龟坏兽加美希尔</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>颉颃胜负</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>宇宙气旋</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>原始生命态 尼比鲁</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td>神鹰羽毛扫</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>械刀婪魔皇断</td>
+</tr>
+</tbody>
+</table>
+<p>泡影用于前期怪效和后攻关闭怪兽；气旋、羽毛扫针对后场；颉颃降低对手场值；坏兽处理单体抗性；械刀在主要阶段开始用额外资源换非破坏回手；陨石用于适合的展开对局。它们大多需要在本家限制前发动。坏兽的召唤手续不发动，但不要把它视为能绕过一切召唤限制。</p>
+<h2 id="规则与展开优先级">2. 规则与展开优先级</h2>
+<ol class="incremental" type="1">
+<li><strong>先外援，后本家限制。</strong>
+矶汉拿③、希屋尔③、图奥内拉③、那落迦③正常处理后，才开始不能发动非本家效果。已用壶／瞬移／丛云的回合仍可用这些本家；限制不追溯。若对手在这些效果的CL1上连锁G为CL2，此时限制尚未处理，有条件的灰／抹杀仍可放CL3。若G已经结算，之后新做黄泉不能追溯取消它。<a
+href="https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=4&amp;cid=23554&amp;request_locale=ja">官方补充</a></li>
+<li><strong>领域／福音支付5张是代价，福音②除外低星是效果。</strong>
+代价可用牌库与墓地合计，先宣告各几张；不足5不能发动。被无效不会退代价，但福音②被无效不会预先把低星除外。多张福音不刷新②，也不允许第三次通常召唤。追加通召只能召本家，上级怪兽照样需解放。<a
+href="https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=4&amp;cid=23562&amp;request_locale=ja">福音官方补充</a></li>
+<li><strong>葬岭手牌效果不能叫6星，黄泉手牌效果不能拿5星。</strong>
+要站一张葬岭来保护场面，通常用图奥内拉／福音去叫里侧副本。不能连锁泡影“手牌葬岭拉另一个葬岭”。<a
+href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=23559&amp;request_locale=ja">葬岭</a>、<a
+href="https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=4&amp;cid=23558&amp;request_locale=ja">黄泉</a></li>
+<li><strong>每次召唤都会按等级强制除外，牌库不足就全部除外。</strong>
+不会因不够8张而令哲罕南停住。上场除外不受同名一回合一次约束；其余手牌／起动效果分别核对限次。牌库除完不会立刻输，但必须抽牌却抽不出会输。<a
+href="https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=4&amp;cid=23561&amp;request_locale=ja">哲罕南官方补充</a></li>
+<li><strong>黄泉／狂岚用同一池属性资源。</strong>
+黄泉在处理时把同属性本家回牌组，成功才无效发动；狂岚先回自己的本家，再可把同属性对方怪兽回牌组，后者不取对象。不算无条件万能康，也不能一张炎弹药算两次干扰。本家无神属性弹药。<a
+href="https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=4&amp;cid=23558&amp;request_locale=ja">黄泉</a>、<a
+href="https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=4&amp;cid=23560&amp;request_locale=ja">狂岚</a></li>
+<li><strong>瞬移结束时是表侧除外。</strong>
+尽量先用低星功能，再由福音、解放或连接消耗该实例；不要将结束时会走掉的瞬移怪兽写成终场。</li>
+</ol>
+<p>开局看“供料＋出口”：壶／领域／福音／丛云供料；低星／瞬移／黄泉／葬岭将里侧资源变成手牌或场值。除外后再决定下一步，不假定必定命中福音或上级。
+有空场自跳矶汉拿的计划时，注意丛云先落地会关闭它的①。壶和瞬移等要用的外援，尽量在第一次本家限制前用完。低星先完成回收／拉人，再拿来做素材。已经有足够交互和续航时，停止无收益的盲除外。</p>
+<h2 id="三类手坑已经交出后的实际决策">3.
+三类手坑已经交出后的实际决策</h2>
+<p>这里讨论对手实际发动后的处理。不能把“起手有几张反制牌”替代这些路线。</p>
+<h3
+id="锁鸟转向里侧资源放弃后续抽二">锁鸟：转向里侧资源，放弃后续抽二</h3>
+<p>锁鸟只禁止从牌库加手，包括抽牌；不禁止从里侧除外回收，也不禁止从牌库特殊召唤。本家领域、矶汉拿、希屋尔、黄泉的里侧回收不触发对手锁鸟，也不被已经适用的锁鸟挡住。锁鸟生效后不再发动壶或狂岚手牌抽二，狂岚的场上回卡仍可用。</p>
+<p><strong>实际第5手：黄泉、壶、黄泉、山雀、狂岚。</strong></p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 30%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>已发生的动作</th>
+<th>牌库／里侧</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>壶支付顶10，实际抽到狂岚＋图奥内拉；对手在合法窗口发动锁鸟并成功处理</td>
+<td>23／10</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>通召图奥内拉，强制除外3</td>
+<td>20／13</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>图奥内拉叫里侧哲罕南；强制除外8，本家限制开始</td>
+<td>12／20</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>手中一张黄泉换回里侧福音，不受锁鸟影响</td>
+<td>12／20</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>福音代价用墓地壶1＋顶4</td>
+<td>8／25</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>福音把图奥内拉换成狂岚，强制除外7</td>
+<td>1／32</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>狂岚仅把自己的里侧黄泉回牌库，留两张牌防抽穿</td>
+<td>2／31</td>
+</tr>
+</tbody>
+</table>
+<p>留下哲罕南＋狂岚＋福音，手中另一黄泉、山雀、两张狂岚。无干扰路线还能落黄泉；吃锁鸟后接受少一个交互，保住两个组件与资源，不继续尝试被禁止的抽二。实际里侧库存没有风属性，不能宣称狂岚能处理任何属性。</p>
+<p>如果对手锁鸟还在连锁中，狂岚手牌快速效果可以在条件允许时连锁，先于锁鸟结算抽二；这需要当时就有狂岚和另一张本家，不能在锁鸟结算后补做。</p>
+<h3
+id="山雀按召唤来源计费愿意为值得的额外交互付一抽">山雀：按召唤来源计费，愿意为值得的额外交互付一抽</h3>
+<table>
+<thead>
+<tr>
+<th>我方动作</th>
+<th style="text-align: right;">一份已结算山雀</th>
+<th style="text-align: right;">一份已结算G</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>普通／福音追加通常召唤</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>矶汉拿、希屋尔、丛云从手牌特召</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>图奥内拉／福音／葬岭从里侧除外特召</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>瞬移从手牌特召</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>瞬移从牌库特召</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>I:P／S:P等从额外特召</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+<p>表中假定每次只有一份相应抽牌效果，且只特殊召唤一批。山雀的结束阶段退手不会抹去对手已经抽到并使用的手坑，不能当作“多送也没关系”。<a
+href="https://www.db.yugioh-card.com/yugiohdb/card_search.action?ope=2&amp;cid=20500&amp;request_locale=ja">山雀正式文本</a></p>
+<p><strong>实际第7手：丛云、希屋尔、G、福音、领域。</strong>
+山雀已生效后仍可：丛云供料→福音→领域→通召希屋尔→福音把希屋尔换狂岚→领域回收葬岭→手牌葬岭叫图奥内拉→图奥内拉叫哲罕南。全程山雀<strong>零抽</strong>。</p>
+<p>接着丛云＋图奥内拉做I:P，山雀才得到<strong>一抽</strong>；留下狂岚＋哲罕南＋可用I:P，且S:P仍在额外。我倾向于付这一抽，因为I:P→S:P提供不依赖本家属性的交互与规避手段。若对手只差一张资源就能突破、或这次I:P没有可用素材／目标，就不做。判断依据是交换收益，不是“零抽”这个指标。</p>
+<h3
+id="g有意义地停牌不能把里侧特召当免抽">G：有意义地停牌，不能把里侧特召当免抽</h3>
+<p>G已成功处理后，后做出的黄泉和抹杀不能追溯取消持续适用的抽牌。继续完整连招可能把对手手牌堆到足以突破终场。需要比较下一次特召增加的有效交互，是否足以抵偿新的一抽；也不能一律停在零干扰的身体上。</p>
+<p><strong>同一第7手，改为G已成功处理：</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>动作</th>
+<th style="text-align: right;">对手累计抽牌</th>
+<th>牌库／里侧</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>丛云支付8并自跳</td>
+<td style="text-align: right;">1</td>
+<td>27／8</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>福音、领域分别支付5</td>
+<td style="text-align: right;">1</td>
+<td>17／18</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>普通通召希屋尔，除外2</td>
+<td style="text-align: right;">1</td>
+<td>15／20</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>希屋尔回收另一领域＋福音；本家限制开始</td>
+<td style="text-align: right;">1</td>
+<td>15／18</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>领域回收里侧黄泉</td>
+<td style="text-align: right;">1</td>
+<td>15／17</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>使用福音追加通召，解放丛云召唤黄泉，除外5</td>
+<td style="text-align: right;">1</td>
+<td>10／22</td>
+</tr>
+</tbody>
+</table>
+<p><strong>停在希屋尔＋黄泉、领域＋福音，手中G＋领域＋福音。</strong>
+里侧有光、地、暗、水、风弹药，缺炎；是一个有实际属性范围的黄泉干扰，后续资源保留。下一回合G是否值得用还要看牌库余量与对手特召能力，不能盲目开G给自己制造抽穿风险。</p>
+<p>固定“只给一抽”的程序在这手选择了葬岭，结果没有即时交互；人工改线选择黄泉更合理。完整无干扰路线则会给G五抽，我不会只因为终场更漂亮就默认继续。</p>
+<p>若对手是在你已经开始本家限制后才交G，灰、抹杀、自己手中的锁鸟可能已不能发动；只能在当时的资源中找压缩路线或停牌。若G是在施加限制的效果上作CL2发动，本家限制要等CL1处理才适用，有合法反制就应在这个窗口使用。</p>
+<p>自己的锁鸟确实能在对手因G／山雀抽牌后停止双方继续从牌库加手，但必须满足触发窗口、尚未被本家限制封住且成功处理；不能当作每手现成的解答。同时有G和山雀时，一次牌库特召可能已让对手抽两张，不能保证“只送一抽”。<a
+href="https://www.db.yugioh-card.com/yugiohdb/faq_search.action?ope=5&amp;fid=12797&amp;request_locale=ja">官方Q&amp;A
+12797</a></p>
+<h3 id="其他关键打断">其他关键打断</h3>
+<ul class="incremental">
+<li><strong>灰打壶：</strong>
+10张代价留在里侧，少抽二；用剩余出口继续。灰打狂岚抽二则连那两张手牌也没有里侧除外，因为它们属于被无效的效果处理。</li>
+<li><strong>灰打瞬移：</strong>
+没有身体、也没有上场除外，改用普通通召与福音。灰不能直接打图奥内拉的里侧特召、矶汉拿的里侧回收或直接里侧除外牌库。</li>
+<li><strong>泡影打图奥内拉／矶汉拿：</strong>
+被无效的该起动效果不会适用本家限制，但同名“使用一次”已花掉；福音仍可把那只低星换走，或用尚未发动的外援续接。</li>
+<li><strong>陨石：</strong>
+第五只召唤前是否已落黄泉、里侧是否已有光弹药才有意义。葬岭保护不防解放，不能拿第五只以后才出现的黄泉声称提前防住。</li>
+<li><strong>拆领域／福音：</strong>
+付出的代价不返还，效果仍依赖场地／永续留场。葬岭保护其他本家而不保护自己；非取对象送墓、解放仍能突破。</li>
+</ul>
+<h2 id="实际展开和残局计划">4. 实际展开和残局计划</h2>
+<h3 id="确定性的三卡基础线">确定性的三卡基础线</h3>
+<p>矶汉拿＋狂岚＋葬岭：矶汉拿空场自跳、除外1→手中狂岚与葬岭一起里侧除外、真实抽二→矶汉拿③只拿回葬岭→葬岭手牌效果叫仍在里侧的狂岚、除外7。
+保证部分是矶汉拿＋狂岚和里侧葬岭所提供的地弹药，原其余手牌及抽二仍在；后续取决于实际落点。不能把狂岚也回收到手里后还说它在里侧可被葬岭叫出。</p>
+<h3
+id="当前40张第1手做完有效场就停止">当前40张第1手：做完有效场就停止</h3>
+<p>起手葬岭、哲罕南、矶汉拿、图奥内拉、瞬移；种子2026090600。</p>
+<ol class="incremental" type="1">
+<li>矶汉拿自跳除外到葬岭；瞬移从牌库叫图奥内拉，洗牌后实际除外葬岭、灰、瞬移。</li>
+<li>通召手中图奥内拉，除外黄泉、丛云、灰；手中葬岭叫刚除外的黄泉。</li>
+<li>图奥内拉③叫葬岭，获得保护；矶汉拿③回收葬岭、狂岚。</li>
+<li>狂岚与初始哲罕南一起里侧除外，实际抽到那落迦、黄泉；黄泉手牌效果换回福音。</li>
+<li>发动福音，支付墓地瞬移1＋顶4；福音将瞬移拉出的图奥内拉换成狂岚。</li>
+<li>已使用效果的矶汉拿＋剩下一只图奥内拉连接I:P，停止。</li>
+</ol>
+<p>终场<strong>黄泉＋葬岭＋狂岚＋I:P＋福音</strong>，手中那落迦、葬岭，牌库3、里侧29，额外仍有S:P等14张。这次里侧没有炎属性，黄泉与狂岚的覆盖并不完整。没有为了再召一只上级而把最后3张除尽。</p>
+<p>对手回合优先决定I:P／S:P、黄泉／狂岚的交互，再考虑那落迦③的本家限制。葬岭手牌效果可以快速补非6星本家，本身不会施加该限制；但新怪兽会强制除外牌库，剩3张时仍须计算。</p>
+<h3 id="后攻和赢法">后攻和赢法</h3>
+<p>七张主牌手坑先减少对方有效终场；进入自己回合后先用泡影、气旋、坏兽、械刀等可用解场，再进入本家限制。若对手仍有可用无效，不为追求完美终场把所有外援依次送掉，应优先让一个供料手段结算，保留另一条出口。</p>
+<p>本家黄泉／狂岚负责资源交换，哲罕南20档处理留场卡，葬岭保护资源；下一回合以本家多身体和条件允许的连接解场结束游戏。锁后不能发动访问码的加攻／炸卡，额外斩杀要在适当回合与顺序使用。攻击力合计超过8000不代表有阻挡或保护时必定斩杀。</p>
+<p>牌库管理优先保留1–3张。狂岚可以只回自己的本家并洗牌，不要求对手有匹配怪兽；这样领域的0牌库封锁也会立即消失。领域的这项封锁还要求自己有5星以上本家，且只在自己的回合禁止对手发动效果，不能当作对手回合的封锁。哲罕南40档才跳抽卡，30档对手结束阶段回手会减少里侧数量。40主牌、仍保留手牌场面额外的本版通常不追这一档，领域的0牌库效果当作偶尔出现的收益。</p>
+<h2 id="卡池筛选与淘汰理由">5. 卡池筛选与淘汰理由</h2>
+<p>本地全库14,262张，六组逐卡文本检索命中：里侧除外81、念动力253、除外回收1509、特召手续1355、抽二／检索1584、抗性／解放解场1127；集合重叠且包含假相关，不把命中数相加当作逐张强度证明。<a
+href="ygo_cards/analysis/yikai/pool_screen.json">筛选记录</a></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>候选</th>
+<th>判断</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>暴食兽／红莲魔兽</td>
+<td>有高打点收益，但挤占起手、通召或额外资源；当前先解决启动与后攻交互，不投入。</td>
+</tr>
+<tr>
+<td>审判／魔兽之大饵</td>
+<td>陷阱速度、条件及对手回合本家限制影响I:P和泛用交互，未投入。</td>
+</tr>
+<tr>
+<td>小世界</td>
+<td>矶汉拿→那落迦→葬岭每段恰好只有种族相同，桥是合法的；但两张手牌换一张手牌且锁后不能用，优先壶、瞬移与丛云的场值／供料。</td>
+</tr>
+<tr>
+<td>时光胶囊／预知存折</td>
+<td>能供里侧资源，但当回合收益低于首张壶，定向一张不等于稳定成场。</td>
+</tr>
+<tr>
+<td>强金／金谦壶</td>
+<td>和狂岚、强贪壶的效果抽牌冲突；本版保留额外工具，未选。</td>
+</tr>
+<tr>
+<td>晨曦映雪白皎皎 笑语成霜共行脚</td>
+<td>自己7张里侧与对手里侧数量对阈值有价值，但不像壶补二或丛云给身体。</td>
+</tr>
+<tr>
+<td>死灵脸／异次元的侦察机</td>
+<td>里侧除外不会触发其除外效果；不能当免费引擎。</td>
+</tr>
+<tr>
+<td>星义・绿廊</td>
+<td>普通“除外怪兽”对象不涵盖里侧本家，不能凭它直接回里侧资源。</td>
+</tr>
+<tr>
+<td>伽马</td>
+<td>仅限一且需要驱动者，并受空怪兽场和本家限制影响；没有为极窄保护窗口放入一个通常怪兽负担。</td>
+</tr>
+<tr>
+<td>次元吸引者／天岩户</td>
+<td>分别改变墓地代价可用性、封住自己的怪效；不按表面协同硬塞。</td>
+</tr>
+<tr>
+<td>三战之才／号</td>
+<td>才能在锁前利用对手已发动怪效的窗口拿控制／看手，但抽二吃锁鸟；号有通常魔陷目标与使用速度问题。可随环境调备牌，本版优先明确解场。</td>
+</tr>
+<tr>
+<td>禁忌的一滴</td>
+<td>可处理多怪，但手牌／场上成本重；本家很需要起动资源，本版副牌选择颉颃、坏兽、械刀分工。</td>
+</tr>
+<tr>
+<td>熔岩魔神</td>
+<td>禁通常召唤会连福音的额外通召一起影响，优先坏兽。</td>
+</tr>
+</tbody>
+</table>
+<p>指定新卡JSON共57条，本家11条全部读取，目录与哈希见<a
+href="ygo_cards/analysis/yikai/research_metadata.json">研究元数据</a>。其余新卡也检查了可能的外挂：加辉瑞月之朔斯奎兹带决斗级检索约束及额外限制；龙札两怪要求三同属性手牌；冰原之始祖需要场值并消耗魔陷。没有证据显示它们优于本版的低组件外援。<a
+href="https://cdncf.moecube.com/ygopro-super-pre/data/test-release-v2.json">原始新卡来源</a></p>
+<h2 id="数据怎样支持这个选择">6. 数据怎样支持这个选择</h2>
+<p>六个版本各做10万次五卡、10万次六卡持有抽样，共120万手；各再做3000次有限先攻无干扰展开，共18000次。固定策略只看已知牌，搜索实际洗牌，记录全部区域和牌张守恒；不是完整决斗引擎。</p>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>版本</th>
+<th style="text-align: right;">五卡至少一手坑</th>
+<th style="text-align: right;">供料＋低星／瞬移持有</th>
+<th style="text-align: right;">三张以上上级本家</th>
+<th style="text-align: right;">模型至少两类本家交互</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原43，三暴食兽</td>
+<td style="text-align: right;">31.62%</td>
+<td style="text-align: right;">67.54%</td>
+<td style="text-align: right;">9.66%</td>
+<td style="text-align: right;">85.47%</td>
+</tr>
+<tr>
+<td><strong>当前40，瞬移2＋丛云1</strong></td>
+<td style="text-align: right;"><strong>63.93%</strong></td>
+<td style="text-align: right;"><strong>66.77%</strong></td>
+<td style="text-align: right;"><strong>6.52%</strong></td>
+<td style="text-align: right;"><strong>81.53%</strong></td>
+</tr>
+<tr>
+<td>40，瞬移3＋丛云0</td>
+<td style="text-align: right;">63.93%</td>
+<td style="text-align: right;">64.83%</td>
+<td style="text-align: right;">6.52%</td>
+<td style="text-align: right;">82.60%</td>
+</tr>
+</tbody>
+</table>
+<p>“两类”只数有本家属性库存的黄泉、狂岚和20档哲罕南，<strong>不是两次保证成功的妨害</strong>；不计I:P、手坑或实际对手属性。当前40的该比例抽样95%误差约±1.39个百分点，与三瞬移版重叠，不能宣称1.07个百分点的差异已证明优劣。</p>
+<p>当前40六卡见手坑71.33%。七手坑提高后攻参与度，额外保持可用，是我接受约3.94个百分点空转本家终场下降的理由。持有率不能直接换算胜率；模型未测真实赛制中的最优对手打断与后攻场面。</p>
+<p>此外模型仍有28/3000手出现空牌库且无跳抽卡，属于应改线或停牌的风险，未包装成成功锁场。第1手和G下第7手的人工改线，说明僵硬策略会浪费牌或停错身体，批量率不是最优操作上限。</p>
+<p>连续前24手完整保留，另做两条人工改线，以及第5、7、17手在G／山雀／锁鸟窗口下的15个条件场景。第7、17手没有效果抽牌时，对手锁鸟没有合法触发窗口，日志明确未适用，<strong>不算成“吃锁鸟成功”</strong>。场景只假定指定手坑成功处理，不假设其抽到的新手坑也全部被挡住，没有抗手坑胜率。</p>
+<p><a href="ygo_cards/analysis/yikai/simulation.json">抽样数据</a>、<a
+href="yikai_replays.md">连续24手与人工改线</a>、<a
+href="ygo_cards/analysis/yikai/draw_handtrap_replays.json">手坑分支原始记录</a>。</p>
+<h2 id="换备与验证">7. 换备与验证</h2>
+<p>每条独立使用，换入换出等量，保持40／15／15。</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>场景</th>
+<th>换入</th>
+<th>换出</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>后攻，低特召后场牌组</td>
+<td>气旋3、羽毛扫1、颉颃2</td>
+<td>山雀3、G1、锁鸟1、抹杀1</td>
+<td>针对实际后场，减少低收益抽牌手坑及反手坑卡；颉颃在战阶结束处理后于主二展开。</td>
+</tr>
+<tr>
+<td>后攻，怪兽压制</td>
+<td>坏兽2、械刀2、泡影2</td>
+<td>壶1、丛云1、哲罕南1、那落迦1、锁鸟1、山雀1</td>
+<td>保留五张其余抽牌／怪效手坑，增加可以处理已完成终场的牌；械刀必须主要阶段开始使用。</td>
+</tr>
+<tr>
+<td>已知先攻，对手展开密集</td>
+<td>泡影3、陨石1</td>
+<td>山雀3、G1</td>
+<td>将更偏后攻的抽牌牌位换成可盖放／后续打断。陨石仍需在本家限制前的合适窗口用，不可与那落迦③无脑并算。</td>
+</tr>
+</tbody>
+</table>
+<p>当前结论仍是40张、保留额外的版本更符合“让异解尽量能赢”的目标。未把新主题的空转上限、跳抽卡效果或随手添一张针对牌当成竞技成绩。</p>
+<p>复现：</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> ygo_cards.yikai_lab <span class="at">--trials</span> 100000 <span class="at">--plays</span> 3000</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> ygo_cards.yikai_manual</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> ygo_cards.yikai_matchups</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> ygo_cards.yikai_report</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> ygo_cards/ydk_tool.py <span class="at">--cards</span> ygo_cards/analysis/yikai/cards.json validate yikai.ydk</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-m</span> unittest discover <span class="at">-s</span> ygo_cards/tests <span class="at">-v</span></span></code></pre></div>
+<p>补充卡库、下载的新卡、官方裁定原文与哈希均已保存；复现不需联网。卡组通过区段、同名卡上限及OCG禁限数量检查。规则回归测试覆盖限制先后、特殊召唤来源、锁鸟与里侧回收、上级召唤与福音限次、牌库不足处理等；没有声称运行过正式客户端完整对局。</p>
+<p><a
+href="https://www.yugioh-card.com/japan/event/limitregulation/?list=202607">官方禁限来源</a>。旧融合／珠泪牌组及其专用脚本、数据和测试已删除，通用测试改为验证当前异解。</p>
+<h1 id="异解24-手连续种子复盘及-2-手人工改线">异解△：24 手连续种子复盘及
+2 手人工改线</h1>
+<p>主说明：<a
+href="yikai.md">yikai.md</a>。这里逐步展示真实移动；上场后的强制除外合并列入召唤行。</p>
+<p>固定策略假定先攻、对手不响应。每次选择只使用已知资源；两手人工改线单独列出。</p>
+<p>“里侧新增”包括代价、效果与额外牌组燃料；“手牌新增”包括抽牌、回收。未增加则为
+—。</p>
+<p>D 为剩余牌库，B 为里侧除外数量；牌库顺序与全部区域的逐步增减均保存在
+JSON。</p>
+<h2 id="固定策略第-1-手种子-2026090600">固定策略：第 1 手（种子
+2026090600）</h2>
+<p><strong>起手：</strong> 葬岭异解△ 弗尔海姆、虚蚀异解△
+哲罕南、虚之异解△ 矶汉拿、碧之异解△ 图奥内拉、紧急瞬移</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>虚之异解△ 矶汉拿①从手牌自跳</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>34 / 1</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>葬岭异解△ 弗尔海姆、灰流丽、紧急瞬移</td>
+<td>—</td>
+<td>30 / 4</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>通常召唤 碧之异解△ 图奥内拉</td>
+<td>天霆异解△ 黄泉、机巧蛇－丛云远吕智、灰流丽</td>
+<td>—</td>
+<td>27 / 7</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>葬岭手牌①：自身里侧除外，叫 天霆异解△ 黄泉</td>
+<td>葬岭异解△
+弗尔海姆、强欲而贪欲之壶、异解△福音、异解△福音、多多迷宝・软绵雀精、强欲而贪欲之壶</td>
+<td>—</td>
+<td>22 / 12</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>图奥内拉③叫 葬岭异解△ 弗尔海姆</td>
+<td>抹杀之指名者、狂岚异解△ 普鲁托尼翁、抽牌小丑与封锁鸟、狂岚异解△
+普鲁托尼翁、虚之异解△ 矶汉拿、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>16 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>矶汉拿③回收 葬岭异解△ 弗尔海姆、狂岚异解△ 普鲁托尼翁</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆、狂岚异解△ 普鲁托尼翁</td>
+<td>16 / 15</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>狂岚手牌①：与 虚蚀异解△ 哲罕南 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、虚蚀异解△ 哲罕南</td>
+<td>绯之异解△ 那落迦、天霆异解△ 黄泉</td>
+<td>14 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>黄泉手牌①：自身里侧除外，回收 异解△福音</td>
+<td>天霆异解△ 黄泉</td>
+<td>异解△福音</td>
+<td>14 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>紧急瞬移、异解△福音、异解△领域-魔之异界域、异解△领域-魔之异界域、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>10 / 22</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 狂岚异解△ 普鲁托尼翁</td>
+<td>碧之异解△ 图奥内拉、虚之异解△
+矶汉拿、异解△领域-魔之异界域、增殖的Z、天之异解△
+希屋尔、强欲而贪欲之壶、碧之异解△ 图奥内拉、狂岚异解△ 普鲁托尼翁</td>
+<td>—</td>
+<td>3 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>通常召唤 葬岭异解△ 弗尔海姆；解放 虚之异解△ 矶汉拿</td>
+<td>天之异解△ 希屋尔、天之异解△ 希屋尔、绯之异解△ 那落迦</td>
+<td>—</td>
+<td>0 / 32</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>碧之异解△ 图奥内拉、葬岭异解△ 弗尔海姆 连接召唤 I:P
+至额外怪兽区</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 32</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>狂岚③仅回自己 绯之异解△ 那落迦 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 31</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 天霆异解△ 黄泉、狂岚异解△
+普鲁托尼翁、葬岭异解△ 弗尔海姆；额外怪兽区 I：P百变莱娜。</p>
+<p>魔陷区：异解△福音；场地区：—。</p>
+<p>手牌：绯之异解△ 那落迦。</p>
+<p>牌库 1，里侧除外 31；本家属性库存：光、地、暗、水、风。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-2-手种子-2026090601">固定策略：第 2 手（种子
+2026090601）</h2>
+<p><strong>起手：</strong> 葬岭异解△ 弗尔海姆、狂岚异解△
+普鲁托尼翁、天之异解△ 希屋尔、绯之异解△ 那落迦、抽牌小丑与封锁鸟</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>狂岚手牌①：与 葬岭异解△ 弗尔海姆 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、葬岭异解△ 弗尔海姆</td>
+<td>天霆异解△ 黄泉、狂岚异解△ 普鲁托尼翁</td>
+<td>33 / 2</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>通常召唤 绯之异解△ 那落迦</td>
+<td>多多迷宝・软绵雀精、异解△福音、虚蚀异解△
+哲罕南、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>29 / 6</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>虚之异解△ 矶汉拿、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>27 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>希屋尔③回收 异解△福音、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>异解△福音、异解△领域-魔之异界域</td>
+<td>27 / 6</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>葬岭异解△ 弗尔海姆、葬岭异解△
+弗尔海姆、紧急瞬移、多多迷宝・软绵雀精、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>22 / 11</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>碧之异解△ 图奥内拉、异解△领域-魔之异界域、抹杀之指名者、碧之异解△
+图奥内拉、异解△福音</td>
+<td>—</td>
+<td>17 / 16</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>福音②将 天之异解△ 希屋尔 换成 狂岚异解△ 普鲁托尼翁</td>
+<td>天之异解△ 希屋尔、天之异解△ 希屋尔、强欲而贪欲之壶、天之异解△
+希屋尔、灰流丽、增殖的Z、狂岚异解△ 普鲁托尼翁、天霆异解△ 黄泉</td>
+<td>—</td>
+<td>10 / 23</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 绯之异解△ 那落迦</td>
+<td>异解△领域-魔之异界域、强欲而贪欲之壶、绯之异解△
+那落迦、异解△福音、灰流丽</td>
+<td>—</td>
+<td>5 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>领域①回收 葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>5 / 27</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>葬岭手牌①：自身里侧除外，叫 碧之异解△ 图奥内拉</td>
+<td>葬岭异解△ 弗尔海姆、碧之异解△
+图奥内拉、强欲而贪欲之壶、紧急瞬移</td>
+<td>—</td>
+<td>2 / 30</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>图奥内拉③叫 葬岭异解△ 弗尔海姆</td>
+<td>虚之异解△ 矶汉拿、机巧蛇－丛云远吕智</td>
+<td>—</td>
+<td>0 / 31</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>狂岚③仅回自己 狂岚异解△ 普鲁托尼翁 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 30</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、天霆异解△
+黄泉、碧之异解△ 图奥内拉、葬岭异解△ 弗尔海姆；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：抽牌小丑与封锁鸟、狂岚异解△ 普鲁托尼翁。</p>
+<p>牌库 1，里侧除外 30；本家属性库存：光、地、暗、水、炎。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-3-手种子-2026090602">固定策略：第 3 手（种子
+2026090602）</h2>
+<p><strong>起手：</strong> 抽牌小丑与封锁鸟、虚之异解△ 矶汉拿、天霆异解△
+黄泉、碧之异解△ 图奥内拉、狂岚异解△ 普鲁托尼翁</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>虚之异解△ 矶汉拿①从手牌自跳</td>
+<td>异解△福音</td>
+<td>—</td>
+<td>34 / 1</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>狂岚手牌①：与 碧之异解△ 图奥内拉 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、碧之异解△ 图奥内拉</td>
+<td>异解△领域-魔之异界域、紧急瞬移</td>
+<td>32 / 3</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>多多迷宝・软绵雀精、狂岚异解△ 普鲁托尼翁、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>28 / 6</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>紧急瞬移、葬岭异解△
+弗尔海姆、灰流丽、异解△领域-魔之异界域、灰流丽</td>
+<td>—</td>
+<td>24 / 11</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>图奥内拉③叫 狂岚异解△ 普鲁托尼翁</td>
+<td>异解△福音、紧急瞬移、狂岚异解△ 普鲁托尼翁、绯之异解△
+那落迦、绯之异解△ 那落迦、天之异解△ 希屋尔、虚蚀异解△ 哲罕南</td>
+<td>—</td>
+<td>17 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>矶汉拿③回收 葬岭异解△ 弗尔海姆、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆、天之异解△ 希屋尔</td>
+<td>17 / 15</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>天霆异解△ 黄泉、强欲而贪欲之壶</td>
+<td>—</td>
+<td>15 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>希屋尔③回收 异解△福音、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>异解△福音、异解△领域-魔之异界域</td>
+<td>15 / 15</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>虚之异解△ 矶汉拿、抹杀之指名者、异解△领域-魔之异界域、碧之异解△
+图奥内拉、强欲而贪欲之壶</td>
+<td>—</td>
+<td>10 / 20</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 虚蚀异解△ 哲罕南</td>
+<td>碧之异解△ 图奥内拉、多多迷宝・软绵雀精、天之异解△ 希屋尔、天之异解△
+希屋尔、机巧蛇－丛云远吕智、异解△福音、强欲而贪欲之壶、葬岭异解△
+弗尔海姆、增殖的Z</td>
+<td>—</td>
+<td>2 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>通常召唤 葬岭异解△ 弗尔海姆；解放 虚之异解△ 矶汉拿</td>
+<td>葬岭异解△ 弗尔海姆、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>0 / 30</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 天之异解△ 希屋尔</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 30</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>领域①回收 葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>葬岭手牌①：自身里侧除外，叫 狂岚异解△ 普鲁托尼翁</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>狂岚③仅回自己 碧之异解△ 图奥内拉 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td>狂岚③仅回自己 碧之异解△ 图奥内拉 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>2 / 27</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、虚蚀异解△
+哲罕南、葬岭异解△ 弗尔海姆、天霆异解△ 黄泉、狂岚异解△
+普鲁托尼翁；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：抽牌小丑与封锁鸟、异解△领域-魔之异界域。</p>
+<p>牌库 2，里侧除外 27；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 3；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-4-手种子-2026090603">固定策略：第 4 手（种子
+2026090603）</h2>
+<p><strong>起手：</strong> 绯之异解△ 那落迦、狂岚异解△
+普鲁托尼翁、狂岚异解△ 普鲁托尼翁、天霆异解△ 黄泉、紧急瞬移</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>异解△福音、异解△福音、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>31 / 3</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>狂岚手牌①：与 绯之异解△ 那落迦 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、绯之异解△ 那落迦</td>
+<td>碧之异解△ 图奥内拉、葬岭异解△ 弗尔海姆</td>
+<td>29 / 5</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>葬岭手牌①：自身里侧除外，叫 狂岚异解△ 普鲁托尼翁</td>
+<td>葬岭异解△ 弗尔海姆、虚蚀异解△
+哲罕南、抹杀之指名者、强欲而贪欲之壶、紧急瞬移、多多迷宝・软绵雀精、葬岭异解△
+弗尔海姆、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>22 / 12</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>图奥内拉③叫 虚蚀异解△ 哲罕南</td>
+<td>虚之异解△ 矶汉拿、异解△福音、灰流丽、增殖的Z、碧之异解△
+图奥内拉、虚之异解△ 矶汉拿、天之异解△ 希屋尔、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>14 / 19</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 碧之异解△ 图奥内拉</td>
+<td>机巧蛇－丛云远吕智、狂岚异解△
+普鲁托尼翁、异解△领域-魔之异界域、绯之异解△
+那落迦、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>9 / 24</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、虚蚀异解△
+哲罕南、天霆异解△ 黄泉；额外怪兽区 —。</p>
+<p>魔陷区：—；场地区：—。</p>
+<p>手牌：狂岚异解△ 普鲁托尼翁、碧之异解△ 图奥内拉。</p>
+<p>牌库 9，里侧除外 24；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 3；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-5-手种子-2026090604">固定策略：第 5 手（种子
+2026090604）</h2>
+<p><strong>起手：</strong> 天霆异解△ 黄泉、强欲而贪欲之壶、天霆异解△
+黄泉、多多迷宝・软绵雀精、狂岚异解△ 普鲁托尼翁</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>强贪壶：代价顶10里侧除外，抽二</td>
+<td>异解△福音、天之异解△ 希屋尔、增殖的Z、葬岭异解△
+弗尔海姆、异解△福音、虚蚀异解△ 哲罕南、碧之异解△ 图奥内拉、绯之异解△
+那落迦、绯之异解△ 那落迦、抽牌小丑与封锁鸟</td>
+<td>狂岚异解△ 普鲁托尼翁、碧之异解△ 图奥内拉</td>
+<td>23 / 10</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>通常召唤 碧之异解△ 图奥内拉</td>
+<td>碧之异解△ 图奥内拉、葬岭异解△ 弗尔海姆、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>20 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>图奥内拉③叫 虚蚀异解△ 哲罕南</td>
+<td>抹杀之指名者、狂岚异解△ 普鲁托尼翁、虚之异解△
+矶汉拿、异解△领域-魔之异界域、异解△领域-魔之异界域、天之异解△
+希屋尔、机巧蛇－丛云远吕智、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>12 / 20</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>狂岚手牌①：与 天霆异解△ 黄泉 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、天霆异解△ 黄泉</td>
+<td>强欲而贪欲之壶、天之异解△ 希屋尔</td>
+<td>10 / 22</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>紧急瞬移、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>8 / 24</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>希屋尔③回收 异解△福音、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>异解△福音、异解△领域-魔之异界域</td>
+<td>8 / 22</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>强欲而贪欲之壶、葬岭异解△
+弗尔海姆、异解△福音、异解△领域-魔之异界域、灰流丽</td>
+<td>—</td>
+<td>4 / 27</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>福音②将 天之异解△ 希屋尔 换成 狂岚异解△ 普鲁托尼翁</td>
+<td>天之异解△
+希屋尔、强欲而贪欲之壶、多多迷宝・软绵雀精、灰流丽、紧急瞬移</td>
+<td>—</td>
+<td>0 / 31</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 碧之异解△ 图奥内拉</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 31</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>狂岚③仅回自己 狂岚异解△ 普鲁托尼翁 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 30</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 虚蚀异解△ 哲罕南、狂岚异解△
+普鲁托尼翁、天霆异解△ 黄泉；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：—。</p>
+<p>手牌：多多迷宝・软绵雀精、狂岚异解△
+普鲁托尼翁、强欲而贪欲之壶、异解△领域-魔之异界域。</p>
+<p>牌库 1，里侧除外 30；本家属性库存：光、地、暗、水、炎。</p>
+<p>交互组件种类 3；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-6-手种子-2026090605">固定策略：第 6 手（种子
+2026090605）</h2>
+<p><strong>起手：</strong> 抹杀之指名者、灰流丽、天之异解△
+希屋尔、狂岚异解△ 普鲁托尼翁、虚蚀异解△ 哲罕南</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>狂岚手牌①：与 虚蚀异解△ 哲罕南 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、虚蚀异解△ 哲罕南</td>
+<td>狂岚异解△ 普鲁托尼翁、异解△领域-魔之异界域</td>
+<td>33 / 2</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>多多迷宝・软绵雀精、葬岭异解△
+弗尔海姆、异解△福音、机巧蛇－丛云远吕智、天霆异解△ 黄泉</td>
+<td>—</td>
+<td>28 / 7</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>通常召唤 天之异解△ 希屋尔</td>
+<td>增殖的Z、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>26 / 9</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>领域①回收 葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>26 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>葬岭手牌①：自身里侧除外，叫 狂岚异解△ 普鲁托尼翁</td>
+<td>葬岭异解△ 弗尔海姆、绯之异解△ 那落迦、天霆异解△ 黄泉、虚之异解△
+矶汉拿、葬岭异解△ 弗尔海姆、葬岭异解△
+弗尔海姆、异解△福音、强欲而贪欲之壶</td>
+<td>—</td>
+<td>19 / 15</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>希屋尔③回收 异解△福音</td>
+<td>—</td>
+<td>异解△福音</td>
+<td>19 / 14</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>绯之异解△ 那落迦、紧急瞬移、紧急瞬移、碧之异解△
+图奥内拉、异解△福音</td>
+<td>—</td>
+<td>14 / 19</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>福音②将 天之异解△ 希屋尔 换成 虚蚀异解△ 哲罕南</td>
+<td>天之异解△ 希屋尔、天之异解△ 希屋尔、虚之异解△
+矶汉拿、多多迷宝・软绵雀精、碧之异解△ 图奥内拉、灰流丽、狂岚异解△
+普鲁托尼翁、强欲而贪欲之壶、碧之异解△ 图奥内拉</td>
+<td>—</td>
+<td>6 / 27</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、虚蚀异解△
+哲罕南；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：抹杀之指名者、灰流丽、狂岚异解△ 普鲁托尼翁。</p>
+<p>牌库 6，里侧除外 27；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-7-手种子-2026090606">固定策略：第 7 手（种子
+2026090606）</h2>
+<p><strong>起手：</strong> 机巧蛇－丛云远吕智、天之异解△
+希屋尔、增殖的Z、异解△福音、异解△领域-魔之异界域</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>丛云：代价顶8里侧除外，自跳</td>
+<td>抹杀之指名者、狂岚异解△
+普鲁托尼翁、灰流丽、异解△领域-魔之异界域、强欲而贪欲之壶、葬岭异解△
+弗尔海姆、天之异解△ 希屋尔、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>27 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>葬岭异解△ 弗尔海姆、碧之异解△ 图奥内拉、紧急瞬移、天霆异解△
+黄泉、强欲而贪欲之壶</td>
+<td>—</td>
+<td>22 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>异解△领域-魔之异界域、虚之异解△ 矶汉拿、碧之异解△
+图奥内拉、虚蚀异解△ 哲罕南、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>17 / 18</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>通常召唤 天之异解△ 希屋尔</td>
+<td>天之异解△ 希屋尔、异解△福音</td>
+<td>—</td>
+<td>15 / 20</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>福音②将 天之异解△ 希屋尔 换成 狂岚异解△ 普鲁托尼翁</td>
+<td>天之异解△ 希屋尔、灰流丽、葬岭异解△ 弗尔海姆、碧之异解△
+图奥内拉、抽牌小丑与封锁鸟、多多迷宝・软绵雀精、狂岚异解△
+普鲁托尼翁、绯之异解△ 那落迦</td>
+<td>—</td>
+<td>8 / 27</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>领域①回收 葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>8 / 26</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>葬岭手牌①：自身里侧除外，叫 碧之异解△ 图奥内拉</td>
+<td>葬岭异解△ 弗尔海姆、天霆异解△ 黄泉、紧急瞬移、强欲而贪欲之壶</td>
+<td>—</td>
+<td>5 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>图奥内拉③叫 虚蚀异解△ 哲罕南</td>
+<td>狂岚异解△ 普鲁托尼翁、多多迷宝・软绵雀精、异解△福音、虚之异解△
+矶汉拿、绯之异解△ 那落迦</td>
+<td>—</td>
+<td>0 / 33</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>机巧蛇－丛云远吕智、碧之异解△ 图奥内拉 连接召唤 I:P
+至额外怪兽区</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 33</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>狂岚③仅回自己 狂岚异解△ 普鲁托尼翁 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 32</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、虚蚀异解△
+哲罕南；额外怪兽区 I：P百变莱娜。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：增殖的Z。</p>
+<p>牌库 1，里侧除外 32；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-8-手种子-2026090607">固定策略：第 8 手（种子
+2026090607）</h2>
+<p><strong>起手：</strong> 狂岚异解△ 普鲁托尼翁、狂岚异解△
+普鲁托尼翁、紧急瞬移、增殖的Z、多多迷宝・软绵雀精</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>多多迷宝・软绵雀精、虚之异解△ 矶汉拿、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>31 / 3</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>狂岚手牌①：与 狂岚异解△ 普鲁托尼翁 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、狂岚异解△ 普鲁托尼翁</td>
+<td>异解△福音、紧急瞬移</td>
+<td>29 / 5</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>狂岚异解△ 普鲁托尼翁、异解△福音、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>25 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>紧急瞬移、紧急瞬移、抽牌小丑与封锁鸟、天之异解△
+希屋尔、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>22 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>图奥内拉③叫 狂岚异解△ 普鲁托尼翁</td>
+<td>虚之异解△ 矶汉拿、灰流丽、灰流丽、天霆异解△
+黄泉、异解△福音、强欲而贪欲之壶、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>15 / 19</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 天霆异解△ 黄泉</td>
+<td>碧之异解△ 图奥内拉、碧之异解△
+图奥内拉、异解△领域-魔之异界域、机巧蛇－丛云远吕智、葬岭异解△
+弗尔海姆、强欲而贪欲之壶</td>
+<td>—</td>
+<td>10 / 24</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>结束阶段：瞬移叫出的 碧之异解△ 图奥内拉 表侧除外</td>
+<td>—</td>
+<td>—</td>
+<td>— / —</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、天霆异解△
+黄泉；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：—。</p>
+<p>手牌：增殖的Z、多多迷宝・软绵雀精。</p>
+<p>牌库 10，里侧除外 24；本家属性库存：光、地、暗、水、风。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-9-手种子-2026090608">固定策略：第 9 手（种子
+2026090608）</h2>
+<p><strong>起手：</strong>
+强欲而贪欲之壶、异解△福音、异解△福音、虚蚀异解△ 哲罕南、狂岚异解△
+普鲁托尼翁</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>强贪壶：代价顶10里侧除外，抽二</td>
+<td>异解△领域-魔之异界域、虚之异解△ 矶汉拿、天之异解△ 希屋尔、狂岚异解△
+普鲁托尼翁、碧之异解△ 图奥内拉、绯之异解△ 那落迦、灰流丽、碧之异解△
+图奥内拉、多多迷宝・软绵雀精、强欲而贪欲之壶</td>
+<td>狂岚异解△ 普鲁托尼翁、绯之异解△ 那落迦</td>
+<td>23 / 10</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>强欲而贪欲之壶、紧急瞬移、灰流丽、碧之异解△
+图奥内拉、强欲而贪欲之壶</td>
+<td>—</td>
+<td>19 / 15</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>狂岚手牌①：与 虚蚀异解△ 哲罕南 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、虚蚀异解△ 哲罕南</td>
+<td>多多迷宝・软绵雀精、抽牌小丑与封锁鸟</td>
+<td>17 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>通常召唤 绯之异解△ 那落迦</td>
+<td>虚之异解△ 矶汉拿、异解△领域-魔之异界域、葬岭异解△
+弗尔海姆、紧急瞬移</td>
+<td>—</td>
+<td>13 / 21</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>福音②将 绯之异解△ 那落迦 换成 狂岚异解△ 普鲁托尼翁</td>
+<td>绯之异解△ 那落迦、天霆异解△ 黄泉、异解△领域-魔之异界域、天之异解△
+希屋尔、异解△福音、天霆异解△ 黄泉、虚之异解△
+矶汉拿、机巧蛇－丛云远吕智</td>
+<td>—</td>
+<td>6 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>天之异解△ 希屋尔、多多迷宝・软绵雀精、增殖的Z、葬岭异解△
+弗尔海姆、抹杀之指名者</td>
+<td>—</td>
+<td>1 / 33</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>狂岚③仅回自己 狂岚异解△ 普鲁托尼翁 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>2 / 32</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁；额外怪兽区
+—。</p>
+<p>魔陷区：异解△福音、异解△福音；场地区：—。</p>
+<p>手牌：狂岚异解△
+普鲁托尼翁、多多迷宝・软绵雀精、抽牌小丑与封锁鸟。</p>
+<p>牌库 2，里侧除外 32；本家属性库存：光、地、暗、水、炎。</p>
+<p>交互组件种类 1；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-10-手种子-2026090609">固定策略：第 10 手（种子
+2026090609）</h2>
+<p><strong>起手：</strong> 强欲而贪欲之壶、虚之异解△
+矶汉拿、异解△领域-魔之异界域、狂岚异解△ 普鲁托尼翁、天霆异解△ 黄泉</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>虚之异解△ 矶汉拿①从手牌自跳</td>
+<td>绯之异解△ 那落迦</td>
+<td>—</td>
+<td>34 / 1</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>强贪壶：代价顶10里侧除外，抽二</td>
+<td>增殖的Z、强欲而贪欲之壶、多多迷宝・软绵雀精、天霆异解△
+黄泉、异解△领域-魔之异界域、虚之异解△
+矶汉拿、强欲而贪欲之壶、紧急瞬移、碧之异解△ 图奥内拉、灰流丽</td>
+<td>天之异解△ 希屋尔、绯之异解△ 那落迦</td>
+<td>22 / 11</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>碧之异解△ 图奥内拉、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>20 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>强欲而贪欲之壶、抹杀之指名者、多多迷宝・软绵雀精、葬岭异解△
+弗尔海姆、虚蚀异解△ 哲罕南</td>
+<td>—</td>
+<td>16 / 18</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>矶汉拿③回收 天之异解△ 希屋尔、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>天之异解△ 希屋尔、葬岭异解△ 弗尔海姆</td>
+<td>16 / 16</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>葬岭手牌①：自身里侧除外，叫 碧之异解△ 图奥内拉</td>
+<td>葬岭异解△
+弗尔海姆、机巧蛇－丛云远吕智、异解△福音、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>13 / 19</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>希屋尔③回收 异解△领域-魔之异界域、异解△福音</td>
+<td>—</td>
+<td>异解△领域-魔之异界域、异解△福音</td>
+<td>13 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>多多迷宝・软绵雀精、紧急瞬移、灰流丽、异解△福音、葬岭异解△
+弗尔海姆</td>
+<td>—</td>
+<td>8 / 22</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>图奥内拉③叫 虚蚀异解△ 哲罕南</td>
+<td>天之异解△ 希屋尔、虚之异解△ 矶汉拿、狂岚异解△ 普鲁托尼翁、狂岚异解△
+普鲁托尼翁、抽牌小丑与封锁鸟、碧之异解△ 图奥内拉、异解△福音、葬岭异解△
+弗尔海姆</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>福音②将 虚之异解△ 矶汉拿 换成 狂岚异解△ 普鲁托尼翁</td>
+<td>虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 天之异解△ 希屋尔</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>通常召唤 绯之异解△ 那落迦</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>领域①回收 天霆异解△ 黄泉</td>
+<td>—</td>
+<td>天霆异解△ 黄泉</td>
+<td>0 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>碧之异解△ 图奥内拉、绯之异解△ 那落迦 连接召唤 I:P 至额外怪兽区</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>黄泉手牌①：自身里侧除外，回收 异解△福音</td>
+<td>天霆异解△ 黄泉</td>
+<td>异解△福音</td>
+<td>0 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td>狂岚③仅回自己 狂岚异解△ 普鲁托尼翁 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 27</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 虚蚀异解△ 哲罕南、狂岚异解△
+普鲁托尼翁、天霆异解△ 黄泉；额外怪兽区 I：P百变莱娜。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：狂岚异解△ 普鲁托尼翁、天之异解△
+希屋尔、异解△领域-魔之异界域、异解△福音。</p>
+<p>牌库 1，里侧除外 27；本家属性库存：光、地、暗、水、炎。</p>
+<p>交互组件种类 3；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-11-手种子-2026090610">固定策略：第 11 手（种子
+2026090610）</h2>
+<p><strong>起手：</strong> 绯之异解△ 那落迦、天霆异解△
+黄泉、灰流丽、绯之异解△ 那落迦、多多迷宝・软绵雀精</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>通常召唤 绯之异解△ 那落迦</td>
+<td>异解△福音、虚之异解△ 矶汉拿、多多迷宝・软绵雀精、增殖的Z</td>
+<td>—</td>
+<td>31 / 4</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>黄泉手牌①：自身里侧除外，回收 异解△福音</td>
+<td>天霆异解△ 黄泉</td>
+<td>异解△福音</td>
+<td>31 / 4</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>异解△领域-魔之异界域、异解△福音、碧之异解△
+图奥内拉、灰流丽、抹杀之指名者</td>
+<td>—</td>
+<td>26 / 9</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>福音②将 绯之异解△ 那落迦 换成 天霆异解△ 黄泉</td>
+<td>绯之异解△ 那落迦、天之异解△ 希屋尔、葬岭异解△
+弗尔海姆、异解△领域-魔之异界域、天霆异解△ 黄泉、狂岚异解△
+普鲁托尼翁</td>
+<td>—</td>
+<td>21 / 14</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>通常召唤 绯之异解△ 那落迦</td>
+<td>紧急瞬移、葬岭异解△ 弗尔海姆、强欲而贪欲之壶、葬岭异解△
+弗尔海姆</td>
+<td>—</td>
+<td>17 / 18</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 天霆异解△ 黄泉、绯之异解△
+那落迦；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：—。</p>
+<p>手牌：灰流丽、多多迷宝・软绵雀精。</p>
+<p>牌库 17，里侧除外 18；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 1；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-12-手种子-2026090611">固定策略：第 12 手（种子
+2026090611）</h2>
+<p><strong>起手：</strong> 多多迷宝・软绵雀精、强欲而贪欲之壶、碧之异解△
+图奥内拉、天之异解△ 希屋尔、多多迷宝・软绵雀精</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>强贪壶：代价顶10里侧除外，抽二</td>
+<td>紧急瞬移、天之异解△ 希屋尔、多多迷宝・软绵雀精、碧之异解△
+图奥内拉、异解△福音、绯之异解△ 那落迦、异解△福音、灰流丽、碧之异解△
+图奥内拉、绯之异解△ 那落迦</td>
+<td>强欲而贪欲之壶、紧急瞬移</td>
+<td>23 / 10</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>瞬移从牌库叫 虚之异解△ 矶汉拿，洗牌</td>
+<td>异解△领域-魔之异界域</td>
+<td>—</td>
+<td>21 / 11</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>灰流丽、强欲而贪欲之壶</td>
+<td>—</td>
+<td>19 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>希屋尔③回收 异解△福音、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>异解△福音、异解△领域-魔之异界域</td>
+<td>19 / 11</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>强欲而贪欲之壶、紧急瞬移、狂岚异解△ 普鲁托尼翁、增殖的Z、天霆异解△
+黄泉</td>
+<td>—</td>
+<td>16 / 16</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>狂岚异解△ 普鲁托尼翁、虚蚀异解△ 哲罕南、抹杀之指名者、天霆异解△
+黄泉、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>11 / 21</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>通常召唤 碧之异解△ 图奥内拉</td>
+<td>异解△领域-魔之异界域、葬岭异解△ 弗尔海姆、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>8 / 24</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>图奥内拉③叫 狂岚异解△ 普鲁托尼翁</td>
+<td>抽牌小丑与封锁鸟、狂岚异解△
+普鲁托尼翁、异解△领域-魔之异界域、虚之异解△ 矶汉拿、虚之异解△
+矶汉拿、葬岭异解△ 弗尔海姆、异解△福音</td>
+<td>—</td>
+<td>1 / 30</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>矶汉拿③回收 天霆异解△ 黄泉、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>天霆异解△ 黄泉、葬岭异解△ 弗尔海姆</td>
+<td>1 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>福音②将 虚之异解△ 矶汉拿 换成 虚蚀异解△ 哲罕南</td>
+<td>虚之异解△ 矶汉拿、机巧蛇－丛云远吕智</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>通常召唤 葬岭异解△ 弗尔海姆；解放 天之异解△ 希屋尔</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>领域①回收 葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>0 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>葬岭手牌①：自身里侧除外，叫 天霆异解△ 黄泉</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>0 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>黄泉手牌①：自身里侧除外，回收 异解△福音</td>
+<td>天霆异解△ 黄泉</td>
+<td>异解△福音</td>
+<td>0 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>狂岚③仅回自己 碧之异解△ 图奥内拉 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 27</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 碧之异解△ 图奥内拉、狂岚异解△
+普鲁托尼翁、虚蚀异解△ 哲罕南、葬岭异解△ 弗尔海姆、天霆异解△
+黄泉；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：多多迷宝・软绵雀精、多多迷宝・软绵雀精、强欲而贪欲之壶、异解△福音。</p>
+<p>牌库 1，里侧除外 27；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 3；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-13-手种子-2026090612">固定策略：第 13 手（种子
+2026090612）</h2>
+<p><strong>起手：</strong> 葬岭异解△
+弗尔海姆、异解△福音、异解△领域-魔之异界域、异解△领域-魔之异界域、紧急瞬移</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>绯之异解△ 那落迦、抹杀之指名者、绯之异解△ 那落迦</td>
+<td>—</td>
+<td>31 / 3</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>紧急瞬移、多多迷宝・软绵雀精、狂岚异解△ 普鲁托尼翁、天之异解△
+希屋尔、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>27 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>天霆异解△ 黄泉、异解△福音、虚蚀异解△
+哲罕南、多多迷宝・软绵雀精、强欲而贪欲之壶</td>
+<td>—</td>
+<td>22 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>葬岭手牌①：自身里侧除外，叫 狂岚异解△ 普鲁托尼翁</td>
+<td>葬岭异解△ 弗尔海姆、虚之异解△
+矶汉拿、异解△领域-魔之异界域、紧急瞬移、天之异解△ 希屋尔、葬岭异解△
+弗尔海姆、机巧蛇－丛云远吕智、灰流丽</td>
+<td>—</td>
+<td>15 / 20</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>图奥内拉③叫 虚蚀异解△ 哲罕南</td>
+<td>碧之异解△ 图奥内拉、葬岭异解△ 弗尔海姆、狂岚异解△
+普鲁托尼翁、天霆异解△ 黄泉、狂岚异解△ 普鲁托尼翁、异解△福音、虚之异解△
+矶汉拿、抽牌小丑与封锁鸟</td>
+<td>—</td>
+<td>7 / 27</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 葬岭异解△ 弗尔海姆</td>
+<td>碧之异解△ 图奥内拉、增殖的Z、虚之异解△
+矶汉拿、强欲而贪欲之壶、灰流丽、多多迷宝・软绵雀精、碧之异解△
+图奥内拉</td>
+<td>—</td>
+<td>1 / 33</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>领域①回收 天之异解△ 希屋尔</td>
+<td>—</td>
+<td>天之异解△ 希屋尔</td>
+<td>1 / 32</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>强欲而贪欲之壶</td>
+<td>—</td>
+<td>0 / 33</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>希屋尔③回收 异解△福音</td>
+<td>—</td>
+<td>异解△福音</td>
+<td>0 / 32</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>狂岚③仅回自己 狂岚异解△ 普鲁托尼翁 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 31</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、虚蚀异解△
+哲罕南、葬岭异解△ 弗尔海姆、天之异解△ 希屋尔；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：异解△领域-魔之异界域、异解△福音。</p>
+<p>牌库 1，里侧除外 31；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-14-手种子-2026090613">固定策略：第 14 手（种子
+2026090613）</h2>
+<p><strong>起手：</strong> 增殖的Z、虚之异解△ 矶汉拿、天霆异解△
+黄泉、抹杀之指名者、强欲而贪欲之壶</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>虚之异解△ 矶汉拿①从手牌自跳</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>34 / 1</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>强贪壶：代价顶10里侧除外，抽二</td>
+<td>抽牌小丑与封锁鸟、碧之异解△ 图奥内拉、天之异解△ 希屋尔、狂岚异解△
+普鲁托尼翁、灰流丽、异解△福音、葬岭异解△ 弗尔海姆、虚之异解△
+矶汉拿、异解△领域-魔之异界域、异解△福音</td>
+<td>虚之异解△ 矶汉拿、天霆异解△ 黄泉</td>
+<td>22 / 11</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>矶汉拿③回收 葬岭异解△ 弗尔海姆、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆、天之异解△ 希屋尔</td>
+<td>22 / 9</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>狂岚异解△ 普鲁托尼翁、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>20 / 11</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>葬岭手牌①：自身里侧除外，叫 碧之异解△ 图奥内拉</td>
+<td>葬岭异解△ 弗尔海姆、绯之异解△ 那落迦、天之异解△
+希屋尔、强欲而贪欲之壶</td>
+<td>—</td>
+<td>17 / 14</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>希屋尔③回收 异解△福音、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>异解△福音、异解△领域-魔之异界域</td>
+<td>17 / 12</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>强欲而贪欲之壶、紧急瞬移、强欲而贪欲之壶、狂岚异解△
+普鲁托尼翁、绯之异解△ 那落迦</td>
+<td>—</td>
+<td>13 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>多多迷宝・软绵雀精、异解△领域-魔之异界域、紧急瞬移、异解△福音、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>8 / 22</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>图奥内拉③叫 狂岚异解△ 普鲁托尼翁</td>
+<td>碧之异解△ 图奥内拉、虚蚀异解△ 哲罕南、天之异解△
+希屋尔、多多迷宝・软绵雀精、机巧蛇－丛云远吕智、灰流丽、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>1 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>福音②将 虚之异解△ 矶汉拿 换成 虚蚀异解△ 哲罕南</td>
+<td>虚之异解△ 矶汉拿、碧之异解△ 图奥内拉</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 天之异解△ 希屋尔</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>通常召唤 虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>黄泉手牌①：自身里侧除外，回收 异解△领域-魔之异界域</td>
+<td>天霆异解△ 黄泉</td>
+<td>异解△领域-魔之异界域</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>碧之异解△ 图奥内拉、虚之异解△ 矶汉拿 连接召唤 I:P 至额外怪兽区</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>领域①回收 异解△福音</td>
+<td>—</td>
+<td>异解△福音</td>
+<td>0 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td>狂岚③仅回自己 碧之异解△ 图奥内拉 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 27</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、虚蚀异解△
+哲罕南、天霆异解△ 黄泉；额外怪兽区 I：P百变莱娜。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：增殖的Z、抹杀之指名者、异解△领域-魔之异界域、异解△福音。</p>
+<p>牌库 1，里侧除外 27；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 3；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-15-手种子-2026090614">固定策略：第 15 手（种子
+2026090614）</h2>
+<p><strong>起手：</strong> 虚蚀异解△
+哲罕南、多多迷宝・软绵雀精、虚之异解△ 矶汉拿、天之异解△
+希屋尔、绯之异解△ 那落迦</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>虚之异解△ 矶汉拿①从手牌自跳</td>
+<td>多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>34 / 1</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>灰流丽、灰流丽</td>
+<td>—</td>
+<td>32 / 3</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>通常召唤 绯之异解△ 那落迦</td>
+<td>异解△领域-魔之异界域、碧之异解△
+图奥内拉、异解△福音、强欲而贪欲之壶</td>
+<td>—</td>
+<td>28 / 7</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>希屋尔③回收 异解△领域-魔之异界域、异解△福音</td>
+<td>—</td>
+<td>异解△领域-魔之异界域、异解△福音</td>
+<td>28 / 5</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>虚之异解△ 矶汉拿、天之异解△ 希屋尔、紧急瞬移、葬岭异解△
+弗尔海姆、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>23 / 10</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>强欲而贪欲之壶、异解△福音、增殖的Z、天霆异解△ 黄泉、天霆异解△
+黄泉</td>
+<td>—</td>
+<td>18 / 15</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>矶汉拿③回收 碧之异解△ 图奥内拉、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>碧之异解△ 图奥内拉、葬岭异解△ 弗尔海姆</td>
+<td>18 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>通常召唤 碧之异解△ 图奥内拉</td>
+<td>葬岭异解△ 弗尔海姆、抹杀之指名者、狂岚异解△ 普鲁托尼翁</td>
+<td>—</td>
+<td>15 / 16</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>葬岭手牌①：自身里侧除外，叫 狂岚异解△ 普鲁托尼翁</td>
+<td>葬岭异解△ 弗尔海姆、机巧蛇－丛云远吕智、天之异解△ 希屋尔、碧之异解△
+图奥内拉、紧急瞬移、异解△领域-魔之异界域、强欲而贪欲之壶、抽牌小丑与封锁鸟</td>
+<td>—</td>
+<td>8 / 23</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>福音②将 虚之异解△ 矶汉拿 换成 天霆异解△ 黄泉</td>
+<td>虚之异解△ 矶汉拿、绯之异解△ 那落迦、葬岭异解△ 弗尔海姆、虚之异解△
+矶汉拿、碧之异解△ 图奥内拉、异解△福音</td>
+<td>—</td>
+<td>3 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>领域①回收 天霆异解△ 黄泉</td>
+<td>—</td>
+<td>天霆异解△ 黄泉</td>
+<td>3 / 27</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>天之异解△ 希屋尔、绯之异解△ 那落迦 连接召唤 I:P 至额外怪兽区</td>
+<td>—</td>
+<td>—</td>
+<td>3 / 27</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>图奥内拉③叫 葬岭异解△ 弗尔海姆</td>
+<td>狂岚异解△ 普鲁托尼翁、异解△领域-魔之异界域、狂岚异解△
+普鲁托尼翁</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>黄泉手牌①：自身里侧除外，回收 异解△福音</td>
+<td>天霆异解△ 黄泉</td>
+<td>异解△福音</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>狂岚③仅回自己 碧之异解△ 图奥内拉 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 28</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 碧之异解△ 图奥内拉、狂岚异解△
+普鲁托尼翁、天霆异解△ 黄泉、葬岭异解△ 弗尔海姆；额外怪兽区
+I：P百变莱娜。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：虚蚀异解△ 哲罕南、多多迷宝・软绵雀精、异解△福音。</p>
+<p>牌库 1，里侧除外 28；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-16-手种子-2026090615">固定策略：第 16 手（种子
+2026090615）</h2>
+<p><strong>起手：</strong> 碧之异解△ 图奥内拉、狂岚异解△
+普鲁托尼翁、天霆异解△ 黄泉、多多迷宝・软绵雀精、紧急瞬移</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>多多迷宝・软绵雀精、抹杀之指名者、异解△福音</td>
+<td>—</td>
+<td>31 / 3</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>狂岚手牌①：与 碧之异解△ 图奥内拉 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、碧之异解△ 图奥内拉</td>
+<td>天霆异解△ 黄泉、强欲而贪欲之壶</td>
+<td>29 / 5</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>强贪壶：代价顶10里侧除外，抽二</td>
+<td>异解△福音、碧之异解△ 图奥内拉、增殖的Z、虚之异解△
+矶汉拿、抽牌小丑与封锁鸟、虚之异解△
+矶汉拿、异解△领域-魔之异界域、狂岚异解△
+普鲁托尼翁、紧急瞬移、异解△领域-魔之异界域</td>
+<td>虚之异解△ 矶汉拿、多多迷宝・软绵雀精</td>
+<td>17 / 15</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>图奥内拉③叫 狂岚异解△ 普鲁托尼翁</td>
+<td>异解△福音、绯之异解△ 那落迦、葬岭异解△
+弗尔海姆、异解△领域-魔之异界域、葬岭异解△ 弗尔海姆、狂岚异解△
+普鲁托尼翁、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>10 / 21</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>通常召唤 虚之异解△ 矶汉拿</td>
+<td>天之异解△ 希屋尔</td>
+<td>—</td>
+<td>9 / 22</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>矶汉拿③回收 葬岭异解△ 弗尔海姆、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆、天之异解△ 希屋尔</td>
+<td>9 / 20</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>灰流丽、绯之异解△ 那落迦</td>
+<td>—</td>
+<td>7 / 22</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>希屋尔③回收 异解△福音、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>异解△福音、异解△领域-魔之异界域</td>
+<td>7 / 20</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>紧急瞬移、强欲而贪欲之壶、天之异解△ 希屋尔、天之异解△
+希屋尔、灰流丽</td>
+<td>—</td>
+<td>4 / 25</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 葬岭异解△ 弗尔海姆</td>
+<td>碧之异解△ 图奥内拉、强欲而贪欲之壶、强欲而贪欲之壶、虚蚀异解△
+哲罕南、机巧蛇－丛云远吕智</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>葬岭手牌①：自身里侧除外，叫 虚蚀异解△ 哲罕南</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>黄泉手牌①：自身里侧除外，回收 异解△领域-魔之异界域</td>
+<td>天霆异解△ 黄泉</td>
+<td>异解△领域-魔之异界域</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>狂岚③仅回自己 碧之异解△ 图奥内拉 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 28</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、天之异解△
+希屋尔、葬岭异解△ 弗尔海姆、虚蚀异解△ 哲罕南、天霆异解△ 黄泉；额外怪兽区
+—。</p>
+<p>魔陷区：异解△福音；场地区：—。</p>
+<p>手牌：多多迷宝・软绵雀精、多多迷宝・软绵雀精、异解△领域-魔之异界域、异解△领域-魔之异界域。</p>
+<p>牌库 1，里侧除外 28；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 3；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-17-手种子-2026090616">固定策略：第 17 手（种子
+2026090616）</h2>
+<p><strong>起手：</strong>
+抹杀之指名者、异解△领域-魔之异界域、紧急瞬移、抽牌小丑与封锁鸟、多多迷宝・软绵雀精</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>碧之异解△ 图奥内拉、绯之异解△ 那落迦、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>31 / 3</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>紧急瞬移、天之异解△ 希屋尔、葬岭异解△
+弗尔海姆、异解△领域-魔之异界域、异解△福音</td>
+<td>—</td>
+<td>27 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>图奥内拉③叫 葬岭异解△ 弗尔海姆</td>
+<td>狂岚异解△ 普鲁托尼翁、灰流丽、增殖的Z、天霆异解△
+黄泉、异解△福音、机巧蛇－丛云远吕智</td>
+<td>—</td>
+<td>21 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>领域①回收 葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>21 / 12</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>葬岭手牌①：自身里侧除外，叫 狂岚异解△ 普鲁托尼翁</td>
+<td>葬岭异解△ 弗尔海姆、异解△福音、多多迷宝・软绵雀精、虚蚀异解△
+哲罕南、天之异解△ 希屋尔、强欲而贪欲之壶、绯之异解△ 那落迦、天霆异解△
+黄泉</td>
+<td>—</td>
+<td>14 / 19</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>结束阶段：瞬移叫出的 碧之异解△ 图奥内拉 表侧除外</td>
+<td>—</td>
+<td>—</td>
+<td>— / —</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 葬岭异解△ 弗尔海姆、狂岚异解△
+普鲁托尼翁；额外怪兽区 —。</p>
+<p>魔陷区：—；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：抹杀之指名者、抽牌小丑与封锁鸟、多多迷宝・软绵雀精。</p>
+<p>牌库 14，里侧除外 19；本家属性库存：光、地、暗、水、炎。</p>
+<p>交互组件种类 1；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-18-手种子-2026090617">固定策略：第 18 手（种子
+2026090617）</h2>
+<p><strong>起手：</strong> 灰流丽、碧之异解△
+图奥内拉、异解△领域-魔之异界域、多多迷宝・软绵雀精、天霆异解△ 黄泉</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>葬岭异解△ 弗尔海姆、异解△福音、灰流丽、碧之异解△ 图奥内拉、葬岭异解△
+弗尔海姆</td>
+<td>—</td>
+<td>30 / 5</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>通常召唤 碧之异解△ 图奥内拉</td>
+<td>强欲而贪欲之壶、异解△领域-魔之异界域、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>27 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>图奥内拉③叫 葬岭异解△ 弗尔海姆</td>
+<td>绯之异解△ 那落迦、多多迷宝・软绵雀精、天之异解△
+希屋尔、抹杀之指名者、异解△福音、狂岚异解△ 普鲁托尼翁</td>
+<td>—</td>
+<td>21 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>领域①回收 异解△福音</td>
+<td>—</td>
+<td>异解△福音</td>
+<td>21 / 12</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>虚之异解△ 矶汉拿、强欲而贪欲之壶、紧急瞬移、天霆异解△
+黄泉、机巧蛇－丛云远吕智</td>
+<td>—</td>
+<td>16 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 狂岚异解△ 普鲁托尼翁</td>
+<td>碧之异解△ 图奥内拉、虚之异解△ 矶汉拿、增殖的Z、碧之异解△
+图奥内拉、抽牌小丑与封锁鸟、多多迷宝・软绵雀精、虚之异解△
+矶汉拿、狂岚异解△ 普鲁托尼翁</td>
+<td>—</td>
+<td>9 / 24</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>黄泉手牌①：自身里侧除外，回收 葬岭异解△ 弗尔海姆</td>
+<td>天霆异解△ 黄泉</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>9 / 24</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>葬岭手牌①：自身里侧除外，叫 天之异解△ 希屋尔</td>
+<td>葬岭异解△ 弗尔海姆、强欲而贪欲之壶、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>7 / 26</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>希屋尔③回收 异解△领域-魔之异界域、异解△福音</td>
+<td>—</td>
+<td>异解△领域-魔之异界域、异解△福音</td>
+<td>7 / 24</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>虚蚀异解△ 哲罕南、狂岚异解△
+普鲁托尼翁、紧急瞬移、异解△领域-魔之异界域、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>2 / 29</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 葬岭异解△ 弗尔海姆、狂岚异解△
+普鲁托尼翁、天之异解△ 希屋尔；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：灰流丽、多多迷宝・软绵雀精、异解△福音。</p>
+<p>牌库 2，里侧除外 29；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 1；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-19-手种子-2026090618">固定策略：第 19 手（种子
+2026090618）</h2>
+<p><strong>起手：</strong> 抽牌小丑与封锁鸟、天霆异解△ 黄泉、绯之异解△
+那落迦、异解△福音、天之异解△ 希屋尔</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>多多迷宝・软绵雀精、葬岭异解△ 弗尔海姆、天霆异解△ 黄泉、葬岭异解△
+弗尔海姆、狂岚异解△ 普鲁托尼翁</td>
+<td>—</td>
+<td>30 / 5</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>通常召唤 绯之异解△ 那落迦</td>
+<td>异解△福音、碧之异解△ 图奥内拉、紧急瞬移、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>26 / 9</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>天之异解△ 希屋尔、灰流丽</td>
+<td>—</td>
+<td>24 / 11</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>福音②将 绯之异解△ 那落迦 换成 狂岚异解△ 普鲁托尼翁</td>
+<td>绯之异解△ 那落迦、狂岚异解△ 普鲁托尼翁、天之异解△
+希屋尔、异解△领域-魔之异界域、紧急瞬移、绯之异解△
+那落迦、增殖的Z、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>17 / 18</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>希屋尔③回收 异解△福音、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>异解△福音、异解△领域-魔之异界域</td>
+<td>17 / 16</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>异解△领域-魔之异界域、机巧蛇－丛云远吕智、碧之异解△
+图奥内拉、葬岭异解△ 弗尔海姆、强欲而贪欲之壶</td>
+<td>—</td>
+<td>12 / 21</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 天之异解△ 希屋尔</td>
+<td>虚蚀异解△ 哲罕南、虚之异解△ 矶汉拿、强欲而贪欲之壶、碧之异解△
+图奥内拉、强欲而贪欲之壶</td>
+<td>—</td>
+<td>7 / 26</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>领域①回收 葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>7 / 25</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>葬岭手牌①：自身里侧除外，叫 碧之异解△ 图奥内拉</td>
+<td>葬岭异解△ 弗尔海姆、抹杀之指名者、狂岚异解△
+普鲁托尼翁、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>4 / 28</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>图奥内拉③叫 葬岭异解△ 弗尔海姆</td>
+<td>多多迷宝・软绵雀精、异解△福音、灰流丽、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>0 / 31</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>狂岚③仅回自己 碧之异解△ 图奥内拉 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 30</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、天霆异解△
+黄泉、碧之异解△ 图奥内拉、葬岭异解△ 弗尔海姆；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：抽牌小丑与封锁鸟、异解△福音。</p>
+<p>牌库 1，里侧除外 30；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-20-手种子-2026090619">固定策略：第 20 手（种子
+2026090619）</h2>
+<p><strong>起手：</strong>
+多多迷宝・软绵雀精、异解△福音、抽牌小丑与封锁鸟、紧急瞬移、异解△福音</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>绯之异解△ 那落迦、天之异解△ 希屋尔、碧之异解△ 图奥内拉</td>
+<td>—</td>
+<td>31 / 3</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>紧急瞬移、灰流丽、狂岚异解△ 普鲁托尼翁、天之异解△ 希屋尔、虚之异解△
+矶汉拿</td>
+<td>—</td>
+<td>27 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>图奥内拉③叫 狂岚异解△ 普鲁托尼翁</td>
+<td>虚之异解△ 矶汉拿、多多迷宝・软绵雀精、天霆异解△ 黄泉、天之异解△
+希屋尔、强欲而贪欲之壶、葬岭异解△ 弗尔海姆、强欲而贪欲之壶</td>
+<td>—</td>
+<td>20 / 14</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 天霆异解△ 黄泉</td>
+<td>碧之异解△
+图奥内拉、异解△领域-魔之异界域、异解△领域-魔之异界域、异解△福音、虚之异解△
+矶汉拿、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>15 / 19</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>葬岭异解△ 弗尔海姆、机巧蛇－丛云远吕智、狂岚异解△
+普鲁托尼翁、增殖的Z、抹杀之指名者</td>
+<td>—</td>
+<td>10 / 24</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、天霆异解△
+黄泉；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音、异解△福音；场地区：—。</p>
+<p>手牌：多多迷宝・软绵雀精、抽牌小丑与封锁鸟。</p>
+<p>牌库 10，里侧除外 24；本家属性库存：光、地、暗、水、炎、风。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-21-手种子-2026090620">固定策略：第 21 手（种子
+2026090620）</h2>
+<p><strong>起手：</strong> 强欲而贪欲之壶、绯之异解△
+那落迦、多多迷宝・软绵雀精、狂岚异解△ 普鲁托尼翁、碧之异解△ 图奥内拉</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>强贪壶：代价顶10里侧除外，抽二</td>
+<td>狂岚异解△
+普鲁托尼翁、异解△福音、多多迷宝・软绵雀精、异解△领域-魔之异界域、灰流丽、天之异解△
+希屋尔、增殖的Z、异解△福音、虚之异解△ 矶汉拿、天霆异解△ 黄泉</td>
+<td>异解△领域-魔之异界域、多多迷宝・软绵雀精</td>
+<td>23 / 10</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>强欲而贪欲之壶、异解△领域-魔之异界域、虚之异解△
+矶汉拿、紧急瞬移、灰流丽</td>
+<td>—</td>
+<td>19 / 15</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>通常召唤 碧之异解△ 图奥内拉</td>
+<td>机巧蛇－丛云远吕智、葬岭异解△ 弗尔海姆、碧之异解△ 图奥内拉</td>
+<td>—</td>
+<td>16 / 18</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>狂岚手牌①：与 绯之异解△ 那落迦 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、绯之异解△ 那落迦</td>
+<td>狂岚异解△ 普鲁托尼翁、天霆异解△ 黄泉</td>
+<td>14 / 20</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>图奥内拉③叫 狂岚异解△ 普鲁托尼翁</td>
+<td>抽牌小丑与封锁鸟、葬岭异解△ 弗尔海姆、天之异解△ 希屋尔、碧之异解△
+图奥内拉、强欲而贪欲之壶、异解△福音、绯之异解△ 那落迦</td>
+<td>—</td>
+<td>7 / 26</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>领域①回收 异解△福音</td>
+<td>—</td>
+<td>异解△福音</td>
+<td>7 / 25</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>抹杀之指名者、天之异解△ 希屋尔、虚蚀异解△
+哲罕南、紧急瞬移、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>2 / 30</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 虚蚀异解△ 哲罕南</td>
+<td>碧之异解△ 图奥内拉、强欲而贪欲之壶、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>0 / 32</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>黄泉手牌①：自身里侧除外，回收 葬岭异解△ 弗尔海姆</td>
+<td>天霆异解△ 黄泉</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>0 / 32</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>葬岭手牌①：自身里侧除外，叫 天之异解△ 希屋尔</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>0 / 32</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>希屋尔③回收 异解△领域-魔之异界域、异解△福音</td>
+<td>—</td>
+<td>异解△领域-魔之异界域、异解△福音</td>
+<td>0 / 30</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>狂岚③仅回自己 狂岚异解△ 普鲁托尼翁 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 29</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、虚蚀异解△
+哲罕南、天之异解△ 希屋尔；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：多多迷宝・软绵雀精、多多迷宝・软绵雀精、狂岚异解△
+普鲁托尼翁、异解△领域-魔之异界域、异解△福音。</p>
+<p>牌库 1，里侧除外 29；本家属性库存：光、地、暗、水、炎。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-22-手种子-2026090621">固定策略：第 22 手（种子
+2026090621）</h2>
+<p><strong>起手：</strong> 虚之异解△
+矶汉拿、机巧蛇－丛云远吕智、多多迷宝・软绵雀精、狂岚异解△
+普鲁托尼翁、碧之异解△ 图奥内拉</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>虚之异解△ 矶汉拿①从手牌自跳</td>
+<td>强欲而贪欲之壶</td>
+<td>—</td>
+<td>34 / 1</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>丛云：代价顶8里侧除外，自跳</td>
+<td>绯之异解△ 那落迦、抹杀之指名者、葬岭异解△
+弗尔海姆、增殖的Z、天霆异解△ 黄泉、碧之异解△ 图奥内拉、碧之异解△
+图奥内拉、狂岚异解△ 普鲁托尼翁</td>
+<td>—</td>
+<td>26 / 9</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>通常召唤 碧之异解△ 图奥内拉</td>
+<td>异解△福音、紧急瞬移、强欲而贪欲之壶</td>
+<td>—</td>
+<td>23 / 12</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>图奥内拉③叫 狂岚异解△ 普鲁托尼翁</td>
+<td>天之异解△
+希屋尔、灰流丽、异解△领域-魔之异界域、多多迷宝・软绵雀精、绯之异解△
+那落迦、抽牌小丑与封锁鸟、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>16 / 18</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>矶汉拿③回收 葬岭异解△ 弗尔海姆、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆、天之异解△ 希屋尔</td>
+<td>16 / 16</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>天之异解△ 希屋尔①从手牌自跳</td>
+<td>强欲而贪欲之壶、灰流丽</td>
+<td>—</td>
+<td>14 / 18</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>希屋尔③回收 异解△福音、异解△领域-魔之异界域</td>
+<td>—</td>
+<td>异解△福音、异解△领域-魔之异界域</td>
+<td>14 / 16</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>虚之异解△ 矶汉拿、异解△福音、天之异解△
+希屋尔、异解△领域-魔之异界域、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>9 / 21</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>葬岭异解△ 弗尔海姆、狂岚异解△ 普鲁托尼翁、异解△福音、虚之异解△
+矶汉拿、紧急瞬移</td>
+<td>—</td>
+<td>4 / 26</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>福音②将 虚之异解△ 矶汉拿 换成 天霆异解△ 黄泉</td>
+<td>虚之异解△ 矶汉拿、天之异解△ 希屋尔、天霆异解△ 黄泉、虚蚀异解△
+哲罕南、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>0 / 30</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>通常召唤 葬岭异解△ 弗尔海姆；解放 机巧蛇－丛云远吕智</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 30</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>领域①回收 葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>碧之异解△ 图奥内拉、天之异解△ 希屋尔 连接召唤 I:P 至额外怪兽区</td>
+<td>—</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>葬岭手牌①：自身里侧除外，叫 虚蚀异解△ 哲罕南</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>0 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>狂岚③仅回自己 狂岚异解△ 普鲁托尼翁 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 28</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、天霆异解△
+黄泉、葬岭异解△ 弗尔海姆、虚蚀异解△ 哲罕南；额外怪兽区
+I：P百变莱娜。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：多多迷宝・软绵雀精、狂岚异解△ 普鲁托尼翁。</p>
+<p>牌库 1，里侧除外 28；本家属性库存：光、地、暗、水、炎。</p>
+<p>交互组件种类 3；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-23-手种子-2026090622">固定策略：第 23 手（种子
+2026090622）</h2>
+<p><strong>起手：</strong> 葬岭异解△ 弗尔海姆、天霆异解△
+黄泉、灰流丽、异解△领域-魔之异界域、异解△领域-魔之异界域</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>绯之异解△
+那落迦、多多迷宝・软绵雀精、强欲而贪欲之壶、紧急瞬移、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>30 / 5</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>葬岭手牌①：自身里侧除外，叫 绯之异解△ 那落迦</td>
+<td>葬岭异解△ 弗尔海姆、葬岭异解△ 弗尔海姆、虚之异解△
+矶汉拿、紧急瞬移、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>26 / 9</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 绯之异解△ 那落迦</td>
+<td>葬岭异解△ 弗尔海姆、绯之异解△ 那落迦、狂岚异解△
+普鲁托尼翁、碧之异解△ 图奥内拉、强欲而贪欲之壶</td>
+<td>—</td>
+<td>21 / 14</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>领域①回收 虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>虚之异解△ 矶汉拿</td>
+<td>21 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>绯之异解△ 那落迦、灰流丽、抽牌小丑与封锁鸟、异解△福音、碧之异解△
+图奥内拉</td>
+<td>—</td>
+<td>17 / 18</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 天霆异解△ 黄泉；额外怪兽区 —。</p>
+<p>魔陷区：—；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：灰流丽、虚之异解△ 矶汉拿。</p>
+<p>牌库 17，里侧除外 18；本家属性库存：地、水、炎、风。</p>
+<p>交互组件种类 1；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="固定策略第-24-手种子-2026090623">固定策略：第 24 手（种子
+2026090623）</h2>
+<p><strong>起手：</strong> 机巧蛇－丛云远吕智、异解△福音、狂岚异解△
+普鲁托尼翁、葬岭异解△ 弗尔海姆、天霆异解△ 黄泉</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>丛云：代价顶8里侧除外，自跳</td>
+<td>抽牌小丑与封锁鸟、异解△领域-魔之异界域、虚之异解△
+矶汉拿、强欲而贪欲之壶、碧之异解△
+图奥内拉、灰流丽、多多迷宝・软绵雀精、绯之异解△ 那落迦</td>
+<td>—</td>
+<td>27 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>强欲而贪欲之壶、狂岚异解△
+普鲁托尼翁、紧急瞬移、抹杀之指名者、增殖的Z</td>
+<td>—</td>
+<td>22 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>葬岭手牌①：自身里侧除外，叫 碧之异解△ 图奥内拉</td>
+<td>葬岭异解△ 弗尔海姆、葬岭异解△
+弗尔海姆、多多迷宝・软绵雀精、天之异解△ 希屋尔</td>
+<td>—</td>
+<td>19 / 16</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>图奥内拉③叫 狂岚异解△ 普鲁托尼翁</td>
+<td>虚之异解△ 矶汉拿、多多迷宝・软绵雀精、天之异解△ 希屋尔、虚蚀异解△
+哲罕南、虚之异解△ 矶汉拿、天霆异解△ 黄泉、葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>12 / 22</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 虚蚀异解△ 哲罕南</td>
+<td>碧之异解△ 图奥内拉、绯之异解△ 那落迦、碧之异解△
+图奥内拉、异解△领域-魔之异界域、天之异解△ 希屋尔、碧之异解△
+图奥内拉、狂岚异解△ 普鲁托尼翁、异解△领域-魔之异界域、紧急瞬移</td>
+<td>—</td>
+<td>4 / 30</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 机巧蛇－丛云远吕智</td>
+<td>异解△福音、灰流丽、异解△福音、强欲而贪欲之壶</td>
+<td>—</td>
+<td>0 / 34</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>狂岚③仅回自己 狂岚异解△ 普鲁托尼翁 至牌库并洗牌</td>
+<td>—</td>
+<td>—</td>
+<td>1 / 33</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 狂岚异解△ 普鲁托尼翁、虚蚀异解△
+哲罕南、天霆异解△ 黄泉；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：—。</p>
+<p>手牌：狂岚异解△ 普鲁托尼翁。</p>
+<p>牌库 1，里侧除外 33；本家属性库存：光、地、暗、水、炎。</p>
+<p>交互组件种类 3；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<h2 id="人工改线第-1-手种子-2026090600">人工改线：第 1 手（种子
+2026090600）</h2>
+<p><strong>起手：</strong> 葬岭异解△ 弗尔海姆、虚蚀异解△
+哲罕南、虚之异解△ 矶汉拿、碧之异解△ 图奥内拉、紧急瞬移</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>虚之异解△ 矶汉拿①从手牌自跳</td>
+<td>葬岭异解△ 弗尔海姆</td>
+<td>—</td>
+<td>34 / 1</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>瞬移从牌库叫 碧之异解△ 图奥内拉，洗牌</td>
+<td>葬岭异解△ 弗尔海姆、灰流丽、紧急瞬移</td>
+<td>—</td>
+<td>30 / 4</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>通常召唤 碧之异解△ 图奥内拉</td>
+<td>天霆异解△ 黄泉、机巧蛇－丛云远吕智、灰流丽</td>
+<td>—</td>
+<td>27 / 7</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>葬岭手牌①：自身里侧除外，叫 天霆异解△ 黄泉</td>
+<td>葬岭异解△
+弗尔海姆、强欲而贪欲之壶、异解△福音、异解△福音、多多迷宝・软绵雀精、强欲而贪欲之壶</td>
+<td>—</td>
+<td>22 / 12</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>图奥内拉③叫 葬岭异解△ 弗尔海姆</td>
+<td>抹杀之指名者、狂岚异解△ 普鲁托尼翁、抽牌小丑与封锁鸟、狂岚异解△
+普鲁托尼翁、虚之异解△ 矶汉拿、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>16 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>矶汉拿③回收 葬岭异解△ 弗尔海姆、狂岚异解△ 普鲁托尼翁</td>
+<td>—</td>
+<td>葬岭异解△ 弗尔海姆、狂岚异解△ 普鲁托尼翁</td>
+<td>16 / 15</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>狂岚手牌①：与 虚蚀异解△ 哲罕南 一起里侧除外并抽二</td>
+<td>狂岚异解△ 普鲁托尼翁、虚蚀异解△ 哲罕南</td>
+<td>绯之异解△ 那落迦、天霆异解△ 黄泉</td>
+<td>14 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>黄泉手牌①：自身里侧除外，回收 异解△福音</td>
+<td>天霆异解△ 黄泉</td>
+<td>异解△福音</td>
+<td>14 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>紧急瞬移、异解△福音、异解△领域-魔之异界域、异解△领域-魔之异界域、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>10 / 22</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>福音②将 碧之异解△ 图奥内拉 换成 狂岚异解△ 普鲁托尼翁</td>
+<td>碧之异解△ 图奥内拉、虚之异解△
+矶汉拿、异解△领域-魔之异界域、增殖的Z、天之异解△
+希屋尔、强欲而贪欲之壶、碧之异解△ 图奥内拉、狂岚异解△ 普鲁托尼翁</td>
+<td>—</td>
+<td>3 / 29</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>虚之异解△ 矶汉拿、碧之异解△ 图奥内拉 连接召唤 I:P 至额外怪兽区</td>
+<td>—</td>
+<td>—</td>
+<td>3 / 29</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 天霆异解△ 黄泉、葬岭异解△
+弗尔海姆、狂岚异解△ 普鲁托尼翁；额外怪兽区 I：P百变莱娜。</p>
+<p>魔陷区：异解△福音；场地区：—。</p>
+<p>手牌：葬岭异解△ 弗尔海姆、绯之异解△ 那落迦。</p>
+<p>牌库 3，里侧除外 29；本家属性库存：光、地、暗、水、风。</p>
+<p>交互组件种类 2；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<p>人工停牌：黄泉、狂岚、葬岭、可用I:P；牌库留3，手牌那落迦、葬岭。里侧尚无炎属性弹药。</p>
+<h2 id="人工改线第-7-手种子-2026090606">人工改线：第 7 手（种子
+2026090606）</h2>
+<p><strong>起手：</strong> 机巧蛇－丛云远吕智、天之异解△
+希屋尔、增殖的Z、异解△福音、异解△领域-魔之异界域</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: right;">步骤</th>
+<th>操作</th>
+<th>里侧新增</th>
+<th>手牌新增</th>
+<th>D / B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>丛云：代价顶8里侧除外，自跳</td>
+<td>抹杀之指名者、狂岚异解△
+普鲁托尼翁、灰流丽、异解△领域-魔之异界域、强欲而贪欲之壶、葬岭异解△
+弗尔海姆、天之异解△ 希屋尔、虚之异解△ 矶汉拿</td>
+<td>—</td>
+<td>27 / 8</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>发动 异解△福音（支付合计5张）</td>
+<td>葬岭异解△ 弗尔海姆、碧之异解△ 图奥内拉、紧急瞬移、天霆异解△
+黄泉、强欲而贪欲之壶</td>
+<td>—</td>
+<td>22 / 13</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>发动 异解△领域-魔之异界域（支付合计5张）</td>
+<td>异解△领域-魔之异界域、虚之异解△ 矶汉拿、碧之异解△
+图奥内拉、虚蚀异解△ 哲罕南、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>17 / 18</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>通常召唤 天之异解△ 希屋尔</td>
+<td>天之异解△ 希屋尔、异解△福音</td>
+<td>—</td>
+<td>15 / 20</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>希屋尔③回收 异解△领域-魔之异界域、异解△福音</td>
+<td>—</td>
+<td>异解△领域-魔之异界域、异解△福音</td>
+<td>15 / 18</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>领域①回收 天霆异解△ 黄泉</td>
+<td>—</td>
+<td>天霆异解△ 黄泉</td>
+<td>15 / 17</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>通常召唤 天霆异解△ 黄泉；解放 机巧蛇－丛云远吕智</td>
+<td>灰流丽、葬岭异解△ 弗尔海姆、碧之异解△
+图奥内拉、抽牌小丑与封锁鸟、多多迷宝・软绵雀精</td>
+<td>—</td>
+<td>10 / 22</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结束：</strong> 主怪兽区 天之异解△ 希屋尔、天霆异解△
+黄泉；额外怪兽区 —。</p>
+<p>魔陷区：异解△福音；场地区：异解△领域-魔之异界域。</p>
+<p>手牌：增殖的Z、异解△领域-魔之异界域、异解△福音。</p>
+<p>牌库 10，里侧除外 22；本家属性库存：光、地、暗、水、风。</p>
+<p>交互组件种类 1；哲罕南跳抽卡：否。</p>
+<p>这里的数量不等于必然成功的妨害次数；I:P
+若已无额外目标，不算一个连接干扰。</p>
+<p>对手G已成功处理：只给一次抽牌；停止特殊召唤，保留黄泉与手中G、领域、福音。</p>
+</body>
+</html>

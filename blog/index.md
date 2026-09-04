@@ -1,6 +1,7 @@
 Scriptum Mistiviae
 ========
 
+- <span class="pdate">2026-09-06</span>[C语言中的一等函数](/posts/2026-09-06-c-func/)
 - <span class="pdate">2026-08-28</span>[如何用汇编刷算法题](/posts/2026-08-28-asmoj/)
 - <span class="pdate">2026-08-27</span>[手写汇编小窍门（x86-64）](/posts/2026-08-27-asm/)
 - <span class="pdate">2026-07-18</span>[Python中的表达式问题：一种静态类型解法](/posts/2026-07-18-py-expr-problem/)
