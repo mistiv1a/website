@@ -8,7 +8,7 @@ sed -i 's#href="\.\./"#href="//mistivia.com"#g' blog/index.html
 cp homepage/style*.css blog/
 
 git add *
-git commit --amend  -am "update"
+git commit -am "update"
 proxychains -q git push -f
 
 # cp homepage/style*.css /var/ygg/web/
