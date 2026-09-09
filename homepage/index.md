@@ -4,6 +4,7 @@ Mistivia
 <p>关于我自己，我并不想作太多介绍。这个站点上主要是我写的一些文字，除此之外还有一些其他内容：</p>
 
 <ul>
+<li><a href="//raye.mistivia.com/microblog/">碎碎念</a></li>
 <li><a href="//raye.mistivia.com/gallery/">摄影集</a></li>
 <li><a href="//mistivia.com/chat">IRC 聊天室</a></li>
 <li><a href="https://t.me/l0adiing">Telegram频道</a></li>
