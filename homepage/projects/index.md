@@ -20,5 +20,3 @@
 [jitasm](./pages/jitasm.html): Python中的x86-64 JIT汇编器。主要动机是在Python里面写SIMD。
 
 [basher](./pages/basher.html): 用Python实现的极简的AI agent。
-
-[asmrt](./pages/asmrt.html): 一个目前未完成的x86-64 Linux汇编运行时，主要用来练习汇编编程。愿景是封装libc常用功能，实现常用数据结构。
