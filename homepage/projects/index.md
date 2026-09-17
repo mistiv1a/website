@@ -20,3 +20,5 @@
 [jitasm](./pages/jitasm.html): Python中的x86-64 JIT汇编器。主要动机是在Python里面写SIMD。
 
 [basher](./pages/basher.html): 用Python实现的极简的AI agent。
+
+[bamboo-lisp](./pages/bamboo-lisp.html): 简单的tree-walking Lisp解释器。支持尾调用优化、词法作用域。采用Lisp-2设计，性能和风格类似早期Emacs Lisp。
