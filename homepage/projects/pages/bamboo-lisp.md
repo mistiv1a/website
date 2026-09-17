@@ -5,5 +5,5 @@ A simple tree-walking Lisp interpreter. It supports tail call optimization and l
 
 # Download
 
-[bamboo-lisp.tar.gz](https://raye.mistivia.com/release/bamboo-lisp.tar.gz)
+[bamboo-lisp.tar.gz](https://raye.mistivia.com/releases/bamboo-lisp.tar.gz)
 
