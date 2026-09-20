@@ -11,7 +11,7 @@ pip install jitasm
 
 ## Download
 
-[jitasm-py.tar.gz](https://raye.mistivia.com/releases/jitasm-py.tar.gz)
+[jitasm-py.tar.br](https://raye.mistivia.com/releases/jitasm-py.tar.br)
 
 ## Changelog
 

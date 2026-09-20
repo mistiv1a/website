@@ -5,5 +5,5 @@ A live streaming tool that can receive streams pushed from OBS, convert them int
 
 ## Download
 
-[ezlive.tar.gz](https://raye.mistivia.com/releases/ezlive.tar.gz)
+[ezlive.tar.br](https://raye.mistivia.com/releases/ezlive.tar.br)
 

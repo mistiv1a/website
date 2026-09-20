@@ -5,5 +5,5 @@
 
 ## Download
 
-[.tar.gz](https://raye.mistivia.com/releases/.tar.gz)
+[.tar.br](https://raye.mistivia.com/releases/.tar.br)
 
