@@ -9,7 +9,7 @@ cp homepage/style*.css blog/
 
 git add *
 git commit -am "update"
-proxychains -q git push -f
+# proxychains -q git push -f
 
 # cp homepage/style*.css /var/ygg/web/
 
