@@ -184,6 +184,14 @@ img {{
     max-width: 300px;
     max-height: 360px;
 }}
+a,
+a:link,
+a:visited,
+a:hover,
+a:active,
+a:focus {{
+  color: inherit;
+}}
 </style>
 {}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
