@@ -190,7 +190,7 @@ a:visited,
 a:hover,
 a:active,
 a:focus {{
-  color: #4A90D9;
+  color: inherit;
 }}
 </style>
 {}
