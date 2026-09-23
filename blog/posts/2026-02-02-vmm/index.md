@@ -7,7 +7,7 @@
 
 ![启动后的 BusyBox Shell](1.jpg)
 
-相关的代码放在了 [GitHub](https://github.com/mistivia/mvvmm) 上面。本文的后面也会主要就着这个源代码讲解。
+相关的代码放在了[这里](https://i.mistivia.com/projects/pages/mvvmm)。本文的后面也会主要就着这个源代码讲解。
 
 过程中也参考了不少之前已有的资料，会一并放在末尾。
 

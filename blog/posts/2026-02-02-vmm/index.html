@@ -35,7 +35,7 @@ a:focus {
 <p>最近因为想学 eBPF 的关系，接触到了 <a href="https://firecracker-microvm.github.io/">Firecracker</a> 这个虚拟机管理器，结果正事没干一头拐进了虚拟化的坑里。本来我对虚拟机管理器的印象都是 QEMU、VMWare 之类的庞然大物，不过 Firecracker 突然让我发现虚拟机管理器其实也不见得非得这么复杂，于是就萌生了自己做一个虚拟机管理器的想法。</p>
 <p>最后的成果是成功启动了Linux内核，并成功运行了 BusyBox 的 Shell，如下图：</p>
 <p><a href="1.jpg" target="_blank"><img src="1.jpg" alt="启动后的 BusyBox Shell"></a></p>
-<p>相关的代码放在了 <a href="https://github.com/mistivia/mvvmm">GitHub</a> 上面。本文的后面也会主要就着这个源代码讲解。</p>
+<p>相关的代码放在了<a href="https://i.mistivia.com/projects/pages/mvvmm">这里</a>。本文的后面也会主要就着这个源代码讲解。</p>
 <p>过程中也参考了不少之前已有的资料，会一并放在末尾。</p>
 <h2>创建虚拟机</h2>
 <p>这一步主要用 <code>ioctl</code> 调用一些 KVM 的接口，代码在 <code>vm_guest_init</code> 函数当中。这一步没什么好介绍的，就是一些套路化的东西：</p>
