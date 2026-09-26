@@ -7,5 +7,5 @@ See: [https://raye.mistivia.com/ygod...](https://raye.mistivia.com/ygodeck/)
 
 ## Download
 
-[ygo-deck-builder.tar.br](https://raye.mistivia.com/releases/ygo-deck-builder.tar.br)
+[ygo-deck-builder.tar.bz2](https://raye.mistivia.com/releases/ygo-deck-builder.tar.bz2)
 

@@ -7,5 +7,5 @@ It comes with a Linux bootloader and VirtIO emulators for block devices and netw
 
 ## Download
 
-[mvvmm.tar.br](https://raye.mistivia.com/releases/mvvmm.tar.br)
+[mvvmm.tar.bz2](https://raye.mistivia.com/releases/mvvmm.tar.bz2)
 

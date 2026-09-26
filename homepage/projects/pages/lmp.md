@@ -5,5 +5,5 @@ Lisp-style C++ tempalte metaprogramming.
 
 ## Download
 
-[lmp.tar.br](https://raye.mistivia.com/releases/lmp.tar.br)
+[lmp.tar.bz2](https://raye.mistivia.com/releases/lmp.tar.bz2)
 

@@ -5,5 +5,5 @@ Type-safe JSON API server library for Haskell.
 
 ## Download
 
-[typed-rpc.tar.br](https://raye.mistivia.com/releases/typed-rpc.tar.br)
+[typed-rpc.tar.bz2](https://raye.mistivia.com/releases/typed-rpc.tar.bz2)
 

@@ -7,5 +7,5 @@ The only toolcall is `bash`.
 
 ## Download
 
-[basher.tar.br](https://raye.mistivia.com/releases/basher.tar.br)
+[basher.tar.bz2](https://raye.mistivia.com/releases/basher.tar.bz2)
 
